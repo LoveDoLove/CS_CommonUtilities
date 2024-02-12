@@ -2,7 +2,7 @@
 
 namespace CommonUtilities.Utilities;
 
-public class AppSettingsUtilities
+public static class AppSettingsUtilities
 {
     private static readonly Lazy<IConfiguration> LazyConfiguration = new(AppSettingsInit);
 

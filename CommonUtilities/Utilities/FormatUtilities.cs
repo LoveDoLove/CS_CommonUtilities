@@ -3,7 +3,7 @@ using System.Web;
 
 namespace CommonUtilities.Utilities;
 
-public class FormatUtilities
+public static class FormatUtilities
 {
     public static string ClassToXWWW(object obj)
     {

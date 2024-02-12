@@ -1,6 +1,6 @@
 ﻿namespace CommonUtilities.Utilities;
 
-public class ValidationUtilities
+public static class ValidationUtilities
 {
     public static bool bValidHex(string szText)
     {

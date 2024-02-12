@@ -6,7 +6,7 @@ using Serilog;
 
 namespace CommonUtilities.Utilities;
 
-public class DatabaseUtilities
+public static class DatabaseUtilities
 {
     public static async Task<List<T>> ExecuteAsync<T>(string connectionStrings, string spName,
         List<SqlParameter> parameters)

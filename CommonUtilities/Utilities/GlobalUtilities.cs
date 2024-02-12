@@ -1,6 +1,8 @@
-﻿namespace CommonUtilities.Utilities;
+﻿using CommonUtilities.Global.ReadLine;
 
-public class GlobalUtilities
+namespace CommonUtilities.Utilities;
+
+public static class GlobalUtilities
 {
     public static void PressAnyKeyToContinue()
     {
@@ -8,20 +10,21 @@ public class GlobalUtilities
         Console.ReadKey();
     }
 
-    public static string ReadLine(string question, string value = "")
+    public static string ReadLine(ReadLineModel readLineModel)
     {
-        string? input;
+        string input;
         while (true)
         {
-            Console.WriteLine($"{question} (Enter X = Cancel)");
-            input = Console.ReadLine();
-            if (string.IsNullOrEmpty(input))
+            Console.WriteLine($"{readLineModel.question} (Enter X = Cancel)");
+            input = Console.ReadLine() ?? string.Empty;
+
+            if (!readLineModel.allowedEmpty && string.IsNullOrEmpty(input))
             {
-                Console.WriteLine("Invalid input!");
+                Console.WriteLine("Invalid input! Please enter a non-empty value.");
                 continue;
             }
 
-            if (input.ToUpper().Equals("X")) return value;
+            if (input.ToUpper().Equals("X")) return readLineModel.value;
 
             break;
         }

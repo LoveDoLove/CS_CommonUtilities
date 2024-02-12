@@ -3,7 +3,7 @@ using System.Text;
 
 namespace CommonUtilities.Utilities;
 
-public class ConvertUtilities
+public static class ConvertUtilities
 {
     public static byte[] btHexToByte(string cHex)
     {

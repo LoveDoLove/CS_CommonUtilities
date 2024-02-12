@@ -2,7 +2,7 @@
 
 namespace CommonUtilities.Utilities;
 
-public class FileUtilities
+public static class FileUtilities
 {
     public static void DeleteFolder(string directoryPath)
     {

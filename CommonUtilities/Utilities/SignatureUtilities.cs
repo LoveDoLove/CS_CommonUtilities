@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace CommonUtilities.Utilities;
 
-public class SignatureUtilities
+public static class SignatureUtilities
 {
     public static string ObjectBase64Signer(long timeStamp, string pemKey, object request)
     {

@@ -4,7 +4,7 @@ using CommonUtilities.Common;
 
 namespace CommonUtilities.Utilities;
 
-public class AesUtilities
+public static class AesUtilities
 {
     public static string Aes256EcbEncrypt(string szText, string szKey)
     {

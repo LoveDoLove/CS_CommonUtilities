@@ -4,7 +4,7 @@ using Serilog.Sinks.SystemConsole.Themes;
 
 namespace CommonUtilities.Utilities;
 
-public class LoggerUtilities
+public static class LoggerUtilities
 {
     public static void StartLog()
     {

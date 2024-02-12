@@ -2,7 +2,7 @@
 
 namespace CommonUtilities.Utilities;
 
-public class CacheUtilities
+public static class CacheUtilities
 {
     private static readonly ObjectCache Cache = MemoryCache.Default;
 

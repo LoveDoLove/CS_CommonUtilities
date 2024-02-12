@@ -3,9 +3,9 @@ using System.Text;
 
 namespace CommonUtilities.Utilities;
 
-public class SHA256Utilities
+public static class SHA256Utilities
 {
-    public string ComputeSHA256Hash(string key)
+    public static string ComputeSHA256Hash(string key)
     {
         string hashValue = "";
         SHA256 objSHA256 = null;
@@ -30,7 +30,7 @@ public class SHA256Utilities
         return hashValue;
     }
 
-    private string WriteHex(byte[] array)
+    private static string WriteHex(byte[] array)
     {
         string hex = "";
         int count;

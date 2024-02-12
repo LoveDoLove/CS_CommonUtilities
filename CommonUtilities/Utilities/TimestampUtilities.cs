@@ -1,6 +1,6 @@
 ﻿namespace CommonUtilities.Utilities;
 
-public class TimestampUtilities
+public static class TimestampUtilities
 {
     public static long GetEpochTime()
     {

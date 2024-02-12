@@ -4,7 +4,7 @@ using CommonUtilities.Common;
 
 namespace CommonUtilities.Utilities;
 
-public class TripleDesUtilities
+public static class TripleDesUtilities
 {
     public static string TripleDesCbcEncrypt(string szText, string szKey, string szIv = Constants.DefaultIv)
     {
