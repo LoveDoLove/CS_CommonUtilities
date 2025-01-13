@@ -1,4 +1,4 @@
-﻿namespace CommonUtilities.Global.RestSharp;
+﻿namespace CommonUtilities.Models;
 
 public class RestModel
 {

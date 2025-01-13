@@ -1,4 +1,4 @@
-﻿namespace CommonUtilities.Global.ReadLine;
+﻿namespace CommonUtilities.Models;
 
 public class ReadLineModel
 {

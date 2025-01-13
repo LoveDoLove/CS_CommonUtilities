@@ -11,7 +11,7 @@ public static class DatabaseUtilities
     public static async Task<List<T>> ExecuteAsync<T>(string connectionStrings, string spName,
         List<SqlParameter> parameters)
     {
-        List<T> results = new List<T>();
+        List<T> results = new();
 
         await using SqlConnection connection = new SqlConnection(connectionStrings);
         try
@@ -48,7 +48,7 @@ public static class DatabaseUtilities
 
     private static async Task<List<T>> MapToListAsync<T>(DbDataReader dr)
     {
-        List<T> objList = new List<T>();
+        List<T> objList = new();
         IEnumerable<PropertyInfo> props = typeof(T).GetRuntimeProperties();
 
         Dictionary<string, DbColumn> colMapping = dr.GetColumnSchema()

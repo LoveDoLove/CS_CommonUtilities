@@ -1,8 +1,8 @@
-﻿using CommonUtilities.Global.ReadLine;
+﻿using CommonUtilities.Models;
 
-namespace CommonUtilities.Utilities;
+namespace CommonUtilities.Helpers;
 
-public static class GlobalUtilities
+public static class ConsoleHelper
 {
     public static void PressAnyKeyToContinue()
     {

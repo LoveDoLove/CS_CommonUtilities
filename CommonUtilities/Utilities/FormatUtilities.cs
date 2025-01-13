@@ -8,7 +8,7 @@ public static class FormatUtilities
     public static string ClassToXWWW(object obj)
     {
         PropertyInfo[] properties = obj.GetType().GetProperties();
-        List<string> formData = new List<string>();
+        List<string> formData = new();
 
         foreach (PropertyInfo property in properties)
         {
