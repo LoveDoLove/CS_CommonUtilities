@@ -3,8 +3,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CommonUtilities.Helpers;
 
+/*
+ * @author: LoveDoLove
+ * @description:
+ * This enum helper class is used to convert an enum to specific types that can be used in the view.
+ */
 public static class EnumHelper
 {
+    public static List<T> ToList<T>() where T : Enum
+    {
+        return Enum.GetValues(typeof(T))
+            .Cast<T>()
+            .ToList();
+    }
+
     public static SelectList ToSelectList<T>(string? selectedValue = null) where T : Enum
     {
         var enumList = Enum.GetValues(typeof(T))

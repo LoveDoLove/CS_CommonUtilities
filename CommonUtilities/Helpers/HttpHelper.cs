@@ -1,5 +1,9 @@
 ﻿namespace CommonUtilities.Helpers;
 
+/**
+ * @author: LoveDoLove
+ * @description: Get HTML content from URL
+ */
 public static class HttpHelper
 {
     public static async Task<string> GetHtmlWithUrl(string url)

@@ -2,6 +2,12 @@
 
 namespace CommonUtilities.Helpers;
 
+/*
+ * @author: LoveDoLove
+ * @description:
+ * This service class generates QR codes.
+ * It provides a method to create a QR code from a given text and return it as a Base64 string.
+ */
 public static class QrCodeHelper
 {
     public static string GenerateQrCode(string url)
