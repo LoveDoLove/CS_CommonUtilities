@@ -6,19 +6,24 @@
  */
 public static class HttpHelper
 {
+    // Using a single static HttpClient instance is generally recommended for performance
+    // to avoid socket exhaustion issues that can occur when creating many HttpClient instances.
+    private static readonly HttpClient client = new HttpClient();
+
     public static async Task<string> GetHtmlWithUrl(string url)
     {
-        using HttpClient client = new HttpClient();
         try
         {
             HttpResponseMessage response = await client.GetAsync(url);
-            response.EnsureSuccessStatusCode();
+            response.EnsureSuccessStatusCode(); // Throws an exception if the HTTP response status is an error code.
             string receiptContent = await response.Content.ReadAsStringAsync();
             return receiptContent;
         }
-        catch
+        catch (HttpRequestException ex)
         {
-            return string.Empty;
+            // Log the exception or handle it as needed
+            // For example: Log.Error(ex, "Error fetching HTML from URL: {Url}", url);
+            return string.Empty; // Or throw a custom exception, or rethrow ex
         }
     }
 }

@@ -34,8 +34,25 @@ public class ImageService : IImageService
 
     public string SavePhoto(IFormFile f, string folder)
     {
-        string file = Guid.NewGuid().ToString("n") + ".jpg";
-        string path = Path.Combine(_environment.WebRootPath, folder, file);
+        string originalExtension = Path.GetExtension(f.FileName).ToLowerInvariant();
+        string targetExtension = ".jpg"; // Default to jpg
+
+        // Allow specific extensions or preserve original if it's one of the allowed types
+        if (originalExtension == ".png" || originalExtension == ".jpeg" || originalExtension == ".jpg")
+        {
+            targetExtension = originalExtension;
+        }
+        // Ensure the target extension is one that SixLabors.ImageSharp can save easily by default.
+        // Forcing to .jpg if unsure is a safe bet for broad compatibility if original format isn't critical.
+        // If original format (like PNG transparency) is critical, more sophisticated handling is needed.
+        // For this example, we'll use .jpg if it's not png or jpeg/jpg.
+        if (targetExtension != ".png" && targetExtension != ".jpeg" && targetExtension != ".jpg") {
+            targetExtension = ".jpg";
+        }
+
+
+        string fileName = Guid.NewGuid().ToString("n") + targetExtension;
+        string path = Path.Combine(_environment.WebRootPath, folder, fileName);
 
         ResizeOptions options = new()
         {
@@ -46,9 +63,9 @@ public class ImageService : IImageService
         using Stream stream = f.OpenReadStream();
         using Image img = Image.Load(stream);
         img.Mutate(x => x.Resize(options));
-        img.Save(path);
+        img.Save(path); // ImageSharp will attempt to save in the format indicated by the path's extension
 
-        return file;
+        return fileName;
     }
 
     public void DeletePhoto(string file, string folder)

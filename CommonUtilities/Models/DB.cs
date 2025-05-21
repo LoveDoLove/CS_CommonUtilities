@@ -1,7 +1,5 @@
 ﻿using CommonUtilities.Helpers;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
-using Stripe.Climate;
 
 namespace CommonUtilities.Models;
 

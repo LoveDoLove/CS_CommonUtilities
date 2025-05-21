@@ -10,7 +10,7 @@ public static class SignatureUtilities
     {
         string requestBody = JsonSerializer.Serialize(request);
         string strToSign = string.Concat(timeStamp, requestBody);
-        byte[] bytesToSign = Encoding.ASCII.GetBytes(strToSign);
+        byte[] bytesToSign = Encoding.UTF8.GetBytes(strToSign); // Changed to UTF8
         byte[] hash;
 
         using (SHA256 sha256 = SHA256.Create())

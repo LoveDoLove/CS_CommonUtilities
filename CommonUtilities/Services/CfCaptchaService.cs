@@ -14,24 +14,27 @@ public class CfCaptchaService : ICfCaptchaService
     private const string CfTurnstileResponse = "cf-turnstile-response";
 
     private readonly CfCaptcha _cfCaptcha;
+    private static readonly HttpClient httpClient = new HttpClient();
+
 
     public CfCaptchaService(CfCaptcha cfCaptcha)
     {
         _cfCaptcha = cfCaptcha;
     }
 
-    public bool VerifyCaptcha(string token)
+    public async Task<bool> VerifyCaptchaAsync(string token)
     {
-        using HttpClient client = new();
         FormUrlEncodedContent content = new([
             new KeyValuePair<string, string>("secret", _cfCaptcha.SecretKey),
             new KeyValuePair<string, string>("response", token)
         ]);
-        HttpResponseMessage response = client.PostAsync(CfCaptchaUrl, content).Result;
-        string responseContent = response.Content.ReadAsStringAsync().Result;
+        HttpResponseMessage response = await httpClient.PostAsync(CfCaptchaUrl, content);
+        response.EnsureSuccessStatusCode(); // Throw if not successful
+        string responseContent = await response.Content.ReadAsStringAsync();
         CfCaptchaResponse? captchaResponse = JsonSerializer.Deserialize<CfCaptchaResponse>(responseContent);
         return captchaResponse != null && captchaResponse.Success;
     }
+
 
     public IHtmlContent GetCaptchaHtml()
     {
@@ -41,7 +44,7 @@ public class CfCaptchaService : ICfCaptchaService
     public bool IsCaptchaResponseValid(HttpRequest request)
     {
         string? turnstileResponse = request.Form[CfTurnstileResponse];
-        if (turnstileResponse == null) return false;
-        return request.Form.ContainsKey(CfTurnstileResponse) && VerifyCaptcha(turnstileResponse);
+        if (string.IsNullOrEmpty(turnstileResponse)) return false;
+        return VerifyCaptchaAsync(turnstileResponse).GetAwaiter().GetResult();
     }
 }

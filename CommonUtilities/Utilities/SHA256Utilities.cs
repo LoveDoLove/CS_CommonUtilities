@@ -7,36 +7,32 @@ public static class SHA256Utilities
 {
     public static string ComputeSHA256Hash(string key)
     {
-        string hashValue = "";
-        SHA256 objSHA256 = null;
-        byte[] hashbuffer = null;
-
         try
         {
-            objSHA256 = new SHA256Managed();
-            objSHA256.ComputeHash(Encoding.ASCII.GetBytes(key));
-            hashbuffer = objSHA256.Hash;
-            hashValue = WriteHex(hashbuffer).ToLower();
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] keyBytes = Encoding.UTF8.GetBytes(key);
+                byte[] hashBuffer = sha256.ComputeHash(keyBytes);
+                return WriteHex(hashBuffer).ToLower();
+            }
         }
         catch (Exception ex)
         {
-            throw ex;
+            // Rethrow the original exception to preserve stack trace and type
+            throw new CryptographicException($"Error computing SHA256 hash: {ex.Message}", ex);
         }
-        finally
-        {
-            objSHA256.Dispose();
-        }
-
-        return hashValue;
     }
 
     private static string WriteHex(byte[] array)
     {
-        string hex = "";
-        int count;
+        if (array == null)
+            return string.Empty;
 
-        for (count = 0; count < array.Length; count++) hex += array[count].ToString("X2");
-
-        return hex;
+        StringBuilder hex = new StringBuilder(array.Length * 2);
+        foreach (byte b in array)
+        {
+            hex.AppendFormat("{0:X2}", b);
+        }
+        return hex.ToString();
     }
 }
