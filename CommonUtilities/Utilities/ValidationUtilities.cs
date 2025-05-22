@@ -2,27 +2,25 @@
 
 public static class ValidationUtilities
 {
-    public static bool bValidHex(string szText)
+    public static bool IsValidHex(string szText)
     {
-        try
-        {
-            szText = szText.ToUpper();
-            for (int i = 1; i < szText.Length; i++)
-            {
-                char szch = szText[i];
-                // See if the next character is a non-digit.
-                if (char.IsDigit(szch)) continue;
+        if (string.IsNullOrEmpty(szText))
+            return false;
 
-                if (szch >= 'G')
-                    // This is not a letter.
-                    return false;
-            }
+        // Hex strings often have an even length (each byte is two hex chars).
+        // This check can be added if strictness is required:
+        // if (szText.Length % 2 != 0)
+        // return false;
 
-            return true;
-        }
-        catch (Exception ex)
+        foreach (char c in szText)
         {
-            throw new Exception(ex.Message);
+            bool isHexChar = (c >= '0' && c <= '9') ||
+                             (c >= 'a' && c <= 'f') ||
+                             (c >= 'A' && c <= 'F');
+            if (!isHexChar)
+                return false;
         }
+
+        return true;
     }
 }

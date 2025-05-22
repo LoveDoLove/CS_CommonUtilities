@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 
+// Required for Path and FileNotFoundException
+
 namespace CommonUtilities.Utilities;
 
 public static class AppSettingsUtilities
@@ -10,12 +12,11 @@ public static class AppSettingsUtilities
 
     private static IConfiguration AppSettingsInit()
     {
-        string appSettingsPath = Directory.GetCurrentDirectory() + "/appsettings.json";
+        // Use Path.Combine for robust path construction
+        string appSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "appsettings.json");
         if (!File.Exists(appSettingsPath))
-        {
-            Console.Error.WriteLine("appsettings.json not found!");
-            Environment.Exit(-1);
-        }
+            // Throw an exception instead of exiting the application
+            throw new FileNotFoundException("appsettings.json not found!", appSettingsPath);
 
         return new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory()).AddJsonFile("appsettings.json")
             .Build();

@@ -23,9 +23,25 @@ public static class FileUtilities
             Log.Information($"Directory deleted: {directoryPath}");
             return true;
         }
-        catch (Exception ex)
+        catch (DirectoryNotFoundException ex) // Specific exception
         {
-            Log.Error(ex.Message);
+            Log.Error(ex, "Directory not found during deletion: {DirectoryPath}", directoryPath);
+            throw; // Rethrow original exception
+        }
+        catch (IOException ex) // Specific exception for I/O errors
+        {
+            Log.Error(ex, "IO error deleting directory: {DirectoryPath}", directoryPath);
+            throw new IOException($"Error deleting directory: {directoryPath}. {ex.Message}", ex);
+        }
+        catch (UnauthorizedAccessException ex) // Specific exception for permission issues
+        {
+            Log.Error(ex, "Unauthorized access deleting directory: {DirectoryPath}", directoryPath);
+            throw new UnauthorizedAccessException(
+                $"Error deleting directory due to permissions: {directoryPath}. {ex.Message}", ex);
+        }
+        catch (Exception ex) // General fallback
+        {
+            Log.Error(ex, "Generic error deleting directory: {DirectoryPath}", directoryPath);
             throw new Exception($"Error deleting directory: {directoryPath}", ex);
         }
     }
@@ -38,9 +54,19 @@ public static class FileUtilities
             Log.Information($"Data stored in {path}");
             return true;
         }
-        catch (Exception ex)
+        catch (IOException ex) // Specific exception for I/O errors
         {
-            Log.Error(ex.Message);
+            Log.Error(ex, "IO error writing file: {Path}", path);
+            throw new IOException($"Error writing file: {path}. {ex.Message}", ex);
+        }
+        catch (UnauthorizedAccessException ex) // Specific exception for permission issues
+        {
+            Log.Error(ex, "Unauthorized access writing file: {Path}", path);
+            throw new UnauthorizedAccessException($"Error writing file due to permissions: {path}. {ex.Message}", ex);
+        }
+        catch (Exception ex) // General fallback
+        {
+            Log.Error(ex, "Generic error writing file: {Path}", path);
             throw new Exception($"Error writing file: {path}", ex);
         }
     }

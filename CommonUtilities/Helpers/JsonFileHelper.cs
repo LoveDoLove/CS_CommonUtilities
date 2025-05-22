@@ -11,25 +11,34 @@ public static class JsonFileHelper
     {
         try
         {
-            if (!File.Exists(filePath)) throw new Exception($"File not found: {filePath}");
+            if (!File.Exists(filePath)) throw new FileNotFoundException($"File not found: {filePath}", filePath);
 
             string fileType = Path.GetExtension(filePath);
-            if (fileType != SupportedFileType) throw new Exception($"Invalid file type: {fileType}");
+            if (!string.Equals(fileType, SupportedFileType, StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException($"Invalid file type: {fileType}. Only {SupportedFileType} is supported.",
+                    nameof(filePath));
 
-            if (new FileInfo(filePath).Length == 0) throw new Exception($"File is empty: {filePath}");
+            string fileData = File.ReadAllText(filePath);
 
-            using StreamReader fileReader = File.OpenText(filePath);
-            string fileData = fileReader.ReadToEnd();
+            if (aesKey != null && iv != null) // Decryption is requested
+            {
+                if (string.IsNullOrEmpty(fileData))
+                    // Cannot decrypt an empty file/content
+                    throw new JsonException($"File content is empty and cannot be decrypted: {filePath}");
+                return AesUtilities.Aes256CbcDecrypt(fileData, aesKey, iv);
+            }
 
-            if (aesKey == null || iv == null) return fileData;
-
-            string decryptedFileData = AesUtilities.Aes256CbcDecrypt(fileData, aesKey, iv);
-
-            return decryptedFileData;
+            // No decryption requested, return fileData as is (could be empty)
+            return fileData;
+        }
+        catch (JsonException) // Rethrow JsonException as it's specific
+        {
+            throw;
         }
         catch (Exception e)
         {
-            throw new Exception($"Error reading file: {e.Message}");
+            // Wrap the original exception to preserve stack trace and provide context
+            throw new IOException($"Error reading or decrypting file: {filePath}. Details: {e.Message}", e);
         }
     }
 
@@ -37,7 +46,7 @@ public static class JsonFileHelper
     {
         try
         {
-            string serializedData = JsonSerializer.Serialize(data);
+            string serializedData = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
 
             if (aesKey == null || iv == null)
             {
@@ -45,8 +54,8 @@ public static class JsonFileHelper
                 return true;
             }
 
-            string encryptedData =
-                AesUtilities.Aes256CbcEncrypt(serializedData, Common.Common.AesKey, Common.Common.InitVector);
+            // Use the provided aesKey and iv, not Common.Common.AesKey
+            string encryptedData = AesUtilities.Aes256CbcEncrypt(serializedData, aesKey, iv);
 
             FileUtilities.WriteFile(filePath, encryptedData);
 
@@ -54,7 +63,8 @@ public static class JsonFileHelper
         }
         catch (Exception e)
         {
-            throw new Exception($"Error saving file: {e.Message}");
+            throw new IOException($"Error serializing, encrypting, or saving file: {filePath}. Details: {e.Message}",
+                e);
         }
     }
 }

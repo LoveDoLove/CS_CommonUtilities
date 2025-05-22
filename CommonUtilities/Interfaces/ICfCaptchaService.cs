@@ -5,7 +5,7 @@ namespace CommonUtilities.Interfaces;
 
 public interface ICfCaptchaService
 {
-    bool VerifyCaptcha(string token);
+    Task<bool> VerifyCaptchaAsync(string token); // Changed to async
     IHtmlContent GetCaptchaHtml();
-    bool IsCaptchaResponseValid(HttpRequest request);
+    bool IsCaptchaResponseValid(HttpRequest request); // This method might need to become async too for consistency
 }

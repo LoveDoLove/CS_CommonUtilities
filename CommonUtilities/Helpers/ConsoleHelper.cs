@@ -1,6 +1,4 @@
-﻿using CommonUtilities.Models;
-
-namespace CommonUtilities.Helpers;
+﻿namespace CommonUtilities.Helpers;
 
 public static class ConsoleHelper
 {

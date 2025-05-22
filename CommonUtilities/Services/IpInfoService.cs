@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using CommonUtilities.Interfaces;
-using CommonUtilities.Models;
 using CommonUtilities.Models.Response.IpInfo;
 using Microsoft.AspNetCore.Http;
 
