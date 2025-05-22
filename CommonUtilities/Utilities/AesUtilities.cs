@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using System.Text;
 using CommonUtilities.Common;
 
 namespace CommonUtilities.Utilities;
@@ -83,6 +82,7 @@ public static class AesUtilities
                         cryptoStream.Write(plainBytes, 0, plainBytes.Length);
                         cryptoStream.FlushFinalBlock();
                     }
+
                     byte[] cipherBytes = memoryStream.ToArray();
                     return Convert.ToBase64String(cipherBytes);
                 }
@@ -122,6 +122,7 @@ public static class AesUtilities
                         cryptoStream.Write(cipherBytes, 0, cipherBytes.Length);
                         cryptoStream.FlushFinalBlock();
                     }
+
                     byte[] plainBytes = memoryStream.ToArray();
                     return Encoding.UTF8.GetString(plainBytes); // Use UTF8 for consistency
                 }

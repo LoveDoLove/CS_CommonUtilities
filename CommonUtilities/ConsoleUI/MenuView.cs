@@ -10,14 +10,14 @@ public class MenuView
         Console.ResetColor();
         new HeaderView().DrawHeader($"{title} v{version}", width);
         string[] options =
-        {
+        [
             "0. Exit",
             "1. Option 1",
             "2. Option 2",
             "3. Option 3",
             "4. Option 4",
             "5. Settings"
-        };
+        ];
 
         // Center menu vertically
         int topPadding = (Console.WindowHeight - options.Length - 6) / 2;

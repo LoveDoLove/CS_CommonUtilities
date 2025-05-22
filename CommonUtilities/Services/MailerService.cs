@@ -1,8 +1,9 @@
 ﻿using CommonUtilities.Interfaces;
-using CommonUtilities.Models;
 using MailKit.Net.Smtp;
 using MimeKit;
-using Serilog; // Added for logging
+using Serilog;
+
+// Added for logging
 
 namespace CommonUtilities.Services;
 
@@ -63,7 +64,8 @@ public class MailerService : IMailerService
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Error sending email to {ToAddresses} with subject {Subject}", string.Join(",", mail.To), mail.Subject);
+            Log.Error(ex, "Error sending email to {ToAddresses} with subject {Subject}", string.Join(",", mail.To),
+                mail.Subject);
             return false;
         }
     }

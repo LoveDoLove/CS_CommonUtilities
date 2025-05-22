@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using System.Text;
 
 namespace CommonUtilities.Utilities;
 
@@ -29,10 +28,7 @@ public static class SHA256Utilities
             return string.Empty;
 
         StringBuilder hex = new StringBuilder(array.Length * 2);
-        foreach (byte b in array)
-        {
-            hex.AppendFormat("{0:X2}", b);
-        }
+        foreach (byte b in array) hex.AppendFormat("{0:X2}", b);
         return hex.ToString();
     }
 }

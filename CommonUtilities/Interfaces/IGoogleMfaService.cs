@@ -1,6 +1,4 @@
-﻿using CommonUtilities.Models;
-
-namespace CommonUtilities.Interfaces;
+﻿namespace CommonUtilities.Interfaces;
 
 public interface IGoogleMfaService
 {

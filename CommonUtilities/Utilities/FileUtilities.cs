@@ -36,7 +36,8 @@ public static class FileUtilities
         catch (UnauthorizedAccessException ex) // Specific exception for permission issues
         {
             Log.Error(ex, "Unauthorized access deleting directory: {DirectoryPath}", directoryPath);
-            throw new UnauthorizedAccessException($"Error deleting directory due to permissions: {directoryPath}. {ex.Message}", ex);
+            throw new UnauthorizedAccessException(
+                $"Error deleting directory due to permissions: {directoryPath}. {ex.Message}", ex);
         }
         catch (Exception ex) // General fallback
         {

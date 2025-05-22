@@ -8,7 +8,7 @@ public static class HttpHelper
 {
     // Using a single static HttpClient instance is generally recommended for performance
     // to avoid socket exhaustion issues that can occur when creating many HttpClient instances.
-    private static readonly HttpClient client = new HttpClient();
+    private static readonly HttpClient client = new();
 
     public static async Task<string> GetHtmlWithUrl(string url)
     {

@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using System.Text;
 
 namespace CommonUtilities.Utilities;
 
@@ -27,6 +26,7 @@ public static class ConvertUtilities
             // Rethrow with more context or the original exception
             throw new InvalidOperationException($"Error converting hex string to byte array: {ex.Message}", ex);
         }
+
         return btOutput;
     }
 
@@ -58,6 +58,7 @@ public static class ConvertUtilities
                     objCryptStream.Write(btInput, 0, btInput.Length);
                     objCryptStream.FlushFinalBlock();
                 }
+
                 return objMemStream.ToArray();
             }
         }
@@ -76,15 +77,13 @@ public static class ConvertUtilities
         StringBuilder szHex = new StringBuilder(btArray.Length * 2);
         try
         {
-            foreach (byte b in btArray)
-            {
-                szHex.AppendFormat("{0:X2}", b);
-            }
+            foreach (byte b in btArray) szHex.AppendFormat("{0:X2}", b);
         }
         catch (Exception ex) // This catch might be overly broad if AppendFormat is the only concern.
         {
             throw new InvalidOperationException($"Error writing byte array to hex string: {ex.Message}", ex);
         }
+
         return szHex.ToString();
     }
 
@@ -98,27 +97,20 @@ public static class ConvertUtilities
         // Priority to hex if it's valid hex and typical hex key length (32, 48, 64 chars for 16, 24, 32 bytes)
         bool isHex = ValidationUtilities.IsValidHex(szKey);
         if (isHex && (szKey.Length == 32 || szKey.Length == 48 || szKey.Length == 64))
-        {
             keyArray = btHexToByte(szKey);
-        }
         // If not a clear hex key, try to interpret as UTF8, especially for common plain text key lengths for AES/TripleDES
         // This part remains heuristic. Consider an explicit parameter for key type.
-        else if (!isHex && (szKey.Length == 16 || szKey.Length == 24 || szKey.Length == 32)) // Common byte lengths for keys
-        {
+        else if (!isHex && (szKey.Length == 16 || szKey.Length == 24 ||
+                            szKey.Length == 32)) // Common byte lengths for keys
             keyArray = Encoding.UTF8.GetBytes(szKey);
-        }
         // Fallback: if it's hex but not a typical key length, still convert from hex.
         else if (isHex && szKey.Length % 2 == 0)
-        {
             keyArray = btHexToByte(szKey);
-        }
         // Final fallback: treat as UTF8.
         else
-        {
             keyArray = Encoding.UTF8.GetBytes(szKey);
-            // Consider warning or throwing if format is ambiguous and doesn't fit common patterns.
-            // e.g., Log.Warning($"Key format for '{szKey.Substring(0, Math.Min(szKey.Length,5))}(...)' is ambiguous, treated as UTF-8.");
-        }
+        // Consider warning or throwing if format is ambiguous and doesn't fit common patterns.
+        // e.g., Log.Warning($"Key format for '{szKey.Substring(0, Math.Min(szKey.Length,5))}(...)' is ambiguous, treated as UTF-8.");
         return keyArray;
     }
 }

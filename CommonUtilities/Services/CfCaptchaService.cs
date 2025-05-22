@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using CommonUtilities.Interfaces;
-using CommonUtilities.Models;
 using CommonUtilities.Models.Response.CfCaptcha;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
@@ -12,9 +11,9 @@ public class CfCaptchaService : ICfCaptchaService
     private const string CfCaptchaUrl = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
     private const string CfCaptchaHtml = "<div class='cf-turnstile' data-sitekey='CF_CAPTCHA_SITE_KEY'></div>";
     private const string CfTurnstileResponse = "cf-turnstile-response";
+    private static readonly HttpClient httpClient = new();
 
     private readonly CfCaptcha _cfCaptcha;
-    private static readonly HttpClient httpClient = new HttpClient();
 
 
     public CfCaptchaService(CfCaptcha cfCaptcha)

@@ -1,5 +1,4 @@
 ﻿using System.Security.Cryptography;
-using System.Text;
 using CommonUtilities.Common;
 
 namespace CommonUtilities.Utilities;
@@ -10,7 +9,10 @@ public static class TripleDesUtilities
     {
         try
         {
-            byte[] key = ConvertUtilities.btHexToByte(szKey); // Assuming szKey is always hex. If not, use ConvertUtilities.szConvertKeyToBytes
+            byte[]
+                key = ConvertUtilities
+                    .btHexToByte(
+                        szKey); // Assuming szKey is always hex. If not, use ConvertUtilities.szConvertKeyToBytes
             byte[] ivBytes;
 
             if (ValidationUtilities.IsValidHex(szIv) && szIv.Length == 16) // 16 hex chars = 8 bytes
@@ -28,6 +30,7 @@ public static class TripleDesUtilities
                     ivBytes = new byte[8];
                     Array.Copy(hashedIv, ivBytes, 8);
                 }
+
                 // Alternatively, if szIv is a passphrase, ensure it's handled consistently or throw if not in expected format.
                 // Forcing a specific format/length for szIv is safer.
                 // For now, we'll stick to the original logic's spirit if DefaultIv is used:
@@ -44,7 +47,9 @@ public static class TripleDesUtilities
                     // This example takes first 8 bytes of UTF8 encoding, ensure it's at least 8 bytes or pad/hash.
                     // A robust solution would use a KDF or require szIv to be hex.
                     byte[] tempIv = Encoding.UTF8.GetBytes(szIv);
-                    if (tempIv.Length < 8) throw new ArgumentException("IV must be at least 8 bytes or a 16-character hex string.", nameof(szIv));
+                    if (tempIv.Length < 8)
+                        throw new ArgumentException("IV must be at least 8 bytes or a 16-character hex string.",
+                            nameof(szIv));
                     ivBytes = new byte[8];
                     Array.Copy(tempIv, ivBytes, 8);
                 }
@@ -52,9 +57,9 @@ public static class TripleDesUtilities
 
 
             using (TripleDESCryptoServiceProvider obj3Des = new()
-            {
-                Padding = PaddingMode.PKCS7, Mode = CipherMode.CBC, Key = key, IV = ivBytes
-            })
+                   {
+                       Padding = PaddingMode.PKCS7, Mode = CipherMode.CBC, Key = key, IV = ivBytes
+                   })
             {
                 byte[] btInput = Encoding.UTF8.GetBytes(szText); // Encrypt plaintext directly
                 using (ICryptoTransform encryptor = obj3Des.CreateEncryptor())
@@ -74,7 +79,10 @@ public static class TripleDesUtilities
     {
         try
         {
-            byte[] key = ConvertUtilities.btHexToByte(szKey); // Assuming szKey is always hex. If not, use ConvertUtilities.szConvertKeyToBytes
+            byte[]
+                key = ConvertUtilities
+                    .btHexToByte(
+                        szKey); // Assuming szKey is always hex. If not, use ConvertUtilities.szConvertKeyToBytes
             byte[] ivBytes;
 
             // Consistent IV handling with encrypt method
@@ -85,15 +93,17 @@ public static class TripleDesUtilities
             else
             {
                 byte[] tempIv = Encoding.UTF8.GetBytes(szIv);
-                if (tempIv.Length < 8) throw new ArgumentException("IV must be at least 8 bytes or a 16-character hex string.", nameof(szIv));
+                if (tempIv.Length < 8)
+                    throw new ArgumentException("IV must be at least 8 bytes or a 16-character hex string.",
+                        nameof(szIv));
                 ivBytes = new byte[8];
                 Array.Copy(tempIv, ivBytes, 8);
             }
 
             using (TripleDESCryptoServiceProvider obj3Des = new()
-            {
-                Padding = PaddingMode.PKCS7, Mode = CipherMode.CBC, Key = key, IV = ivBytes
-            })
+                   {
+                       Padding = PaddingMode.PKCS7, Mode = CipherMode.CBC, Key = key, IV = ivBytes
+                   })
             {
                 // Assuming szText is hex encoded ciphertext
                 if (!ValidationUtilities.IsValidHex(szText))

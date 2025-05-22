@@ -20,6 +20,7 @@ public static class ValidationUtilities
             if (!isHexChar)
                 return false;
         }
+
         return true;
     }
 }

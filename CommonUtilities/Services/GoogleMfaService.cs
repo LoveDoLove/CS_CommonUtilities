@@ -1,5 +1,4 @@
 ﻿using CommonUtilities.Interfaces;
-using CommonUtilities.Models;
 using Google.Authenticator;
 using Microsoft.Extensions.Logging;
 

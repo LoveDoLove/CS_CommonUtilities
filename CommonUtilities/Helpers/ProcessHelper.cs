@@ -1,8 +1,5 @@
-using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace CommonUtilities.Helpers;
 
@@ -28,8 +25,8 @@ public static class ProcessHelper
         if (!string.IsNullOrEmpty(workingDirectory))
             process.StartInfo.WorkingDirectory = workingDirectory;
 
-        var outputBuilder = new System.Text.StringBuilder();
-        var errorBuilder = new System.Text.StringBuilder();
+        var outputBuilder = new StringBuilder();
+        var errorBuilder = new StringBuilder();
 
         process.OutputDataReceived += (_, e) =>
         {
@@ -52,22 +49,32 @@ public static class ProcessHelper
             var timeoutTask = Task.Delay(timeoutMilliseconds, cancellationToken);
 
             if (await Task.WhenAny(processTask, timeoutTask) == timeoutTask)
-            {
                 if (!process.HasExited)
                 {
-                    try { process.Kill(true); } catch { }
+                    try
+                    {
+                        process.Kill(true);
+                    }
+                    catch
+                    {
+                    }
+
                     throw new TimeoutException($"Process timed out: {fileName} {arguments}");
                 }
-            }
 
             return (outputBuilder.ToString(), errorBuilder.ToString(), process.ExitCode);
         }
         catch (OperationCanceledException)
         {
             if (!process.HasExited)
-            {
-                try { process.Kill(true); } catch { }
-            }
+                try
+                {
+                    process.Kill(true);
+                }
+                catch
+                {
+                }
+
             throw;
         }
         catch (Win32Exception ex)
@@ -77,9 +84,14 @@ public static class ProcessHelper
         catch (Exception)
         {
             if (!process.HasExited)
-            {
-                try { process.Kill(true); } catch { }
-            }
+                try
+                {
+                    process.Kill(true);
+                }
+                catch
+                {
+                }
+
             throw;
         }
     }

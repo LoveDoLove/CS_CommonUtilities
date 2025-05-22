@@ -15,20 +15,19 @@ public static class JsonFileHelper
 
             string fileType = Path.GetExtension(filePath);
             if (!string.Equals(fileType, SupportedFileType, StringComparison.OrdinalIgnoreCase))
-                throw new ArgumentException($"Invalid file type: {fileType}. Only {SupportedFileType} is supported.", nameof(filePath));
+                throw new ArgumentException($"Invalid file type: {fileType}. Only {SupportedFileType} is supported.",
+                    nameof(filePath));
 
             string fileData = File.ReadAllText(filePath);
 
             if (aesKey != null && iv != null) // Decryption is requested
             {
                 if (string.IsNullOrEmpty(fileData))
-                {
                     // Cannot decrypt an empty file/content
                     throw new JsonException($"File content is empty and cannot be decrypted: {filePath}");
-                }
                 return AesUtilities.Aes256CbcDecrypt(fileData, aesKey, iv);
             }
-            
+
             // No decryption requested, return fileData as is (could be empty)
             return fileData;
         }
@@ -64,7 +63,8 @@ public static class JsonFileHelper
         }
         catch (Exception e)
         {
-            throw new IOException($"Error serializing, encrypting, or saving file: {filePath}. Details: {e.Message}", e);
+            throw new IOException($"Error serializing, encrypting, or saving file: {filePath}. Details: {e.Message}",
+                e);
         }
     }
 }

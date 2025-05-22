@@ -1,7 +1,6 @@
 ﻿using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
-using System.IO;
 
 namespace CommonUtilities.Utilities;
 
@@ -10,7 +9,7 @@ public static class LoggerUtilities
     public static void StartLog()
     {
         // Use Path.Combine for robust path construction
-        string logFilePath = Path.Combine(Directory.GetCurrentDirectory(), "app_logs", ".log"); 
+        string logFilePath = Path.Combine(Directory.GetCurrentDirectory(), "app_logs", ".log");
         // Consider a more descriptive log file name, e.g., "application.log" or "GitTools.log"
         // Also, ensure the "app_logs" directory exists or is created.
         // For simplicity, if ".log" is intended to be in the current directory:
@@ -30,11 +29,11 @@ public static class LoggerUtilities
             .Enrich.FromLogContext()
             .Enrich.WithProperty("Application", "GitTools") // Adds app identifier to all logs
             .WriteTo.File(
-                path: logFilePath, // Use the combined path
-                fileSizeLimitBytes: 10_000_000,  // 10MB size limit
-                retainedFileCountLimit: 7,       // Keep 7 days of logs
+                logFilePath, // Use the combined path
+                fileSizeLimitBytes: 10_000_000, // 10MB size limit
+                retainedFileCountLimit: 7, // Keep 7 days of logs
                 rollingInterval: RollingInterval.Day,
-                buffered: true,                  // Buffer writes for better performance
+                buffered: true, // Buffer writes for better performance
                 flushToDiskInterval: TimeSpan.FromSeconds(5))
             .WriteTo.Console(
                 outputTemplate:
