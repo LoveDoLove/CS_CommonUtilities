@@ -4,22 +4,19 @@ using Serilog.Sinks.SystemConsole.Themes;
 
 namespace CommonUtilities.Utilities;
 
+/// <summary>
+/// Provides static helpers for configuring and writing logs using Serilog.
+/// </summary>
 public static class LoggerUtilities
 {
-    public static void StartLog()
+    /// <summary>
+    /// Starts Serilog logging with file and console sinks.
+    /// </summary>
+    public static void StartLog(string applicationName = "Application")
     {
-        // Use Path.Combine for robust path construction
-        string logFilePath = Path.Combine(Directory.GetCurrentDirectory(), "app_logs", ".log");
-        // Consider a more descriptive log file name, e.g., "application.log" or "GitTools.log"
-        // Also, ensure the "app_logs" directory exists or is created.
-        // For simplicity, if ".log" is intended to be in the current directory:
-        // string logFilePath = Path.Combine(Directory.GetCurrentDirectory(), "application.log");
-        // If the intent was a hidden log file like ".log", ensure the directory part is handled.
-        // For this example, I'll assume a log file in a subdirectory "logs".
         string logDirectory = Path.Combine(Directory.GetCurrentDirectory(), "logs");
-        Directory.CreateDirectory(logDirectory); // Ensure log directory exists
-        logFilePath = Path.Combine(logDirectory, "application.log");
-
+        Directory.CreateDirectory(logDirectory);
+        string logFilePath = Path.Combine(logDirectory, $"{applicationName.ToLowerInvariant()}.log");
 
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
@@ -27,24 +24,61 @@ public static class LoggerUtilities
             .MinimumLevel.Override("System", LogEventLevel.Warning)
             .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Information)
             .Enrich.FromLogContext()
-            .Enrich.WithProperty("Application", "GitTools") // Adds app identifier to all logs
+            .Enrich.WithProperty("Application", applicationName)
             .WriteTo.File(
-                logFilePath, // Use the combined path
-                fileSizeLimitBytes: 10_000_000, // 10MB size limit
-                retainedFileCountLimit: 7, // Keep 7 days of logs
+                logFilePath,
+                fileSizeLimitBytes: 10_000_000,
+                retainedFileCountLimit: 7,
                 rollingInterval: RollingInterval.Day,
-                buffered: true, // Buffer writes for better performance
+                buffered: true,
                 flushToDiskInterval: TimeSpan.FromSeconds(5))
             .WriteTo.Console(
-                outputTemplate:
-                "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}",
+                outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}",
                 theme: AnsiConsoleTheme.Literate,
-                restrictedToMinimumLevel: LogEventLevel.Information) // Only important info to console
+                restrictedToMinimumLevel: LogEventLevel.Information)
             .CreateLogger();
     }
 
+    /// <summary>
+    /// Stops Serilog logging and flushes all buffered logs.
+    /// </summary>
     public static void StopLog()
     {
-        Log.CloseAndFlush(); // Ensure all buffered logs are written
+        Log.CloseAndFlush();
     }
+
+    /// <summary>
+    /// Logs an informational message.
+    /// </summary>
+    public static void Info(string message) => Log.Information(message);
+
+    /// <summary>
+    /// Logs an error message.
+    /// </summary>
+    public static void Error(string message) => Log.Error(message);
+
+    /// <summary>
+    /// Logs a warning message.
+    /// </summary>
+    public static void Warning(string message) => Log.Warning(message);
+
+    /// <summary>
+    /// Logs a debug message.
+    /// </summary>
+    public static void Debug(string message) => Log.Debug(message);
+
+    /// <summary>
+    /// Logs an error message with exception.
+    /// </summary>
+    public static void Error(Exception exception, string message) => Log.Error(exception, message);
+
+    /// <summary>
+    /// Logs a fatal message.
+    /// </summary>
+    public static void Fatal(string message) => Log.Fatal(message);
+
+    /// <summary>
+    /// Logs a fatal message with exception.
+    /// </summary>
+    public static void Fatal(Exception exception, string message) => Log.Fatal(exception, message);
 }
