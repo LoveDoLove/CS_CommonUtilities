@@ -61,12 +61,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: CommonUtilities-${{ inputs.release_version }}-x64.zip
-          path: ./release-assets/CommonUtilities-${{ inputs.release_version }}-x64.zip
+          path: ./release-assets
       - name: Download Windows x86 artifact
         uses: actions/download-artifact@v4
         with:
           name: CommonUtilities-${{ inputs.release_version }}-x86.zip
-          path: ./release-assets/CommonUtilities-${{ inputs.release_version }}-x86.zip
+          path: ./release-assets
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
