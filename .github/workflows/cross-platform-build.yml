@@ -74,6 +74,8 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.release_version }}
           name: ${{ github.event.inputs.release_version }}
-          files: ./release-assets/*.zip
+          files: |
+            ./release-assets/CommonUtilities-${{ inputs.release_version }}-x64.zip
+            ./release-assets/CommonUtilities-${{ inputs.release_version }}-x86.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
