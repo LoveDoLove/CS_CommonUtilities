@@ -2,7 +2,11 @@ name: Cross-Platform Build
 
 on:
   workflow_dispatch:
-
+    inputs:
+      release_version:
+        description: 'Desired Release Version (e.g., v1.0.0)'
+        required: true
+        type: string
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -26,16 +30,26 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore EasyKit/EasyKit.csproj
+        run: dotnet restore CommonUtilities/CommonUtilities.csproj
 
       - name: Clean project
-        run: dotnet clean EasyKit/EasyKit.csproj
+        run: dotnet clean CommonUtilities/CommonUtilities.csproj
 
       - name: Publish single-file executable
-        run: dotnet publish EasyKit/EasyKit.csproj -c Release -r ${{ matrix.runtime }} --self-contained true /p:PublishSingleFile=true /p:PublishTrimmed=true
+        run: dotnet publish CommonUtilities/CommonUtilities.csproj -c Release -r ${{ matrix.runtime }} --self-contained true /p:PublishSingleFile=true /p:PublishTrimmed=true
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}-${{ matrix.runtime }}
           path: EasyKit/bin/Release/net8.0/${{ matrix.runtime }}/publish/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        with:
+          tag_name: ${{ github.event.inputs.release_version }}
+          name: ${{ github.event.inputs.release_version }}
+          files: EasyKit/bin/Release/net8.0/${{ matrix.runtime }}/publish/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

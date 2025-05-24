@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 # Rider IDE
 *.idea
+
+# Hide report
+report.md
