@@ -35,14 +35,14 @@ jobs:
       - name: Clean project
         run: dotnet clean CommonUtilities/CommonUtilities.csproj
 
-      - name: Publish single-file executable
-        run: dotnet publish CommonUtilities/CommonUtilities.csproj -c Release -r ${{ matrix.runtime }} --self-contained true /p:PublishSingleFile=true /p:PublishTrimmed=true
+      - name: Publish library
+        run: dotnet publish CommonUtilities/CommonUtilities.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained false /p:UseAppHost=false -o ./publish/${{ matrix.os }}/CommonUtilities
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: build-${{ matrix.os }}-${{ matrix.runtime }}
-          path: EasyKit/bin/Release/net8.0/${{ matrix.runtime }}/publish/
+          name: ${{ matrix.os }}-build
+          path: ./publish/${{ matrix.os }}/CommonUtilities
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -50,6 +50,6 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.release_version }}
           name: ${{ github.event.inputs.release_version }}
-          files: EasyKit/bin/Release/net8.0/${{ matrix.runtime }}/publish/*
+          files: ./publish/${{ matrix.os }}/CommonUtilities/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
