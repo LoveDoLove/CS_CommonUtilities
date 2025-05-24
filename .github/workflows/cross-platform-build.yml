@@ -37,13 +37,18 @@ jobs:
         run: dotnet clean CommonUtilities/CommonUtilities.csproj
 
       - name: Publish library
-        run: dotnet publish CommonUtilities/CommonUtilities.csproj --configuration context7 --runtime ${{ matrix.runtime }} --self-contained false /p:UseAppHost=false -o ./publish/${{ matrix.os }}-${{ matrix.arch }}/CommonUtilities
+        run: dotnet publish CommonUtilities/CommonUtilities.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained false /p:UseAppHost=false -o ./publish/${{ matrix.os }}-${{ matrix.arch }}/CommonUtilities
 
-      - name: Upload artifact
+      - name: Zip ${{ matrix.arch }} output
+        run: |
+          Compress-Archive -Path ./publish/${{ matrix.os }}-${{ matrix.arch }}/CommonUtilities/* -DestinationPath ./CommonUtilities-${{ inputs.release_version }}-${{ matrix.arch }}.zip
+        shell: pwsh
+
+      - name: Upload ${{ matrix.arch }} artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}-${{ matrix.arch }}-build
-          path: ./publish/${{ matrix.os }}-${{ matrix.arch }}/CommonUtilities
+          name: CommonUtilities-${{ inputs.release_version }}-${{ matrix.arch }}.zip
+          path: ./CommonUtilities-${{ inputs.release_version }}-${{ matrix.arch }}.zip
           overwrite: true
 
   release:
@@ -55,13 +60,13 @@ jobs:
       - name: Download Windows x64 artifact
         uses: actions/download-artifact@v4
         with:
-          name: windows-latest-x64-build # Match new artifact name
-          path: ./downloaded-artifacts/windows-latest-x64-build
+          name: CommonUtilities-${{ inputs.release_version }}-x64.zip
+          path: ./release-assets/CommonUtilities-${{ inputs.release_version }}-x64.zip
       - name: Download Windows x86 artifact
         uses: actions/download-artifact@v4
         with:
-          name: windows-latest-x86-build # Match new artifact name
-          path: ./downloaded-artifacts/windows-latest-x86-build
+          name: CommonUtilities-${{ inputs.release_version }}-x86.zip
+          path: ./release-assets/CommonUtilities-${{ inputs.release_version }}-x86.zip
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
@@ -69,6 +74,6 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.release_version }}
           name: ${{ github.event.inputs.release_version }}
-          files: ./downloaded-artifacts/**/*
+          files: ./release-assets/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
