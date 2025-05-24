@@ -11,14 +11,15 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        runtime: [win-x64, linux-x64]
         include:
-          - os: ubuntu-latest
-            runtime: linux-x64
           - os: windows-latest
+            arch: x64
             runtime: win-x64
+          - os: windows-latest
+            arch: x86
+            runtime: win-x86
 
     steps:
       - name: Checkout repository
@@ -36,30 +37,29 @@ jobs:
         run: dotnet clean CommonUtilities/CommonUtilities.csproj
 
       - name: Publish library
-        run: dotnet publish CommonUtilities/CommonUtilities.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained false /p:UseAppHost=false -o ./publish/${{ matrix.os }}/CommonUtilities
+        run: dotnet publish CommonUtilities/CommonUtilities.csproj --configuration context7 --runtime ${{ matrix.runtime }} --self-contained false /p:UseAppHost=false -o ./publish/${{ matrix.os }}-${{ matrix.arch }}/CommonUtilities
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.os }}-build
-          path: ./publish/${{ matrix.os }}/CommonUtilities
+          name: ${{ matrix.os }}-${{ matrix.arch }}-build
+          path: ./publish/${{ matrix.os }}-${{ matrix.arch }}/CommonUtilities
           overwrite: true
 
   release:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Download Ubuntu artifact
+      - name: Download Windows x64 artifact
         uses: actions/download-artifact@v4
         with:
-          name: ubuntu-latest-build
-          path: ./downloaded-artifacts/ubuntu-latest-build
-
-      - name: Download Windows artifact
+          name: windows-latest-x64-build # Match new artifact name
+          path: ./downloaded-artifacts/windows-latest-x64-build
+      - name: Download Windows x86 artifact
         uses: actions/download-artifact@v4
         with:
-          name: windows-latest-build
-          path: ./downloaded-artifacts/windows-latest-build
+          name: windows-latest-x86-build # Match new artifact name
+          path: ./downloaded-artifacts/windows-latest-x86-build
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
