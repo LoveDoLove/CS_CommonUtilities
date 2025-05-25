@@ -6,8 +6,19 @@ using Serilog;
 
 namespace CommonUtilities.Utilities;
 
+/// <summary>
+/// Provides utility methods for database operations.
+/// </summary>
 public static class DatabaseUtilities
 {
+    /// <summary>
+    /// Executes a stored procedure asynchronously and maps the results to a list of objects.
+    /// </summary>
+    /// <typeparam name="T">The type of objects to map the results to.</typeparam>
+    /// <param name="connectionStrings">The database connection string.</param>
+    /// <param name="spName">The name of the stored procedure to execute.</param>
+    /// <param name="parameters">A list of SqlParameter objects to pass to the stored procedure.</param>
+    /// <returns>A Task representing the asynchronous operation, with a result of a List of objects of type T.</returns>
     public static async Task<List<T>> ExecuteAsync<T>(string connectionStrings, string spName,
         List<SqlParameter> parameters)
     {
@@ -46,6 +57,12 @@ public static class DatabaseUtilities
         return results;
     }
 
+    /// <summary>
+    /// Maps data from a DbDataReader to a list of objects of type T.
+    /// </summary>
+    /// <typeparam name="T">The type of objects to map the data to.</typeparam>
+    /// <param name="dr">The DbDataReader containing the data to map.</param>
+    /// <returns>A Task representing the asynchronous operation, with a result of a List of objects of type T.</returns>
     private static async Task<List<T>> MapToListAsync<T>(DbDataReader dr)
     {
         List<T> objList = new();

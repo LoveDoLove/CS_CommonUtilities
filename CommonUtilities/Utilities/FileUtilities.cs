@@ -2,8 +2,20 @@
 
 namespace CommonUtilities.Utilities;
 
+/// <summary>
+/// Provides utility methods for file system operations.
+/// </summary>
 public static class FileUtilities
 {
+    /// <summary>
+    /// Deletes a folder and all its contents recursively.
+    /// </summary>
+    /// <param name="directoryPath">The path to the directory to delete.</param>
+    /// <returns>True if the directory was successfully deleted, false otherwise.</returns>
+    /// <exception cref="DirectoryNotFoundException">Thrown if the directory does not exist.</exception>
+    /// <exception cref="IOException">Thrown if an I/O error occurs.</exception>
+    /// <exception cref="UnauthorizedAccessException">Thrown if the caller does not have the required permission.</exception>
+    /// <exception cref="Exception">Thrown for other errors during deletion.</exception>
     public static bool DeleteFolder(string directoryPath)
     {
         try
@@ -46,6 +58,15 @@ public static class FileUtilities
         }
     }
 
+    /// <summary>
+    /// Writes content to a file, overwriting the file if it already exists.
+    /// </summary>
+    /// <param name="path">The path to the file to write.</param>
+    /// <param name="content">The string content to write to the file.</param>
+    /// <returns>True if the file was successfully written, false otherwise.</returns>
+    /// <exception cref="IOException">Thrown if an I/O error occurs.</exception>
+    /// <exception cref="UnauthorizedAccessException">Thrown if the caller does not have the required permission.</exception>
+    /// <exception cref="Exception">Thrown for other errors during writing.</exception>
     public static bool WriteFile(string path, string content)
     {
         try

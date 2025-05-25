@@ -3,8 +3,20 @@ using CommonUtilities.Common;
 
 namespace CommonUtilities.Utilities;
 
+/// <summary>
+/// Provides utility methods for TripleDES encryption and decryption.
+/// </summary>
 public static class TripleDesUtilities
 {
+    /// <summary>
+    /// Encrypts a string using TripleDES with CBC mode.
+    /// </summary>
+    /// <param name="szText">The plaintext string to encrypt.</param>
+    /// <param name="szKey">The secret key for encryption (hex string).</param>
+    /// <param name="szIv">The initialization vector (hex string or passphrase). Defaults to Constants.DefaultIv.</param>
+    /// <returns>The encrypted string (hex encoded).</returns>
+    /// <exception cref="CryptographicException">Thrown if an error occurs during encryption.</exception>
+    /// <exception cref="ArgumentException">Thrown if the IV is invalid.</exception>
     public static string TripleDesCbcEncrypt(string szText, string szKey, string szIv = Constants.DefaultIv)
     {
         try
@@ -75,6 +87,15 @@ public static class TripleDesUtilities
         }
     }
 
+    /// <summary>
+    /// Decrypts a string using TripleDES with CBC mode.
+    /// </summary>
+    /// <param name="szText">The encrypted string to decrypt (hex encoded).</param>
+    /// <param name="szKey">The secret key for decryption (hex string).</param>
+    /// <param name="szIv">The initialization vector (hex string or passphrase). Defaults to Constants.DefaultIv.</param>
+    /// <returns>The decrypted plaintext string.</returns>
+    /// <exception cref="CryptographicException">Thrown if an error occurs during decryption.</exception>
+    /// <exception cref="ArgumentException">Thrown if the input text or IV is invalid.</exception>
     public static string TripleDesCbcDecrypt(string szText, string szKey, string szIv = Constants.DefaultIv)
     {
         try
