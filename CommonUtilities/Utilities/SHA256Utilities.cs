@@ -2,8 +2,17 @@
 
 namespace CommonUtilities.Utilities;
 
+/// <summary>
+/// Provides utility methods for computing SHA256 hashes.
+/// </summary>
 public static class SHA256Utilities
 {
+    /// <summary>
+    /// Computes the SHA256 hash of a given string.
+    /// </summary>
+    /// <param name="key">The input string to hash.</param>
+    /// <returns>The lowercase hexadecimal representation of the SHA256 hash.</returns>
+    /// <exception cref="CryptographicException">Thrown if an error occurs during hash computation.</exception>
     public static string ComputeSHA256Hash(string key)
     {
         try
@@ -22,6 +31,11 @@ public static class SHA256Utilities
         }
     }
 
+    /// <summary>
+    /// Converts a byte array to its hexadecimal string representation.
+    /// </summary>
+    /// <param name="array">The byte array to convert.</param>
+    /// <returns>The hexadecimal string representation of the byte array, or an empty string if the input is null.</returns>
     private static string WriteHex(byte[] array)
     {
         if (array == null)

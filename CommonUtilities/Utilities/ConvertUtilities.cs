@@ -2,8 +2,18 @@
 
 namespace CommonUtilities.Utilities;
 
+/// <summary>
+/// Provides utility methods for data type conversions.
+/// </summary>
 public static class ConvertUtilities
 {
+    /// <summary>
+    /// Converts a hexadecimal string to a byte array.
+    /// </summary>
+    /// <param name="cHex">The hexadecimal string to convert.</param>
+    /// <returns>A byte array representing the hexadecimal string.</returns>
+    /// <exception cref="ArgumentException">Thrown if the hex string is null, empty, has an odd number of characters, or contains invalid hex characters.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if an error occurs during conversion.</exception>
     public static byte[] btHexToByte(string cHex)
     {
         if (string.IsNullOrEmpty(cHex))
@@ -30,6 +40,11 @@ public static class ConvertUtilities
         return btOutput;
     }
 
+    /// <summary>
+    /// Converts a string to its hexadecimal representation.
+    /// </summary>
+    /// <param name="szText">The string to convert.</param>
+    /// <returns>The hexadecimal representation of the input string, or an empty string if the input is null.</returns>
     public static string szStringToHex(string szText)
     {
         if (szText == null)
@@ -44,6 +59,14 @@ public static class ConvertUtilities
         return szHex.ToString();
     }
 
+    /// <summary>
+    /// Performs a cryptographic transformation on a byte array.
+    /// </summary>
+    /// <param name="btInput">The input byte array to transform.</param>
+    /// <param name="cryptoTransform">The cryptographic transform to apply.</param>
+    /// <returns>The transformed byte array.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if btInput or cryptoTransform is null.</exception>
+    /// <exception cref="InvalidOperationException">Thrown if an error occurs during the cryptographic transformation.</exception>
     public static byte[] btTransform(byte[] btInput, ICryptoTransform cryptoTransform)
     {
         if (btInput == null) throw new ArgumentNullException(nameof(btInput));
@@ -69,6 +92,12 @@ public static class ConvertUtilities
         // Removed unreachable code: return btResult;
     }
 
+    /// <summary>
+    /// Converts a byte array to its hexadecimal string representation.
+    /// </summary>
+    /// <param name="btArray">The byte array to convert.</param>
+    /// <returns>The hexadecimal string representation of the byte array, or an empty string if the input is null.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if an error occurs during conversion.</exception>
     public static string szWriteHex(byte[] btArray)
     {
         if (btArray == null)
@@ -87,6 +116,13 @@ public static class ConvertUtilities
         return szHex.ToString();
     }
 
+    /// <summary>
+    /// Converts a key string (either hex or plain text) to a byte array.
+    /// It attempts to intelligently determine if the key is hex or plain text based on common key lengths.
+    /// </summary>
+    /// <param name="szKey">The key string to convert.</param>
+    /// <returns>A byte array representing the key.</returns>
+    /// <exception cref="ArgumentNullException">Thrown if szKey is null or empty.</exception>
     public static byte[] szConvertKeyToBytes(string szKey)
     {
         if (string.IsNullOrEmpty(szKey))

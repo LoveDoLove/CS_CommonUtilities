@@ -1,49 +1,70 @@
 namespace CommonUtilities.ConsoleUI;
 
+/// <summary>
+/// Provides methods for prompting user input in the console.
+/// </summary>
 public class PromptView
 {
+    /// <summary>
+    /// Prompts the user for input with a given message.
+    /// </summary>
+    /// <param name="message">The message to display to the user.</param>
+    /// <returns>The string input by the user, or null if input is redirected and an end-of-file is reached.</returns>
     public string? Prompt(string message)
     {
         Console.Write(message);
         return Console.ReadLine();
     }
 
+    /// <summary>
+    /// Prompts the user for input, allowing cancellation with the Escape key.
+    /// Handles Backspace for editing.
+    /// </summary>
+    /// <param name="message">The message to display to the user.</param>
+    /// <param name="cancelHint">A hint displayed to the user about how to cancel. Defaults to " (or press Escape to cancel)".</param>
+    /// <returns>The string input by the user, or null if the user presses Escape.</returns>
     public string? PromptWithCancel(string message, string cancelHint = " (or press Escape to cancel)")
     {
         Console.Write(message + cancelHint);
 
-        string input = "";
+        var inputBuilder = new StringBuilder();
         ConsoleKeyInfo key;
 
         while (true)
         {
-            key = Console.ReadKey(true);
+            key = Console.ReadKey(true); // Read key without displaying it
 
             if (key.Key == ConsoleKey.Escape)
             {
-                Console.WriteLine();
-                return null; // Return null to indicate cancellation
+                Console.WriteLine(); // Move to next line after cancellation
+                return null; // Indicate cancellation
             }
 
             if (key.Key == ConsoleKey.Enter)
             {
-                Console.WriteLine();
-                return input;
+                Console.WriteLine(); // Move to next line after input submission
+                return inputBuilder.ToString();
             }
 
-            if (key.Key == ConsoleKey.Backspace && input.Length > 0)
+            if (key.Key == ConsoleKey.Backspace && inputBuilder.Length > 0)
             {
-                input = input.Substring(0, input.Length - 1);
-                Console.Write("\b \b"); // Erase the last character
+                inputBuilder.Length--; // Remove last character from builder
+                Console.Write("\b \b"); // Erase the character from console (backspace, space, backspace)
             }
-            else if (!char.IsControl(key.KeyChar))
+            else if (!char.IsControl(key.KeyChar)) // Ignore control characters except Enter, Esc, Backspace
             {
-                input += key.KeyChar;
-                Console.Write(key.KeyChar);
+                inputBuilder.Append(key.KeyChar); // Add character to builder
+                Console.Write(key.KeyChar);     // Display character on console
             }
         }
     }
 
+    /// <summary>
+    /// Prompts the user for a Yes/No confirmation.
+    /// </summary>
+    /// <param name="message">The confirmation message to display.</param>
+    /// <param name="defaultYes">Determines the default response if the user presses Enter. True for Yes (Y/n), False for No (y/N).</param>
+    /// <returns>True if the user confirms Yes, False if No or Escape is pressed.</returns>
     public bool ConfirmYesNo(string message, bool defaultYes = true)
     {
         string hint = defaultYes ? " (Y/n): " : " (y/N): ";
@@ -51,275 +72,259 @@ public class PromptView
 
         while (true)
         {
-            var key = Console.ReadKey(true);
+            var key = Console.ReadKey(true); // Read key without displaying it
 
             if (key.Key == ConsoleKey.Enter)
             {
-                Console.WriteLine(defaultYes ? "Y" : "N");
+                Console.WriteLine(defaultYes ? "Y" : "N"); // Display the default choice
                 return defaultYes;
             }
 
             if (key.Key == ConsoleKey.Escape)
             {
-                Console.WriteLine("Cancelled");
+                Console.WriteLine("Cancelled"); // Indicate cancellation
+                // Typically, cancellation of a Y/N might be treated as 'No' or require specific handling.
+                // Here, returning false, which aligns with 'N'.
                 return false;
             }
 
-            if (char.ToLower(key.KeyChar) == 'y')
+            char lowerKeyChar = char.ToLower(key.KeyChar);
+            if (lowerKeyChar == 'y')
             {
                 Console.WriteLine("Y");
                 return true;
             }
 
-            if (char.ToLower(key.KeyChar) == 'n')
+            if (lowerKeyChar == 'n')
             {
                 Console.WriteLine("N");
                 return false;
             }
+            // Ignore other key presses
         }
     }
 
+    /// <summary>
+    /// Prompts the user for input with autocomplete suggestions.
+    /// Supports Escape to cancel, Enter to accept, Up/Down arrows to navigate suggestions,
+    /// Tab to autocomplete with the first suggestion, and F1 to toggle suggestion visibility.
+    /// </summary>
+    /// <param name="message">The message to display to the user.</param>
+    /// <param name="suggestions">A list of strings to use as autocomplete suggestions.</param>
+    /// <param name="cancelHint">A hint about how to cancel. Defaults to " (or press Escape to cancel)".</param>
+    /// <returns>The string input by the user (possibly autocompleted), or null if cancelled.</returns>
     public string? PromptWithAutocomplete(string message, List<string> suggestions,
         string? cancelHint = " (or press Escape to cancel)")
     {
         Console.Write(message + (cancelHint ?? ""));
 
-        string input = "";
-        int cursorPosition = 0;
-        List<string> matchingSuggestions = new();
-        int selectedSuggestion = -1;
-        bool showSuggestions = false;
+        var inputBuilder = new StringBuilder();
+        int cursorPosition = 0; // Current position of the cursor within the input string
+        List<string> currentMatchingSuggestions = new();
+        int currentSelectedSuggestionIndex = -1; // Index of the currently highlighted suggestion
+        bool areSuggestionsVisible = false; // Whether suggestions are currently being displayed
 
-        // Save the initial cursor position for drawing suggestions
-        int initialLeft = Console.CursorLeft;
-        int initialTop = Console.CursorTop;
+        // Store the initial console cursor position to correctly draw suggestions below the input line
+        int initialConsoleLeft = Console.CursorLeft;
+        int initialConsoleTop = Console.CursorTop;
 
         while (true)
         {
-            // Handle key input
-            var key = Console.ReadKey(true);
+            var keyInfo = Console.ReadKey(true); // Read key without displaying it
 
-            switch (key.Key)
+            switch (keyInfo.Key)
             {
                 case ConsoleKey.Enter:
-                    // Accept current input or selected suggestion
-                    if (selectedSuggestion >= 0 && selectedSuggestion < matchingSuggestions.Count)
+                    // If a suggestion is selected, use it as the input
+                    if (currentSelectedSuggestionIndex >= 0 && currentSelectedSuggestionIndex < currentMatchingSuggestions.Count)
                     {
-                        input = matchingSuggestions[selectedSuggestion];
+                        inputBuilder.Clear().Append(currentMatchingSuggestions[currentSelectedSuggestionIndex]);
+                        cursorPosition = inputBuilder.Length; // Move cursor to end of accepted suggestion
 
-                        // Clear current line and redraw with the accepted suggestion
-                        Console.SetCursorPosition(initialLeft, initialTop);
-                        Console.Write(new string(' ', input.Length + 5)); // Clear with some extra space
-                        Console.SetCursorPosition(initialLeft, initialTop);
-                        Console.Write(input);
+                        // Redraw the input line with the accepted suggestion
+                        Console.SetCursorPosition(initialConsoleLeft, initialConsoleTop);
+                        // Clear the line first (input + some buffer) then write the new input
+                        Console.Write(new string(' ', Console.WindowWidth > initialConsoleLeft ? Console.WindowWidth - initialConsoleLeft -1 : 0));
+                        Console.SetCursorPosition(initialConsoleLeft, initialConsoleTop);
+                        Console.Write(inputBuilder.ToString());
                     }
-
-                    // Clear suggestions area
-                    ClearSuggestions(matchingSuggestions.Count);
-
-                    Console.WriteLine();
-                    return input;
+                    ClearSuggestionsDisplay(currentMatchingSuggestions.Count); // Clear suggestion display area
+                    Console.WriteLine(); // Move to next line
+                    return inputBuilder.ToString();
 
                 case ConsoleKey.Escape:
-                    // Cancel operation
-                    ClearSuggestions(matchingSuggestions.Count);
-                    Console.WriteLine();
-                    return null;
+                    ClearSuggestionsDisplay(currentMatchingSuggestions.Count);
+                    Console.WriteLine(); // Move to next line
+                    return null; // Indicate cancellation
 
                 case ConsoleKey.Backspace:
-                    if (input.Length > 0 && cursorPosition > 0)
+                    if (cursorPosition > 0)
                     {
-                        // Remove character before cursor
-                        input = input.Remove(cursorPosition - 1, 1);
+                        inputBuilder.Remove(cursorPosition - 1, 1);
                         cursorPosition--;
-
-                        // Redraw input
-                        Console.SetCursorPosition(initialLeft, initialTop);
-                        Console.Write(input + " "); // Extra space to clear any left-over character
-                        Console.SetCursorPosition(initialLeft + cursorPosition, initialTop);
-
-                        // Update suggestions
-                        UpdateSuggestions();
+                        RedrawInputLine();
+                        UpdateAndDisplaySuggestions();
                     }
-
                     break;
 
                 case ConsoleKey.Delete:
-                    if (input.Length > 0 && cursorPosition < input.Length)
+                    if (cursorPosition < inputBuilder.Length)
                     {
-                        // Remove character at cursor
-                        input = input.Remove(cursorPosition, 1);
-
-                        // Redraw input
-                        Console.SetCursorPosition(initialLeft, initialTop);
-                        Console.Write(input + " "); // Extra space to clear any left-over character
-                        Console.SetCursorPosition(initialLeft + cursorPosition, initialTop);
-
-                        // Update suggestions
-                        UpdateSuggestions();
+                        inputBuilder.Remove(cursorPosition, 1);
+                        RedrawInputLine();
+                        UpdateAndDisplaySuggestions();
                     }
-
                     break;
 
                 case ConsoleKey.LeftArrow:
                     if (cursorPosition > 0)
                     {
                         cursorPosition--;
-                        Console.SetCursorPosition(initialLeft + cursorPosition, initialTop);
+                        Console.SetCursorPosition(initialConsoleLeft + cursorPosition, initialConsoleTop);
                     }
-
                     break;
 
                 case ConsoleKey.RightArrow:
-                    if (cursorPosition < input.Length)
+                    if (cursorPosition < inputBuilder.Length)
                     {
                         cursorPosition++;
-                        Console.SetCursorPosition(initialLeft + cursorPosition, initialTop);
+                        Console.SetCursorPosition(initialConsoleLeft + cursorPosition, initialConsoleTop);
                     }
-
                     break;
 
-                case ConsoleKey.Tab:
-                    // Auto-complete with first suggestion
-                    if (matchingSuggestions.Count > 0)
+                case ConsoleKey.Tab: // Autocomplete with the first (or currently selected) suggestion
+                    if (currentMatchingSuggestions.Count > 0)
                     {
-                        input = matchingSuggestions[0];
-                        cursorPosition = input.Length;
-
-                        // Redraw input
-                        Console.SetCursorPosition(initialLeft, initialTop);
-                        Console.Write(input);
-
-                        // Update suggestions
-                        UpdateSuggestions();
+                        int suggestionToUse = currentSelectedSuggestionIndex >= 0 ? currentSelectedSuggestionIndex : 0;
+                        inputBuilder.Clear().Append(currentMatchingSuggestions[suggestionToUse]);
+                        cursorPosition = inputBuilder.Length;
+                        RedrawInputLine();
+                        UpdateAndDisplaySuggestions(); // Suggestions might change or disappear
                     }
-
                     break;
 
                 case ConsoleKey.DownArrow:
-                    // Navigate through suggestions
-                    if (matchingSuggestions.Count > 0)
+                    if (areSuggestionsVisible && currentMatchingSuggestions.Count > 0)
                     {
-                        selectedSuggestion = (selectedSuggestion + 1) % matchingSuggestions.Count;
-                        DrawSuggestions();
+                        currentSelectedSuggestionIndex = (currentSelectedSuggestionIndex + 1) % currentMatchingSuggestions.Count;
+                        DrawSuggestionsDisplay();
                     }
-
                     break;
 
                 case ConsoleKey.UpArrow:
-                    // Navigate through suggestions
-                    if (matchingSuggestions.Count > 0)
+                    if (areSuggestionsVisible && currentMatchingSuggestions.Count > 0)
                     {
-                        selectedSuggestion = selectedSuggestion <= 0
-                            ? matchingSuggestions.Count - 1
-                            : selectedSuggestion - 1;
-                        DrawSuggestions();
+                        currentSelectedSuggestionIndex = (currentSelectedSuggestionIndex - 1 + currentMatchingSuggestions.Count) % currentMatchingSuggestions.Count;
+                        DrawSuggestionsDisplay();
                     }
-
                     break;
 
-                case ConsoleKey.F1:
-                    // Toggle suggestions visibility
-                    showSuggestions = !showSuggestions;
-                    if (showSuggestions)
-                        // If showing suggestions, update them based on current input
-                        UpdateSuggestions();
+                case ConsoleKey.F1: // Toggle suggestion visibility
+                    areSuggestionsVisible = !areSuggestionsVisible;
+                    if (areSuggestionsVisible)
+                    {
+                        UpdateAndDisplaySuggestions();
+                    }
                     else
-                        // If hiding, clear the suggestions area
-                        ClearSuggestions(matchingSuggestions.Count);
+                    {
+                        ClearSuggestionsDisplay(currentMatchingSuggestions.Count);
+                    }
                     break;
 
                 default:
-                    // Add character to input
-                    if (!char.IsControl(key.KeyChar))
+                    if (!char.IsControl(keyInfo.KeyChar)) // Process printable characters
                     {
-                        if (cursorPosition == input.Length)
-                            input += key.KeyChar;
-                        else
-                            input = input.Insert(cursorPosition, key.KeyChar.ToString());
-
+                        inputBuilder.Insert(cursorPosition, keyInfo.KeyChar);
                         cursorPosition++;
-
-                        // Redraw input
-                        Console.SetCursorPosition(initialLeft, initialTop);
-                        Console.Write(input);
-                        Console.SetCursorPosition(initialLeft + cursorPosition, initialTop);
-
-                        // Update suggestions
-                        UpdateSuggestions();
+                        RedrawInputLine();
+                        UpdateAndDisplaySuggestions();
                     }
-
                     break;
             }
         }
 
-        // Helper methods for autocomplete functionality
-        void UpdateSuggestions()
+        // Helper to redraw the current input line
+        void RedrawInputLine()
         {
-            if (!showSuggestions) return;
-
-            // Clear previous suggestions
-            ClearSuggestions(matchingSuggestions.Count);
-
-            // Find matching suggestions
-            matchingSuggestions = suggestions
-                .Where(s => s.ToLower().Contains(input.ToLower()))
-                .Take(5) // Limit to 5 suggestions
-                .ToList();
-
-            // Reset selection
-            selectedSuggestion = matchingSuggestions.Count > 0 ? 0 : -1;
-
-            // Draw new suggestions
-            DrawSuggestions();
+            Console.SetCursorPosition(initialConsoleLeft, initialConsoleTop);
+            // Write current input, then a space to clear the character if input shrinks, then reposition cursor
+            Console.Write(inputBuilder.ToString() + " ");
+            Console.SetCursorPosition(initialConsoleLeft + cursorPosition, initialConsoleTop);
         }
 
-        void DrawSuggestions()
+        // Helper to update the list of matching suggestions and then draw them
+        void UpdateAndDisplaySuggestions()
         {
-            if (matchingSuggestions.Count == 0) return;
-
-            // Save current position
-            int currentLeft = Console.CursorLeft;
-            int currentTop = Console.CursorTop;
-
-            // Draw each suggestion
-            for (int i = 0; i < matchingSuggestions.Count; i++)
+            if (!areSuggestionsVisible)
             {
-                Console.SetCursorPosition(initialLeft, initialTop + i + 2);
+                ClearSuggestionsDisplay(currentMatchingSuggestions.Count); // Ensure old ones are cleared if toggled off
+                currentMatchingSuggestions.Clear();
+                return;
+            }
 
-                if (i == selectedSuggestion)
+            ClearSuggestionsDisplay(currentMatchingSuggestions.Count); // Clear previous suggestions before finding new ones
+
+            string currentInputLower = inputBuilder.ToString().ToLower();
+            currentMatchingSuggestions = suggestions
+                .Where(s => s.ToLower().Contains(currentInputLower))
+                .Take(5) // Limit the number of suggestions displayed
+                .ToList();
+
+            currentSelectedSuggestionIndex = currentMatchingSuggestions.Count > 0 ? 0 : -1; // Default to first or no selection
+            DrawSuggestionsDisplay();
+        }
+
+        // Helper to draw the suggestions below the input line
+        void DrawSuggestionsDisplay()
+        {
+            if (!areSuggestionsVisible || currentMatchingSuggestions.Count == 0)
+            {
+                ClearSuggestionsDisplay(5); // Clear max possible suggestion lines if none to show but were visible
+                return;
+            }
+
+            int originalCursorLeft = Console.CursorLeft; // Save cursor before drawing suggestions
+            int originalCursorTop = Console.CursorTop;
+
+            for (int i = 0; i < currentMatchingSuggestions.Count; i++)
+            {
+                Console.SetCursorPosition(initialConsoleLeft, initialConsoleTop + i + 1); // Draw suggestions one line below input
+                if (i == currentSelectedSuggestionIndex)
                 {
-                    Console.BackgroundColor = ConsoleColor.DarkCyan;
+                    Console.BackgroundColor = ConsoleColor.DarkCyan; // Highlight selected suggestion
                     Console.ForegroundColor = ConsoleColor.White;
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.Gray;
+                    Console.ForegroundColor = ConsoleColor.Gray; // Non-selected suggestion color
                 }
-
-                Console.Write(matchingSuggestions[i].PadRight(30));
+                // Pad suggestion to a fixed width or console width to ensure proper clearing
+                string suggestionText = currentMatchingSuggestions[i];
+                int displayWidth = Console.WindowWidth > initialConsoleLeft ? Console.WindowWidth - initialConsoleLeft -1 : suggestionText.Length;
+                Console.Write(suggestionText.PadRight(Math.Min(suggestionText.Length + 5, displayWidth) )); // Pad for consistent look
                 Console.ResetColor();
             }
+            // Clear any remaining old suggestion lines if new list is shorter
+            ClearSuggestionsDisplay(5, currentMatchingSuggestions.Count);
 
-            // Restore cursor position
-            Console.SetCursorPosition(currentLeft, currentTop);
+
+            Console.SetCursorPosition(originalCursorLeft, originalCursorTop); // Restore cursor to input line
         }
 
-        void ClearSuggestions(int count)
+        // Helper to clear the suggestion display area
+        void ClearSuggestionsDisplay(int numberOfLinesToClear, int startIndex = 0)
         {
-            // Save current position
-            int currentLeft = Console.CursorLeft;
-            int currentTop = Console.CursorTop;
+            if (!areSuggestionsVisible && startIndex == 0) return; // Don't clear if not visible unless specifically clearing old lines
 
-            // Clear suggestion lines
-            for (int i = 0; i < count; i++)
+            int originalCursorLeft = Console.CursorLeft;
+            int originalCursorTop = Console.CursorTop;
+
+            for (int i = startIndex; i < numberOfLinesToClear; i++)
             {
-                Console.SetCursorPosition(0, initialTop + i + 2);
-                Console.Write(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(initialConsoleLeft, initialConsoleTop + i + 1);
+                Console.Write(new string(' ', Console.WindowWidth > initialConsoleLeft ? Console.WindowWidth - initialConsoleLeft -1 : 0)); // Clear line
             }
-
-            // Restore cursor position
-            Console.SetCursorPosition(currentLeft, currentTop);
+            Console.SetCursorPosition(originalCursorLeft, originalCursorTop); // Restore cursor
         }
     }
 }

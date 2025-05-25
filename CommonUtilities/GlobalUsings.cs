@@ -1,3 +1,7 @@
+// This file contains global using directives for the CommonUtilities project.
+// These directives make the specified namespaces available throughout the project
+// without needing to add individual using statements in each file.
+
 global using System;
 global using System.Collections.Generic;
 global using System.IO;

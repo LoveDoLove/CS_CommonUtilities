@@ -3,10 +3,21 @@ using CommonUtilities.Common;
 
 namespace CommonUtilities.Utilities;
 
+/// <summary>
+/// Provides utility methods for AES encryption and decryption.
+/// </summary>
 public static class AesUtilities
 {
     // WARNING: ECB mode is generally insecure as it doesn't use an IV and identical plaintext blocks encrypt to identical ciphertext blocks.
     // Consider using CBC or GCM mode if security is a high priority.
+    /// <summary>
+    /// Encrypts a string using AES-256 with ECB mode.
+    /// WARNING: ECB mode is generally insecure.
+    /// </summary>
+    /// <param name="szText">The plaintext string to encrypt.</param>
+    /// <param name="szKey">The secret key for encryption.</param>
+    /// <returns>The Base64 encoded encrypted string.</returns>
+    /// <exception cref="CryptographicException">Thrown if an error occurs during encryption.</exception>
     public static string Aes256EcbEncrypt(string szText, string szKey)
     {
         try
@@ -31,6 +42,14 @@ public static class AesUtilities
     }
 
     // WARNING: ECB mode is generally insecure. See comment on Aes256EcbEncrypt.
+    /// <summary>
+    /// Decrypts a string using AES-256 with ECB mode.
+    /// WARNING: ECB mode is generally insecure.
+    /// </summary>
+    /// <param name="szText">The Base64 encoded string to decrypt.</param>
+    /// <param name="szKey">The secret key for decryption.</param>
+    /// <returns>The decrypted plaintext string.</returns>
+    /// <exception cref="CryptographicException">Thrown if an error occurs during decryption.</exception>
     public static string Aes256EcbDecrypt(string szText, string szKey)
     {
         try
@@ -54,6 +73,15 @@ public static class AesUtilities
         }
     }
 
+    /// <summary>
+    /// Encrypts a string using AES-256 with CBC mode.
+    /// </summary>
+    /// <param name="szText">The plaintext string to encrypt.</param>
+    /// <param name="szKey">The secret key for encryption.</param>
+    /// <param name="szIv">The initialization vector (must be 16 bytes). Defaults to Constants.DefaultIv.</param>
+    /// <returns>The Base64 encoded encrypted string.</returns>
+    /// <exception cref="ArgumentException">Thrown if the IV or key is not of the correct length.</exception>
+    /// <exception cref="CryptographicException">Thrown if an error occurs during encryption.</exception>
     public static string Aes256CbcEncrypt(string szText, string szKey, string szIv = Constants.DefaultIv)
     {
         try
@@ -94,6 +122,15 @@ public static class AesUtilities
         }
     }
 
+    /// <summary>
+    /// Decrypts a string using AES-256 with CBC mode.
+    /// </summary>
+    /// <param name="szText">The Base64 encoded string to decrypt.</param>
+    /// <param name="szKey">The secret key for decryption.</param>
+    /// <param name="szIv">The initialization vector (must be 16 bytes). Defaults to Constants.DefaultIv.</param>
+    /// <returns>The decrypted plaintext string.</returns>
+    /// <exception cref="ArgumentException">Thrown if the IV or key is not of the correct length.</exception>
+    /// <exception cref="CryptographicException">Thrown if an error occurs during decryption.</exception>
     public static string Aes256CbcDecrypt(string szText, string szKey, string szIv = Constants.DefaultIv)
     {
         try
