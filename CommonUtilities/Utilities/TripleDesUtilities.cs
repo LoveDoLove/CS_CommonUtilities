@@ -68,11 +68,13 @@ public static class TripleDesUtilities
             }
 
 
-            using (TripleDESCryptoServiceProvider obj3Des = new()
-                   {
-                       Padding = PaddingMode.PKCS7, Mode = CipherMode.CBC, Key = key, IV = ivBytes
-                   })
+            using (TripleDES obj3Des = TripleDES.Create())
             {
+                obj3Des.Key = key;
+                obj3Des.IV = ivBytes;
+                obj3Des.Padding = PaddingMode.PKCS7;
+                obj3Des.Mode = CipherMode.CBC;
+
                 byte[] btInput = Encoding.UTF8.GetBytes(szText); // Encrypt plaintext directly
                 using (ICryptoTransform encryptor = obj3Des.CreateEncryptor())
                 {
@@ -121,11 +123,13 @@ public static class TripleDesUtilities
                 Array.Copy(tempIv, ivBytes, 8);
             }
 
-            using (TripleDESCryptoServiceProvider obj3Des = new()
-                   {
-                       Padding = PaddingMode.PKCS7, Mode = CipherMode.CBC, Key = key, IV = ivBytes
-                   })
+            using (TripleDES obj3Des = TripleDES.Create())
             {
+                obj3Des.Key = key;
+                obj3Des.IV = ivBytes;
+                obj3Des.Padding = PaddingMode.PKCS7;
+                obj3Des.Mode = CipherMode.CBC;
+
                 // Assuming szText is hex encoded ciphertext
                 if (!ValidationUtilities.IsValidHex(szText))
                     throw new ArgumentException("Input text for decryption must be a hex string.", nameof(szText));

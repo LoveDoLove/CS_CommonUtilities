@@ -1,6 +1,6 @@
 ﻿using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using System.Reflection;
 using Serilog;
 
@@ -35,7 +35,7 @@ public static class DatabaseUtilities
                 foreach (SqlParameter param in parameters)
                     command.Parameters.Add(param);
 
-            if (command.Connection.State == ConnectionState.Closed)
+            if (command.Connection != null && command.Connection.State == ConnectionState.Closed)
                 await command.Connection.OpenAsync();
 
             await using (DbDataReader reader = await command.ExecuteReaderAsync())
@@ -78,8 +78,12 @@ public static class DatabaseUtilities
             T obj = Activator.CreateInstance<T>();
             foreach (PropertyInfo prop in props)
             {
-                object val = dr.GetValue(colMapping[prop.Name.ToLower()].ColumnOrdinal.Value);
-                prop.SetValue(obj, val == DBNull.Value ? null : val);
+                var columnMapDetails = colMapping[prop.Name.ToLower()];
+                if (columnMapDetails.ColumnOrdinal.HasValue)
+                {
+                    object val = dr.GetValue(columnMapDetails.ColumnOrdinal.Value);
+                    prop.SetValue(obj, val == DBNull.Value ? null : val);
+                }
             }
 
             objList.Add(obj);

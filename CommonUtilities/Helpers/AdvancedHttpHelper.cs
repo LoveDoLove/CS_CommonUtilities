@@ -53,7 +53,7 @@ namespace CommonUtilities.Helpers
                 // Client not found in cache, create a new one
                 var options = new RestClientOptions(normalizedBaseUrl)
                 {
-                    MaxTimeout = (timeoutSeconds ?? DefaultTimeoutSeconds) * 1000, // Timeout in milliseconds
+                    Timeout = TimeSpan.FromSeconds(timeoutSeconds ?? DefaultTimeoutSeconds), // Timeout
                     ThrowOnAnyError = false, // Allows handling errors manually after execution
                     UserAgent = string.IsNullOrEmpty(userAgent) ? DefaultUserAgent : userAgent,
                 };
@@ -62,7 +62,7 @@ namespace CommonUtilities.Helpers
                 _clientCache[clientKey] = newClient; // Add the new client to the cache
 
                 Log.Information("Created and cached new RestClient for {BaseUrl} with User-Agent {UserAgent} and Timeout {Timeout}s",
-                    normalizedBaseUrl, options.UserAgent, options.MaxTimeout / 1000);
+                    normalizedBaseUrl, options.UserAgent, options.Timeout.Value.TotalSeconds);
                 return newClient;
             }
         }

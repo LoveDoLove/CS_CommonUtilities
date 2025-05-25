@@ -17,7 +17,15 @@ namespace CommonUtilities.Utilities
             try
             {
                 string currentDirectory = Directory.GetCurrentDirectory();
-                DriveInfo drive = new DriveInfo(Path.GetPathRoot(currentDirectory));
+                string? driveLetter = Path.GetPathRoot(currentDirectory);
+
+                if (string.IsNullOrEmpty(driveLetter))
+                {
+                    Log.Error("Could not determine the drive letter from path: {Path}", currentDirectory);
+                    return false;
+                }
+
+                DriveInfo drive = new DriveInfo(driveLetter);
 
                 // Consider healthy if at least 1GB free
                 const long minimumFreeSpace = 1024 * 1024 * 1024; // 1GB

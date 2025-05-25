@@ -47,7 +47,7 @@ public class SyncService : CronJobService
     /// </summary>
     /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
     /// <returns>A <see cref="Task"/> representing the work to be done.</returns>
-    public override async Task<Task> DoWork(CancellationToken cancellationToken)
+    public override Task DoWork(CancellationToken cancellationToken)
     {
         _logger.LogInformation($"{DateTime.Now:hh:mm:ss} {nameof(SyncService)} is working.");
 
