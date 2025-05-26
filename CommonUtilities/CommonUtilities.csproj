@@ -13,8 +13,8 @@
         <Description>A modular, production-ready C#/.NET utility library and toolkit for rapid development.</Description>
         <RepositoryUrl>https://github.com/LoveDoLove/CS_CommonUtilities</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <AssemblyVersion>1.3.6</AssemblyVersion>
-        <FileVersion>1.3.6</FileVersion>
+        <AssemblyVersion>1.4.0</AssemblyVersion>
+        <FileVersion>1.4.0</FileVersion>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     </PropertyGroup>
