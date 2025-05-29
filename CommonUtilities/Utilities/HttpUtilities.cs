@@ -1,38 +1,39 @@
-﻿namespace CommonUtilities.Helpers;
+namespace CommonUtilities.Utilities;
 
 /// <summary>
-/// Provides simple helper methods for making HTTP requests.
-/// This class uses a static <see cref="HttpClient"/> instance for efficiency.
-/// For more advanced scenarios like custom headers, timeouts, or retry logic, consider using <see cref="AdvancedHttpHelper"/>.
+///     Provides simple utility methods for making HTTP requests.
+///     This class uses a static <see cref="HttpClient" /> instance for efficiency.
+///     For more advanced scenarios like custom headers, timeouts, or retry logic, consider using
+///     <see cref="AdvancedHttpUtilities" />.
 /// </summary>
-public static class HttpHelper
+public static class HttpUtilities
 {
     // Using a single static HttpClient instance is generally recommended for performance
     // and to avoid socket exhaustion issues that can occur when creating many HttpClient instances frequently.
     private static readonly HttpClient client = new();
 
     /// <summary>
-    /// Asynchronously retrieves the HTML content from a specified URL.
+    ///     Asynchronously retrieves the HTML content from a specified URL.
     /// </summary>
     /// <param name="url">The URL from which to fetch the HTML content.</param>
     /// <returns>
-    /// A task that represents the asynchronous operation. The task result contains the HTML content as a string.
-    /// Returns <see cref="string.Empty"/> if an <see cref="HttpRequestException"/> occurs (e.g., network error, non-success status code).
-    /// Consider logging the exception for diagnostics.
+    ///     A task that represents the asynchronous operation. The task result contains the HTML content as a string.
+    ///     Returns <see cref="string.Empty" /> if an <see cref="HttpRequestException" /> occurs (e.g., network error,
+    ///     non-success status code).
+    ///     Consider logging the exception for diagnostics.
     /// </returns>
     /// <remarks>
-    /// This method uses a shared static <see cref="HttpClient"/> instance.
-    /// It calls <see cref="HttpResponseMessage.EnsureSuccessStatusCode()"/>, which will throw an <see cref="HttpRequestException"/>
-    /// if the HTTP response status indicates an error.
+    ///     This method uses a shared static <see cref="HttpClient" /> instance.
+    ///     It calls <see cref="HttpResponseMessage.EnsureSuccessStatusCode()" />, which will throw an
+    ///     <see cref="HttpRequestException" />
+    ///     if the HTTP response status indicates an error.
     /// </remarks>
     public static async Task<string> GetHtmlWithUrl(string url)
     {
         if (string.IsNullOrWhiteSpace(url))
-        {
             // Consider logging this or throwing ArgumentNullException
             // Log.Warning("GetHtmlWithUrl called with null or empty URL.");
             return string.Empty;
-        }
 
         try
         {

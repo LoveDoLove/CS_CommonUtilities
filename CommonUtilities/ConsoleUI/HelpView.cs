@@ -1,7 +1,7 @@
 namespace CommonUtilities.ConsoleUI;
 
 /// <summary>
-/// Provides functionality to display a formatted help view in the console.
+///     Provides functionality to display a formatted help view in the console.
 /// </summary>
 public class HelpView
 {
@@ -14,7 +14,7 @@ public class HelpView
     private readonly int _width;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="HelpView"/> class.
+    ///     Initializes a new instance of the <see cref="HelpView" /> class.
     /// </summary>
     /// <param name="width">The width of the help view box. Defaults to 60 characters.</param>
     /// <param name="borderColor">The color of the border. Defaults to DarkCyan.</param>
@@ -32,11 +32,11 @@ public class HelpView
     }
 
     /// <summary>
-    /// Adds a help item to the view.
+    ///     Adds a help item to the view.
     /// </summary>
     /// <param name="topic">The topic or command name.</param>
     /// <param name="description">A brief description of the topic or command.</param>
-    /// <returns>The current <see cref="HelpView"/> instance for fluent chaining.</returns>
+    /// <returns>The current <see cref="HelpView" /> instance for fluent chaining.</returns>
     public HelpView AddHelpItem(string topic, string description)
     {
         _helpItems.Add((topic, description));
@@ -44,7 +44,7 @@ public class HelpView
     }
 
     /// <summary>
-    /// Displays the help view in the console.
+    ///     Displays the help view in the console.
     /// </summary>
     /// <param name="title">The title of the help view. Defaults to "Help".</param>
     public void Show(string title = "Help")
@@ -92,9 +92,7 @@ public class HelpView
             string desc = _helpItems[i].Description;
             int maxDescLength = _width - 20; // Max length for description (topic padding + borders + spaces)
             if (desc.Length > maxDescLength)
-            {
                 desc = desc.Substring(0, maxDescLength - 3) + "..."; // Truncate and add ellipsis
-            }
 
             Console.Write(desc.PadRight(_width - 19)); // Description, padded
             Console.ForegroundColor = _borderColor;
@@ -130,13 +128,13 @@ public class HelpView
     }
 
     /// <summary>
-    /// Shows context-sensitive help based on the current menu.
-    /// <remarks>
-    /// This method is intended to be called when a specific help key (e.g., F1) is pressed.
-    /// The implementation for this is pending.
-    /// </remarks>
+    ///     Shows context-sensitive help based on the current menu.
+    ///     <remarks>
+    ///         This method is intended to be called when a specific help key (e.g., F1) is pressed.
+    ///         The implementation for this is pending.
+    ///     </remarks>
     /// </summary>
-    /// <param name="menuBuilder">The <see cref="MenuBuilder"/> instance representing the current menu context.</param>
+    /// <param name="menuBuilder">The <see cref="MenuBuilder" /> instance representing the current menu context.</param>
     public static void ShowContextHelp(MenuBuilder menuBuilder)
     {
         // Implement context-sensitive help based on the current menu

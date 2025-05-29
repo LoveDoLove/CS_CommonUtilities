@@ -5,15 +5,10 @@ using System.Runtime.InteropServices;
 namespace CommonUtilities.Models;
 
 /// <summary>
-/// Provides OS platform detection and software presence checks.
+///     Provides OS platform detection and software presence checks.
 /// </summary>
 public class Software
 {
-    /// <summary>
-    /// The detected OS platform ("windows", "linux", "osx", or "unknown").
-    /// </summary>
-    public string OSPlatform { get; }
-
     public Software()
     {
         if (RuntimeInformation.IsOSPlatform(System.Runtime.InteropServices.OSPlatform.Windows))
@@ -27,7 +22,12 @@ public class Software
     }
 
     /// <summary>
-    /// Checks if a named software is available on the system.
+    ///     The detected OS platform ("windows", "linux", "osx", or "unknown").
+    /// </summary>
+    public string OSPlatform { get; }
+
+    /// <summary>
+    ///     Checks if a named software is available on the system.
     /// </summary>
     /// <param name="softwareName">The software to check (e.g., "git", "choco").</param>
     /// <returns>True if found, false otherwise.</returns>
@@ -36,17 +36,15 @@ public class Software
         // Dynamically find a private instance method named "Check_softwareName" (e.g., "Check_git")
         var method = GetType().GetMethod($"Check_{softwareName}", BindingFlags.NonPublic | BindingFlags.Instance);
         if (method != null)
-        {
             // If found, invoke it and cast the result to bool
             return (bool)method.Invoke(this, null)!; // Null-forgiving operator used as we expect bool return
-        }
         Console.WriteLine($"No check method found for {softwareName}. Please implement 'Check_{softwareName}()'.");
         return false;
     }
 
     /// <summary>
-    /// Checks for Chocolatey package manager on Windows systems.
-    /// Uses the 'where' command to locate 'choco.exe'.
+    ///     Checks for Chocolatey package manager on Windows systems.
+    ///     Uses the 'where' command to locate 'choco.exe'.
     /// </summary>
     /// <returns>True if Chocolatey is found, false otherwise.</returns>
     private bool Check_choco()
@@ -80,8 +78,8 @@ public class Software
     }
 
     /// <summary>
-    /// Checks for Git version control system on the current platform.
-    /// Uses 'where' on Windows and 'which' on Linux/macOS to locate the 'git' executable.
+    ///     Checks for Git version control system on the current platform.
+    ///     Uses 'where' on Windows and 'which' on Linux/macOS to locate the 'git' executable.
     /// </summary>
     /// <returns>True if Git is found, false otherwise.</returns>
     private bool Check_git()

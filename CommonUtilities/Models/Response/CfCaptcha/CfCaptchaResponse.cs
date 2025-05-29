@@ -3,13 +3,13 @@
 namespace CommonUtilities.Models.Response.CfCaptcha;
 
 /// <summary>
-/// Represents the response from the Cloudflare Turnstile CAPTCHA verification endpoint.
+///     Represents the response from the Cloudflare Turnstile CAPTCHA verification endpoint.
 /// </summary>
 public class CfCaptchaResponse
 {
     /// <summary>
-    /// Gets or sets a value indicating whether the CAPTCHA verification was successful.
-    /// This property is mapped from the "success" field in the JSON response from Cloudflare.
+    ///     Gets or sets a value indicating whether the CAPTCHA verification was successful.
+    ///     This property is mapped from the "success" field in the JSON response from Cloudflare.
     /// </summary>
     /// <value><c>true</c> if the CAPTCHA token was valid; otherwise, <c>false</c>.</value>
     [JsonPropertyName("success")]

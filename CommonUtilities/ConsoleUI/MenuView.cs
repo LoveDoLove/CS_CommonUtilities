@@ -1,14 +1,14 @@
 namespace CommonUtilities.ConsoleUI;
 
 /// <summary>
-/// Provides methods to display various types of menus in the console.
-/// This class is a simpler way to show basic menus compared to <see cref="MenuBuilder"/>
-/// for more complex scenarios.
+///     Provides methods to display various types of menus in the console.
+///     This class is a simpler way to show basic menus compared to <see cref="MenuBuilder" />
+///     for more complex scenarios.
 /// </summary>
 public class MenuView
 {
     /// <summary>
-    /// Displays the main menu with a predefined set of options.
+    ///     Displays the main menu with a predefined set of options.
     /// </summary>
     /// <param name="title">The title of the main menu.</param>
     /// <param name="version">The version string to display with the title.</param>
@@ -29,7 +29,7 @@ public class MenuView
             "2. Option 2", // Placeholder option
             "3. Option 3", // Placeholder option
             "4. Option 4", // Placeholder option
-            "5. Settings"  // Placeholder option
+            "5. Settings" // Placeholder option
         ];
 
         // Calculate top padding to center the menu vertically in the console window
@@ -72,7 +72,7 @@ public class MenuView
     }
 
     /// <summary>
-    /// Displays a generic menu with the provided title and options.
+    ///     Displays a generic menu with the provided title and options.
     /// </summary>
     /// <param name="title">The title of the menu.</param>
     /// <param name="options">An array of strings representing the menu options.</param>
@@ -121,12 +121,12 @@ public class MenuView
     }
 
     /// <summary>
-    /// Creates and returns a new <see cref="MenuBuilder"/> instance for constructing more complex, interactive menus.
+    ///     Creates and returns a new <see cref="MenuBuilder" /> instance for constructing more complex, interactive menus.
     /// </summary>
     /// <param name="title">The title for the menu to be built.</param>
     /// <param name="version">Optional version string for the menu title. Defaults to an empty string.</param>
     /// <param name="width">The width for the menu to be built. Defaults to 50 characters.</param>
-    /// <returns>A new <see cref="MenuBuilder"/> instance.</returns>
+    /// <returns>A new <see cref="MenuBuilder" /> instance.</returns>
     public MenuBuilder CreateMenu(string title, string version = "", int width = 50)
     {
         return new MenuBuilder(title, width, version);

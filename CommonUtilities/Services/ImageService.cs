@@ -9,7 +9,7 @@ using File = System.IO.File;
 namespace CommonUtilities.Services;
 
 /// <summary>
-/// Service for handling image uploads, validation, resizing, and deletion.
+///     Service for handling image uploads, validation, resizing, and deletion.
 /// </summary>
 public class ImageService : IImageService
 {
@@ -23,7 +23,7 @@ public class ImageService : IImageService
     private readonly IWebHostEnvironment _environment;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ImageService"/> class.
+    ///     Initializes a new instance of the <see cref="ImageService" /> class.
     /// </summary>
     /// <param name="environment">The web host environment, used to determine file paths.</param>
     public ImageService(IWebHostEnvironment environment)
@@ -32,7 +32,7 @@ public class ImageService : IImageService
     }
 
     /// <summary>
-    /// Validates an uploaded photo based on type (JPEG/PNG) and size (max 5MB).
+    ///     Validates an uploaded photo based on type (JPEG/PNG) and size (max 5MB).
     /// </summary>
     /// <param name="f">The IFormFile representing the uploaded photo.</param>
     /// <returns>An empty string if the photo is valid, otherwise an error message.</returns>
@@ -45,9 +45,9 @@ public class ImageService : IImageService
     }
 
     /// <summary>
-    /// Saves an uploaded photo to the specified folder after resizing it.
-    /// The photo is resized to 200x200 pixels using a crop mode.
-    /// The saved filename is a GUID.
+    ///     Saves an uploaded photo to the specified folder after resizing it.
+    ///     The photo is resized to 200x200 pixels using a crop mode.
+    ///     The saved filename is a GUID.
     /// </summary>
     /// <param name="f">The IFormFile representing the uploaded photo.</param>
     /// <param name="folder">The subfolder within the web root's 'wwwroot' directory to save the photo.</param>
@@ -86,7 +86,7 @@ public class ImageService : IImageService
     }
 
     /// <summary>
-    /// Deletes a photo from the specified folder.
+    ///     Deletes a photo from the specified folder.
     /// </summary>
     /// <param name="file">The filename of the photo to delete.</param>
     /// <param name="folder">The subfolder within the web root's 'wwwroot' directory where the photo is located.</param>

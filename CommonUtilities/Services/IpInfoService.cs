@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Http;
 namespace CommonUtilities.Services;
 
 /// <summary>
-/// Service for retrieving IP information using the ipinfo.io API.
+///     Service for retrieving IP information using the ipinfo.io API.
 /// </summary>
 public class IpInfoService : IIpInfoService
 {
@@ -15,7 +15,7 @@ public class IpInfoService : IIpInfoService
     private readonly IpInfo _ipInfo;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="IpInfoService"/> class.
+    ///     Initializes a new instance of the <see cref="IpInfoService" /> class.
     /// </summary>
     /// <param name="ipInfo">The IP information configuration containing the API token.</param>
     public IpInfoService(IpInfo ipInfo)
@@ -24,10 +24,13 @@ public class IpInfoService : IIpInfoService
     }
 
     /// <summary>
-    /// Retrieves IP information for the client IP address from the provided HttpContext.
+    ///     Retrieves IP information for the client IP address from the provided HttpContext.
     /// </summary>
     /// <param name="context">The HttpContext containing the client request information.</param>
-    /// <returns>A Task representing the asynchronous operation, with a result of <see cref="IpInfoResponse"/> containing the IP details, or null if an error occurs.</returns>
+    /// <returns>
+    ///     A Task representing the asynchronous operation, with a result of <see cref="IpInfoResponse" /> containing the
+    ///     IP details, or null if an error occurs.
+    /// </returns>
     public async Task<IpInfoResponse?> GetIpInfo(HttpContext context)
     {
         string clientIp = GetClientIp(context);
@@ -42,8 +45,8 @@ public class IpInfoService : IIpInfoService
     }
 
     /// <summary>
-    /// Gets the client's IP address from the HttpContext.
-    /// It checks various headers to find the most accurate IP address, especially when behind a proxy or load balancer.
+    ///     Gets the client's IP address from the HttpContext.
+    ///     It checks various headers to find the most accurate IP address, especially when behind a proxy or load balancer.
     /// </summary>
     /// <param name="context">The HttpContext containing the client request information.</param>
     /// <returns>The client's IP address as a string, or "UNKNOWN" if it cannot be determined.</returns>

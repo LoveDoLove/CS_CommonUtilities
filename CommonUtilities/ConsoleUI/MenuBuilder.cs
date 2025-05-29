@@ -1,7 +1,7 @@
 namespace CommonUtilities.ConsoleUI;
 
 /// <summary>
-/// Builds and displays interactive console menus.
+///     Builds and displays interactive console menus.
 /// </summary>
 public class MenuBuilder
 {
@@ -27,7 +27,7 @@ public class MenuBuilder
     private string _verticalBorder = "│";
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MenuBuilder"/> class.
+    ///     Initializes a new instance of the <see cref="MenuBuilder" /> class.
     /// </summary>
     /// <param name="title">The title of the menu.</param>
     /// <param name="width">The width of the menu in characters. Defaults to 50.</param>
@@ -40,12 +40,12 @@ public class MenuBuilder
     }
 
     /// <summary>
-    /// Adds a new option to the menu.
+    ///     Adds a new option to the menu.
     /// </summary>
     /// <param name="key">The key used to select the option (e.g., "1", "A").</param>
     /// <param name="text">The text displayed for the option.</param>
     /// <param name="handler">The action to execute when the option is selected.</param>
-    /// <returns>The current <see cref="MenuBuilder"/> instance for fluent chaining.</returns>
+    /// <returns>The current <see cref="MenuBuilder" /> instance for fluent chaining.</returns>
     public MenuBuilder AddOption(string key, string text, Action handler)
     {
         _options.Add(new MenuOption(key, text, handler));
@@ -53,10 +53,10 @@ public class MenuBuilder
     }
 
     /// <summary>
-    /// Adds an existing <see cref="MenuOption"/> instance to the menu.
+    ///     Adds an existing <see cref="MenuOption" /> instance to the menu.
     /// </summary>
-    /// <param name="option">The <see cref="MenuOption"/> to add.</param>
-    /// <returns>The current <see cref="MenuBuilder"/> instance for fluent chaining.</returns>
+    /// <param name="option">The <see cref="MenuOption" /> to add.</param>
+    /// <returns>The current <see cref="MenuBuilder" /> instance for fluent chaining.</returns>
     public MenuBuilder AddOption(MenuOption option)
     {
         _options.Add(option);
@@ -64,10 +64,10 @@ public class MenuBuilder
     }
 
     /// <summary>
-    /// Sets the help text displayed below the menu options.
+    ///     Sets the help text displayed below the menu options.
     /// </summary>
     /// <param name="helpText">The help text to display.</param>
-    /// <returns>The current <see cref="MenuBuilder"/> instance for fluent chaining.</returns>
+    /// <returns>The current <see cref="MenuBuilder" /> instance for fluent chaining.</returns>
     public MenuBuilder WithHelpText(string helpText)
     {
         _helpText = helpText;
@@ -75,10 +75,10 @@ public class MenuBuilder
     }
 
     /// <summary>
-    /// Sets an optional subtitle to be displayed below the main title.
+    ///     Sets an optional subtitle to be displayed below the main title.
     /// </summary>
     /// <param name="subtitle">The subtitle text.</param>
-    /// <returns>The current <see cref="MenuBuilder"/> instance for fluent chaining.</returns>
+    /// <returns>The current <see cref="MenuBuilder" /> instance for fluent chaining.</returns>
     public MenuBuilder WithSubtitle(string subtitle)
     {
         _subtitle = subtitle;
@@ -86,14 +86,14 @@ public class MenuBuilder
     }
 
     /// <summary>
-    /// Customizes the colors used for various parts of the menu.
+    ///     Customizes the colors used for various parts of the menu.
     /// </summary>
     /// <param name="borderColor">The color for the menu border.</param>
     /// <param name="highlightColor">The background color for the selected option.</param>
     /// <param name="titleColor">The color for the menu title.</param>
     /// <param name="textColor">The color for the menu option text.</param>
     /// <param name="helpColor">The color for the help text.</param>
-    /// <returns>The current <see cref="MenuBuilder"/> instance for fluent chaining.</returns>
+    /// <returns>The current <see cref="MenuBuilder" /> instance for fluent chaining.</returns>
     public MenuBuilder WithColors(
         ConsoleColor borderColor = ConsoleColor.DarkCyan,
         ConsoleColor highlightColor = ConsoleColor.Cyan,
@@ -110,10 +110,10 @@ public class MenuBuilder
     }
 
     /// <summary>
-    /// Specifies whether the menu should be centered vertically in the console window.
+    ///     Specifies whether the menu should be centered vertically in the console window.
     /// </summary>
     /// <param name="centerVertically">True to center vertically, false otherwise.</param>
-    /// <returns>The current <see cref="MenuBuilder"/> instance for fluent chaining.</returns>
+    /// <returns>The current <see cref="MenuBuilder" /> instance for fluent chaining.</returns>
     public MenuBuilder WithCenterVertically(bool centerVertically)
     {
         _centerVertically = centerVertically;
@@ -121,7 +121,7 @@ public class MenuBuilder
     }
 
     /// <summary>
-    /// Customizes the characters used for the menu border.
+    ///     Customizes the characters used for the menu border.
     /// </summary>
     /// <param name="topLeftCorner">Character for the top-left corner.</param>
     /// <param name="topRightCorner">Character for the top-right corner.</param>
@@ -129,7 +129,7 @@ public class MenuBuilder
     /// <param name="bottomRightCorner">Character for the bottom-right corner.</param>
     /// <param name="horizontalBorder">Character for horizontal border lines.</param>
     /// <param name="verticalBorder">Character for vertical border lines.</param>
-    /// <returns>The current <see cref="MenuBuilder"/> instance for fluent chaining.</returns>
+    /// <returns>The current <see cref="MenuBuilder" /> instance for fluent chaining.</returns>
     public MenuBuilder WithBorderStyle(
         string topLeftCorner = "┌",
         string topRightCorner = "┐",
@@ -148,30 +148,30 @@ public class MenuBuilder
     }
 
     /// <summary>
-    /// Applies a double-line border style to the menu.
+    ///     Applies a double-line border style to the menu.
     /// </summary>
-    /// <returns>The current <see cref="MenuBuilder"/> instance for fluent chaining.</returns>
+    /// <returns>The current <see cref="MenuBuilder" /> instance for fluent chaining.</returns>
     public MenuBuilder WithDoubleBorder()
     {
         return WithBorderStyle("╔", "╗", "╚", "╝", "═", "║");
     }
 
     /// <summary>
-    /// Applies a rounded-corner border style to the menu.
+    ///     Applies a rounded-corner border style to the menu.
     /// </summary>
-    /// <returns>The current <see cref="MenuBuilder"/> instance for fluent chaining.</returns>
+    /// <returns>The current <see cref="MenuBuilder" /> instance for fluent chaining.</returns>
     public MenuBuilder WithRoundedBorder()
     {
         return WithBorderStyle("╭", "╮", "╰", "╯");
     }
 
     /// <summary>
-    /// Adds a keyboard shortcut to the menu.
+    ///     Adds a keyboard shortcut to the menu.
     /// </summary>
-    /// <param name="key">The <see cref="ConsoleKey"/> that triggers the shortcut.</param>
+    /// <param name="key">The <see cref="ConsoleKey" /> that triggers the shortcut.</param>
     /// <param name="description">A description of the shortcut's action.</param>
     /// <param name="handler">The action to execute when the shortcut is pressed.</param>
-    /// <returns>The current <see cref="MenuBuilder"/> instance for fluent chaining.</returns>
+    /// <returns>The current <see cref="MenuBuilder" /> instance for fluent chaining.</returns>
     public MenuBuilder AddShortcut(ConsoleKey key, string description, Action handler)
     {
         _shortcuts.Add(new KeyboardShortcut(key, description, handler));
@@ -180,10 +180,10 @@ public class MenuBuilder
     }
 
     /// <summary>
-    /// Controls whether help text for keyboard shortcuts is displayed.
+    ///     Controls whether help text for keyboard shortcuts is displayed.
     /// </summary>
     /// <param name="show">True to show keyboard shortcut help, false otherwise.</param>
-    /// <returns>The current <see cref="MenuBuilder"/> instance for fluent chaining.</returns>
+    /// <returns>The current <see cref="MenuBuilder" /> instance for fluent chaining.</returns>
     public MenuBuilder ShowKeyboardShortcutsHelp(bool show)
     {
         _showKeyboardShortcutsHelp = show;
@@ -191,7 +191,7 @@ public class MenuBuilder
     }
 
     /// <summary>
-    /// Clears the console and displays the menu, then handles user input.
+    ///     Clears the console and displays the menu, then handles user input.
     /// </summary>
     public void Show()
     {
@@ -201,7 +201,7 @@ public class MenuBuilder
     }
 
     /// <summary>
-    /// Draws the header section of the menu, including title, version, and current directory.
+    ///     Draws the header section of the menu, including title, version, and current directory.
     /// </summary>
     private void DrawHeader()
     {
@@ -223,10 +223,7 @@ public class MenuBuilder
         string currentDir = Directory.GetCurrentDirectory();
         string dirDisplay = $"Current Directory: {currentDir}";
         // Ensure directory display does not exceed menu width
-        if (dirDisplay.Length > _width)
-        {
-            dirDisplay = dirDisplay.Substring(0, _width - 3) + "...";
-        }
+        if (dirDisplay.Length > _width) dirDisplay = dirDisplay.Substring(0, _width - 3) + "...";
         Console.WriteLine(dirDisplay.PadLeft((_width + dirDisplay.Length) / 2).PadRight(_width));
         Console.ResetColor();
 
@@ -245,7 +242,8 @@ public class MenuBuilder
     }
 
     /// <summary>
-    /// Draws the menu options without selection highlighting. (Not used directly by Show(), kept for potential future use or debugging)
+    ///     Draws the menu options without selection highlighting. (Not used directly by Show(), kept for potential future use
+    ///     or debugging)
     /// </summary>
     private void DrawOptions()
     {
@@ -297,7 +295,7 @@ public class MenuBuilder
     }
 
     /// <summary>
-    /// Displays a help screen for the current menu, including general navigation and registered shortcuts.
+    ///     Displays a help screen for the current menu, including general navigation and registered shortcuts.
     /// </summary>
     private void ShowHelp()
     {
@@ -311,18 +309,15 @@ public class MenuBuilder
 
         // Add all registered keyboard shortcuts to the help view
         if (_shortcuts.Count > 0)
-        {
             foreach (var shortcut in _shortcuts)
-            {
                 helpView.AddHelpItem(shortcut.Key.ToString(), shortcut.Description);
-            }
-        }
+
         // Show the constructed help view
         helpView.Show($"{_title} - Help");
     }
 
     /// <summary>
-    /// Handles user input for menu navigation and option selection.
+    ///     Handles user input for menu navigation and option selection.
     /// </summary>
     private void HandleInput()
     {
@@ -373,6 +368,7 @@ public class MenuBuilder
                     DrawHeader();
                     DrawOptionsWithSelection(selectedIndex);
                 }
+
                 continue; // Continue to next iteration of the input loop
             }
 
@@ -385,7 +381,8 @@ public class MenuBuilder
                     break;
 
                 case ConsoleKey.DownArrow:
-                    selectedIndex = Math.Min(_options.Count - 1, selectedIndex + 1); // Move selection down, clamping at last option
+                    selectedIndex =
+                        Math.Min(_options.Count - 1, selectedIndex + 1); // Move selection down, clamping at last option
                     DrawOptionsWithSelection(selectedIndex); // Redraw with new selection
                     break;
 
@@ -402,6 +399,7 @@ public class MenuBuilder
                         DrawHeader();
                         DrawOptionsWithSelection(selectedIndex);
                     }
+
                     break;
 
                 case ConsoleKey.Escape:
@@ -412,6 +410,7 @@ public class MenuBuilder
                         exitOption.Handler();
                         return; // Exit input loop
                     }
+
                     // If no "0" option, Escape might do nothing or be handled by a specific shortcut
                     break;
 
@@ -435,6 +434,7 @@ public class MenuBuilder
                         DrawHeader();
                         DrawOptionsWithSelection(selectedIndex);
                     }
+
                     // If no match, the key press is ignored
                     break;
             }
@@ -442,7 +442,7 @@ public class MenuBuilder
     }
 
     /// <summary>
-    /// Draws the menu options, highlighting the currently selected option.
+    ///     Draws the menu options, highlighting the currently selected option.
     /// </summary>
     /// <param name="selectedIndex">The index of the option to highlight.</param>
     private void DrawOptionsWithSelection(int selectedIndex)
@@ -453,23 +453,25 @@ public class MenuBuilder
         if (_centerVertically)
         {
             Console.Clear(); // Clear entire console for vertical centering
-            DrawHeader();    // Redraw header first
+            DrawHeader(); // Redraw header first
 
             // Calculate top padding to center the menu block
             // Approximate height: options + help text lines + borders + title area
-            int approximateMenuBlockHeight = displayOptions.Length + (_showKeyboardShortcutsHelp && _shortcuts.Count > 0 ? _shortcuts.Count + 2 : 0) + (!string.IsNullOrEmpty(_helpText) ? 2 : 0) + 4;
-            int topPadding = (Console.WindowHeight - approximateMenuBlockHeight - (Console.CursorTop)) / 2; // Subtract current cursor top from window height
+            int approximateMenuBlockHeight = displayOptions.Length +
+                                             (_showKeyboardShortcutsHelp && _shortcuts.Count > 0
+                                                 ? _shortcuts.Count + 2
+                                                 : 0) + (!string.IsNullOrEmpty(_helpText) ? 2 : 0) + 4;
+            int topPadding =
+                (Console.WindowHeight - approximateMenuBlockHeight - Console.CursorTop) /
+                2; // Subtract current cursor top from window height
             topPadding = Math.Max(0, topPadding); // Ensure non-negative padding
             for (int i = 0; i < topPadding; i++) Console.WriteLine();
         }
-        else
-        {
-            // If not centering, ensure cursor is positioned correctly after header
-            // This might involve clearing specific lines if header height varies
-            // For simplicity, current implementation relies on Console.Clear() in HandleInput or vertical centering logic
-        }
 
 
+        // If not centering, ensure cursor is positioned correctly after header
+        // This might involve clearing specific lines if header height varies
+        // For simplicity, current implementation relies on Console.Clear() in HandleInput or vertical centering logic
         // Draw menu box top border
         string border = new string(_horizontalBorder[0], _width - 2);
         Console.ForegroundColor = _borderColor;
@@ -483,20 +485,18 @@ public class MenuBuilder
             // Ensure option text fits within the menu width, accounting for borders and padding
             string paddedOptionText = optionText.PadRight(_width - 4);
             if (paddedOptionText.Length > _width - 4) // Truncate if too long
-            {
                 paddedOptionText = paddedOptionText.Substring(0, _width - 7) + "...";
-            }
 
 
             Console.ForegroundColor = _borderColor; // Color for vertical border
-            Console.Write($"{_verticalBorder} ");  // Left vertical border and space
+            Console.Write($"{_verticalBorder} "); // Left vertical border and space
             Console.ResetColor();
 
             // Highlight the selected option
             if (i == selectedIndex)
             {
                 Console.BackgroundColor = _highlightColor; // Highlight background
-                Console.ForegroundColor = ConsoleColor.Black;   // Text color on highlight
+                Console.ForegroundColor = ConsoleColor.Black; // Text color on highlight
                 Console.Write(paddedOptionText);
                 Console.ResetColor(); // Reset colors after writing highlighted option
             }
@@ -530,22 +530,19 @@ public class MenuBuilder
         {
             Console.ForegroundColor = _helpColor;
             Console.WriteLine("\nKeyboard Shortcuts:");
-            foreach (var shortcut in _shortcuts)
-            {
-                Console.WriteLine($"  {shortcut.Key} - {shortcut.Description}");
-            }
+            foreach (var shortcut in _shortcuts) Console.WriteLine($"  {shortcut.Key} - {shortcut.Description}");
             Console.ResetColor();
         }
     }
 }
 
 /// <summary>
-/// Represents a single option in a console menu.
+///     Represents a single option in a console menu.
 /// </summary>
 public class MenuOption
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="MenuOption"/> class.
+    ///     Initializes a new instance of the <see cref="MenuOption" /> class.
     /// </summary>
     /// <param name="key">The key used to select the option (e.g., "1", "A").</param>
     /// <param name="text">The text displayed for the option.</param>
@@ -558,15 +555,17 @@ public class MenuOption
     }
 
     /// <summary>
-    /// Gets the key used to select the option.
+    ///     Gets the key used to select the option.
     /// </summary>
     public string Key { get; }
+
     /// <summary>
-    /// Gets the text displayed for the option.
+    ///     Gets the text displayed for the option.
     /// </summary>
     public string Text { get; }
+
     /// <summary>
-    /// Gets the action to execute when the option is selected.
+    ///     Gets the action to execute when the option is selected.
     /// </summary>
     public Action Handler { get; }
 }

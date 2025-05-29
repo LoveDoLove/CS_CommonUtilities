@@ -1,12 +1,12 @@
 namespace CommonUtilities.ConsoleUI;
 
 /// <summary>
-/// Provides functionality to draw a stylized header in the console.
+///     Provides functionality to draw a stylized header in the console.
 /// </summary>
 public class HeaderView
 {
     /// <summary>
-    /// Draws a header with the specified title and width.
+    ///     Draws a header with the specified title and width.
     /// </summary>
     /// <param name="title">The title to display in the header.</param>
     /// <param name="width">The width of the header. Defaults to 50 characters.</param>

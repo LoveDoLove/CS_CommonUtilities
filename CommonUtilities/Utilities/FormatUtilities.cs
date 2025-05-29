@@ -4,12 +4,12 @@ using System.Web;
 namespace CommonUtilities.Utilities;
 
 /// <summary>
-/// Provides utility methods for formatting data.
+///     Provides utility methods for formatting data.
 /// </summary>
 public static class FormatUtilities
 {
     /// <summary>
-    /// Converts an object's properties to an x-www-form-urlencoded string.
+    ///     Converts an object's properties to an x-www-form-urlencoded string.
     /// </summary>
     /// <param name="obj">The object to convert.</param>
     /// <returns>An x-www-form-urlencoded string representing the object's properties.</returns>

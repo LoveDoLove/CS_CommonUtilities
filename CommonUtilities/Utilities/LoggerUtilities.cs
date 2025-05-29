@@ -5,12 +5,12 @@ using Serilog.Sinks.SystemConsole.Themes;
 namespace CommonUtilities.Utilities;
 
 /// <summary>
-/// Provides static helpers for configuring and writing logs using Serilog.
+///     Provides static helpers for configuring and writing logs using Serilog.
 /// </summary>
 public static class LoggerUtilities
 {
     /// <summary>
-    /// Starts Serilog logging with file and console sinks.
+    ///     Starts Serilog logging with file and console sinks.
     /// </summary>
     public static void StartLog(string applicationName = "Application")
     {
@@ -40,7 +40,7 @@ public static class LoggerUtilities
     }
 
     /// <summary>
-    /// Stops Serilog logging and flushes all buffered logs.
+    ///     Stops Serilog logging and flushes all buffered logs.
     /// </summary>
     public static void StopLog()
     {
@@ -48,37 +48,58 @@ public static class LoggerUtilities
     }
 
     /// <summary>
-    /// Logs an informational message.
+    ///     Logs an informational message.
     /// </summary>
-    public static void Info(string message) => Log.Information(message);
+    public static void Info(string message)
+    {
+        Log.Information(message);
+    }
 
     /// <summary>
-    /// Logs an error message.
+    ///     Logs an error message.
     /// </summary>
-    public static void Error(string message) => Log.Error(message);
+    public static void Error(string message)
+    {
+        Log.Error(message);
+    }
 
     /// <summary>
-    /// Logs a warning message.
+    ///     Logs a warning message.
     /// </summary>
-    public static void Warning(string message) => Log.Warning(message);
+    public static void Warning(string message)
+    {
+        Log.Warning(message);
+    }
 
     /// <summary>
-    /// Logs a debug message.
+    ///     Logs a debug message.
     /// </summary>
-    public static void Debug(string message) => Log.Debug(message);
+    public static void Debug(string message)
+    {
+        Log.Debug(message);
+    }
 
     /// <summary>
-    /// Logs an error message with exception.
+    ///     Logs an error message with exception.
     /// </summary>
-    public static void Error(Exception exception, string message) => Log.Error(exception, message);
+    public static void Error(Exception exception, string message)
+    {
+        Log.Error(exception, message);
+    }
 
     /// <summary>
-    /// Logs a fatal message.
+    ///     Logs a fatal message.
     /// </summary>
-    public static void Fatal(string message) => Log.Fatal(message);
+    public static void Fatal(string message)
+    {
+        Log.Fatal(message);
+    }
 
     /// <summary>
-    /// Logs a fatal message with exception.
+    ///     Logs a fatal message with exception.
     /// </summary>
-    public static void Fatal(Exception exception, string message) => Log.Fatal(exception, message);
+    public static void Fatal(Exception exception, string message)
+    {
+        Log.Fatal(exception, message);
+    }
 }

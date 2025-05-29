@@ -3,14 +3,15 @@
 namespace CommonUtilities.Utilities;
 
 /// <summary>
-/// Provides utility methods for caching data in memory.
+///     Provides utility methods for caching data in memory.
 /// </summary>
 public static class CacheUtilities
 {
     private static readonly ObjectCache Cache = MemoryCache.Default;
 
     /// <summary>
-    /// Gets an item from the cache. If the item does not exist, it adds the item to the cache using the provided value factory.
+    ///     Gets an item from the cache. If the item does not exist, it adds the item to the cache using the provided value
+    ///     factory.
     /// </summary>
     /// <typeparam name="T">The type of the item to get or add.</typeparam>
     /// <param name="key">The cache key.</param>
@@ -27,7 +28,7 @@ public static class CacheUtilities
     }
 
     /// <summary>
-    /// Removes an item from the cache.
+    ///     Removes an item from the cache.
     /// </summary>
     /// <param name="key">The cache key of the item to remove.</param>
     public static void Remove(string key)
@@ -36,7 +37,7 @@ public static class CacheUtilities
     }
 
     /// <summary>
-    /// Clears all items from the cache.
+    ///     Clears all items from the cache.
     /// </summary>
     public static void ClearAll()
     {

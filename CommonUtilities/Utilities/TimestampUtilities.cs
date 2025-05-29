@@ -1,12 +1,12 @@
 ﻿namespace CommonUtilities.Utilities;
 
 /// <summary>
-/// Provides utility methods for working with timestamps.
+///     Provides utility methods for working with timestamps.
 /// </summary>
 public static class TimestampUtilities
 {
     /// <summary>
-    /// Gets the current Coordinated Universal Time (UTC) as a Unix epoch timestamp (seconds since 1970-01-01T00:00:00Z).
+    ///     Gets the current Coordinated Universal Time (UTC) as a Unix epoch timestamp (seconds since 1970-01-01T00:00:00Z).
     /// </summary>
     /// <returns>The current UTC epoch time in seconds.</returns>
     public static long GetEpochTime()

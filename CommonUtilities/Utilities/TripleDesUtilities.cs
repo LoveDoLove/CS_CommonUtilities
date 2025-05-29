@@ -4,12 +4,12 @@ using CommonUtilities.Common;
 namespace CommonUtilities.Utilities;
 
 /// <summary>
-/// Provides utility methods for TripleDES encryption and decryption.
+///     Provides utility methods for TripleDES encryption and decryption.
 /// </summary>
 public static class TripleDesUtilities
 {
     /// <summary>
-    /// Encrypts a string using TripleDES with CBC mode.
+    ///     Encrypts a string using TripleDES with CBC mode.
     /// </summary>
     /// <param name="szText">The plaintext string to encrypt.</param>
     /// <param name="szKey">The secret key for encryption (hex string).</param>
@@ -90,7 +90,7 @@ public static class TripleDesUtilities
     }
 
     /// <summary>
-    /// Decrypts a string using TripleDES with CBC mode.
+    ///     Decrypts a string using TripleDES with CBC mode.
     /// </summary>
     /// <param name="szText">The encrypted string to decrypt (hex encoded).</param>
     /// <param name="szKey">The secret key for decryption (hex string).</param>

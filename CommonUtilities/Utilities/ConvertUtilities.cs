@@ -3,16 +3,19 @@
 namespace CommonUtilities.Utilities;
 
 /// <summary>
-/// Provides utility methods for data type conversions.
+///     Provides utility methods for data type conversions.
 /// </summary>
 public static class ConvertUtilities
 {
     /// <summary>
-    /// Converts a hexadecimal string to a byte array.
+    ///     Converts a hexadecimal string to a byte array.
     /// </summary>
     /// <param name="cHex">The hexadecimal string to convert.</param>
     /// <returns>A byte array representing the hexadecimal string.</returns>
-    /// <exception cref="ArgumentException">Thrown if the hex string is null, empty, has an odd number of characters, or contains invalid hex characters.</exception>
+    /// <exception cref="ArgumentException">
+    ///     Thrown if the hex string is null, empty, has an odd number of characters, or
+    ///     contains invalid hex characters.
+    /// </exception>
     /// <exception cref="InvalidOperationException">Thrown if an error occurs during conversion.</exception>
     public static byte[] btHexToByte(string cHex)
     {
@@ -41,7 +44,7 @@ public static class ConvertUtilities
     }
 
     /// <summary>
-    /// Converts a string to its hexadecimal representation.
+    ///     Converts a string to its hexadecimal representation.
     /// </summary>
     /// <param name="szText">The string to convert.</param>
     /// <returns>The hexadecimal representation of the input string, or an empty string if the input is null.</returns>
@@ -60,7 +63,7 @@ public static class ConvertUtilities
     }
 
     /// <summary>
-    /// Performs a cryptographic transformation on a byte array.
+    ///     Performs a cryptographic transformation on a byte array.
     /// </summary>
     /// <param name="btInput">The input byte array to transform.</param>
     /// <param name="cryptoTransform">The cryptographic transform to apply.</param>
@@ -93,7 +96,7 @@ public static class ConvertUtilities
     }
 
     /// <summary>
-    /// Converts a byte array to its hexadecimal string representation.
+    ///     Converts a byte array to its hexadecimal string representation.
     /// </summary>
     /// <param name="btArray">The byte array to convert.</param>
     /// <returns>The hexadecimal string representation of the byte array, or an empty string if the input is null.</returns>
@@ -117,8 +120,8 @@ public static class ConvertUtilities
     }
 
     /// <summary>
-    /// Converts a key string (either hex or plain text) to a byte array.
-    /// It attempts to intelligently determine if the key is hex or plain text based on common key lengths.
+    ///     Converts a key string (either hex or plain text) to a byte array.
+    ///     It attempts to intelligently determine if the key is hex or plain text based on common key lengths.
     /// </summary>
     /// <param name="szKey">The key string to convert.</param>
     /// <returns>A byte array representing the key.</returns>
