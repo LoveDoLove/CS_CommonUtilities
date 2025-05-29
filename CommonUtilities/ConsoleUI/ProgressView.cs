@@ -1,7 +1,7 @@
 namespace CommonUtilities.ConsoleUI;
 
 /// <summary>
-/// Provides functionality to display a progress bar in the console.
+///     Provides functionality to display a progress bar in the console.
 /// </summary>
 public class ProgressView
 {
@@ -14,7 +14,7 @@ public class ProgressView
     private bool _isComplete;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ProgressView"/> class and draws the initial progress bar.
+    ///     Initializes a new instance of the <see cref="ProgressView" /> class and draws the initial progress bar.
     /// </summary>
     /// <param name="startText">Text to display before the progress bar (e.g., "Loading:", "Processing:").</param>
     /// <param name="totalSteps">The total number of steps for the operation.</param>
@@ -36,10 +36,13 @@ public class ProgressView
     }
 
     /// <summary>
-    /// Updates the progress bar to a specific step.
+    ///     Updates the progress bar to a specific step.
     /// </summary>
     /// <param name="step">The current step number.</param>
-    /// <param name="statusMessage">Optional message to display next to the progress bar (e.g., "Processing item X..."). Defaults to "Step X of Y".</param>
+    /// <param name="statusMessage">
+    ///     Optional message to display next to the progress bar (e.g., "Processing item X...").
+    ///     Defaults to "Step X of Y".
+    /// </param>
     public void Update(int step, string? statusMessage = null)
     {
         // Ensure current step does not exceed total steps
@@ -51,20 +54,17 @@ public class ProgressView
     }
 
     /// <summary>
-    /// Increments the progress bar by one step.
+    ///     Increments the progress bar by one step.
     /// </summary>
     /// <param name="statusMessage">Optional message to display next to the progress bar.</param>
     public void Increment(string? statusMessage = null)
     {
-        if (_currentStep < _totalSteps)
-        {
-            _currentStep++;
-        }
+        if (_currentStep < _totalSteps) _currentStep++;
         DrawProgressBar(statusMessage);
     }
 
     /// <summary>
-    /// Marks the progress as complete, fills the progress bar, and displays a completion message.
+    ///     Marks the progress as complete, fills the progress bar, and displays a completion message.
     /// </summary>
     /// <param name="completionMessage">Optional message to display upon completion. Defaults to "Complete".</param>
     public void Complete(string? completionMessage = null)
@@ -76,21 +76,22 @@ public class ProgressView
     }
 
     /// <summary>
-    /// Draws or redraws the progress bar in the console.
+    ///     Draws or redraws the progress bar in the console.
     /// </summary>
     /// <param name="statusMessage">The message to display next to the progress bar.</param>
     private void DrawProgressBar(string? statusMessage = null)
     {
         // Calculate progress percentage. Avoid division by zero if totalSteps is 0.
-        int percent = _totalSteps == 0 ? 100 : (_currentStep * 100 / _totalSteps);
+        int percent = _totalSteps == 0 ? 100 : _currentStep * 100 / _totalSteps;
         percent = Math.Clamp(percent, 0, 100); // Ensure percent is between 0 and 100
 
         // Calculate the number of filled characters in the progress bar. Avoid division by zero.
-        int progressChars = _totalSteps == 0 ? _barWidth : (_currentStep * _barWidth / _totalSteps);
+        int progressChars = _totalSteps == 0 ? _barWidth : _currentStep * _barWidth / _totalSteps;
         progressChars = Math.Clamp(progressChars, 0, _barWidth); // Ensure it's within bar width
 
         // Construct the progress bar string (e.g., "[████    ]")
-        string progressBarString = "[" + new string('█', progressChars) + new string(' ', _barWidth - progressChars) + "]";
+        string progressBarString =
+            "[" + new string('█', progressChars) + new string(' ', _barWidth - progressChars) + "]";
 
         // Calculate elapsed time since the progress view was started
         TimeSpan elapsed = DateTime.Now - _startTime;
@@ -104,17 +105,15 @@ public class ProgressView
 
         // Prepare the full line to be written to ensure it fits and for clearing purposes
         string lineToWrite = $"{_startText} {progressBarString} {percent}% - {currentStatusText} ({timeText})";
-        if (_isComplete)
-        {
-            lineToWrite += " ✓";
-        }
+        if (_isComplete) lineToWrite += " ✓";
 
         // Move cursor to the beginning of the current line to overwrite
         Console.SetCursorPosition(0, Console.CursorTop);
 
         // Clear the current line by writing spaces, then return cursor to start
         // This prevents artifacts if the new line is shorter than the old one.
-        Console.Write(new string(' ', Console.WindowWidth > 0 ? Console.WindowWidth - 1: 0)); // Handle WindowWidth being 0
+        Console.Write(new string(' ',
+            Console.WindowWidth > 0 ? Console.WindowWidth - 1 : 0)); // Handle WindowWidth being 0
         Console.SetCursorPosition(0, Console.CursorTop);
 
         // Write the descriptive text (e.g., "Loading:")

@@ -1,19 +1,19 @@
-﻿using QRCoder;
+using QRCoder;
 
-namespace CommonUtilities.Helpers;
+namespace CommonUtilities.Utilities;
 
 /// <summary>
-/// Helper class for generating QR codes.
-/// This class uses the QRCoder library to create QR codes from a given string (typically a URL)
-/// and returns the QR code image as a Base64 encoded string.
+///     Utility class for generating QR codes.
+///     This class uses the QRCoder library to create QR codes from a given string (typically a URL)
+///     and returns the QR code image as a Base64 encoded string.
 /// </summary>
 /// <remarks>
-/// Author: LoveDoLove
+///     Author: LoveDoLove
 /// </remarks>
-public static class QrCodeHelper
+public static class QrCodeUtilities
 {
     /// <summary>
-    /// Generates a QR code image from the specified URL or text.
+    ///     Generates a QR code image from the specified URL or text.
     /// </summary>
     /// <param name="content">The string content (e.g., URL, text) to encode in the QR code.</param>
     /// <returns>A Base64 encoded string representing the QR code image (PNG format by default from QRCoder's Base64QRCode).</returns>

@@ -3,12 +3,12 @@
 namespace CommonUtilities.Utilities;
 
 /// <summary>
-/// Provides utility methods for file system operations.
+///     Provides utility methods for file system operations.
 /// </summary>
 public static class FileUtilities
 {
     /// <summary>
-    /// Deletes a folder and all its contents recursively.
+    ///     Deletes a folder and all its contents recursively.
     /// </summary>
     /// <param name="directoryPath">The path to the directory to delete.</param>
     /// <returns>True if the directory was successfully deleted, false otherwise.</returns>
@@ -59,7 +59,7 @@ public static class FileUtilities
     }
 
     /// <summary>
-    /// Writes content to a file, overwriting the file if it already exists.
+    ///     Writes content to a file, overwriting the file if it already exists.
     /// </summary>
     /// <param name="path">The path to the file to write.</param>
     /// <param name="content">The string content to write to the file.</param>

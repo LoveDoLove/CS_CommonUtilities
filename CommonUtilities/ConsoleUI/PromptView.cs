@@ -1,12 +1,12 @@
 namespace CommonUtilities.ConsoleUI;
 
 /// <summary>
-/// Provides methods for prompting user input in the console.
+///     Provides methods for prompting user input in the console.
 /// </summary>
 public class PromptView
 {
     /// <summary>
-    /// Prompts the user for input with a given message.
+    ///     Prompts the user for input with a given message.
     /// </summary>
     /// <param name="message">The message to display to the user.</param>
     /// <returns>The string input by the user, or null if input is redirected and an end-of-file is reached.</returns>
@@ -17,8 +17,8 @@ public class PromptView
     }
 
     /// <summary>
-    /// Prompts the user for input, allowing cancellation with the Escape key.
-    /// Handles Backspace for editing.
+    ///     Prompts the user for input, allowing cancellation with the Escape key.
+    ///     Handles Backspace for editing.
     /// </summary>
     /// <param name="message">The message to display to the user.</param>
     /// <param name="cancelHint">A hint displayed to the user about how to cancel. Defaults to " (or press Escape to cancel)".</param>
@@ -54,16 +54,19 @@ public class PromptView
             else if (!char.IsControl(key.KeyChar)) // Ignore control characters except Enter, Esc, Backspace
             {
                 inputBuilder.Append(key.KeyChar); // Add character to builder
-                Console.Write(key.KeyChar);     // Display character on console
+                Console.Write(key.KeyChar); // Display character on console
             }
         }
     }
 
     /// <summary>
-    /// Prompts the user for a Yes/No confirmation.
+    ///     Prompts the user for a Yes/No confirmation.
     /// </summary>
     /// <param name="message">The confirmation message to display.</param>
-    /// <param name="defaultYes">Determines the default response if the user presses Enter. True for Yes (Y/n), False for No (y/N).</param>
+    /// <param name="defaultYes">
+    ///     Determines the default response if the user presses Enter. True for Yes (Y/n), False for No
+    ///     (y/N).
+    /// </param>
     /// <returns>True if the user confirms Yes, False if No or Escape is pressed.</returns>
     public bool ConfirmYesNo(string message, bool defaultYes = true)
     {
@@ -105,9 +108,9 @@ public class PromptView
     }
 
     /// <summary>
-    /// Prompts the user for input with autocomplete suggestions.
-    /// Supports Escape to cancel, Enter to accept, Up/Down arrows to navigate suggestions,
-    /// Tab to autocomplete with the first suggestion, and F1 to toggle suggestion visibility.
+    ///     Prompts the user for input with autocomplete suggestions.
+    ///     Supports Escape to cancel, Enter to accept, Up/Down arrows to navigate suggestions,
+    ///     Tab to autocomplete with the first suggestion, and F1 to toggle suggestion visibility.
     /// </summary>
     /// <param name="message">The message to display to the user.</param>
     /// <param name="suggestions">A list of strings to use as autocomplete suggestions.</param>
@@ -136,7 +139,8 @@ public class PromptView
             {
                 case ConsoleKey.Enter:
                     // If a suggestion is selected, use it as the input
-                    if (currentSelectedSuggestionIndex >= 0 && currentSelectedSuggestionIndex < currentMatchingSuggestions.Count)
+                    if (currentSelectedSuggestionIndex >= 0 &&
+                        currentSelectedSuggestionIndex < currentMatchingSuggestions.Count)
                     {
                         inputBuilder.Clear().Append(currentMatchingSuggestions[currentSelectedSuggestionIndex]);
                         cursorPosition = inputBuilder.Length; // Move cursor to end of accepted suggestion
@@ -144,10 +148,14 @@ public class PromptView
                         // Redraw the input line with the accepted suggestion
                         Console.SetCursorPosition(initialConsoleLeft, initialConsoleTop);
                         // Clear the line first (input + some buffer) then write the new input
-                        Console.Write(new string(' ', Console.WindowWidth > initialConsoleLeft ? Console.WindowWidth - initialConsoleLeft -1 : 0));
+                        Console.Write(new string(' ',
+                            Console.WindowWidth > initialConsoleLeft
+                                ? Console.WindowWidth - initialConsoleLeft - 1
+                                : 0));
                         Console.SetCursorPosition(initialConsoleLeft, initialConsoleTop);
                         Console.Write(inputBuilder.ToString());
                     }
+
                     ClearSuggestionsDisplay(currentMatchingSuggestions.Count); // Clear suggestion display area
                     Console.WriteLine(); // Move to next line
                     return inputBuilder.ToString();
@@ -165,6 +173,7 @@ public class PromptView
                         RedrawInputLine();
                         UpdateAndDisplaySuggestions();
                     }
+
                     break;
 
                 case ConsoleKey.Delete:
@@ -174,6 +183,7 @@ public class PromptView
                         RedrawInputLine();
                         UpdateAndDisplaySuggestions();
                     }
+
                     break;
 
                 case ConsoleKey.LeftArrow:
@@ -182,6 +192,7 @@ public class PromptView
                         cursorPosition--;
                         Console.SetCursorPosition(initialConsoleLeft + cursorPosition, initialConsoleTop);
                     }
+
                     break;
 
                 case ConsoleKey.RightArrow:
@@ -190,6 +201,7 @@ public class PromptView
                         cursorPosition++;
                         Console.SetCursorPosition(initialConsoleLeft + cursorPosition, initialConsoleTop);
                     }
+
                     break;
 
                 case ConsoleKey.Tab: // Autocomplete with the first (or currently selected) suggestion
@@ -201,34 +213,36 @@ public class PromptView
                         RedrawInputLine();
                         UpdateAndDisplaySuggestions(); // Suggestions might change or disappear
                     }
+
                     break;
 
                 case ConsoleKey.DownArrow:
                     if (areSuggestionsVisible && currentMatchingSuggestions.Count > 0)
                     {
-                        currentSelectedSuggestionIndex = (currentSelectedSuggestionIndex + 1) % currentMatchingSuggestions.Count;
+                        currentSelectedSuggestionIndex =
+                            (currentSelectedSuggestionIndex + 1) % currentMatchingSuggestions.Count;
                         DrawSuggestionsDisplay();
                     }
+
                     break;
 
                 case ConsoleKey.UpArrow:
                     if (areSuggestionsVisible && currentMatchingSuggestions.Count > 0)
                     {
-                        currentSelectedSuggestionIndex = (currentSelectedSuggestionIndex - 1 + currentMatchingSuggestions.Count) % currentMatchingSuggestions.Count;
+                        currentSelectedSuggestionIndex =
+                            (currentSelectedSuggestionIndex - 1 + currentMatchingSuggestions.Count) %
+                            currentMatchingSuggestions.Count;
                         DrawSuggestionsDisplay();
                     }
+
                     break;
 
                 case ConsoleKey.F1: // Toggle suggestion visibility
                     areSuggestionsVisible = !areSuggestionsVisible;
                     if (areSuggestionsVisible)
-                    {
                         UpdateAndDisplaySuggestions();
-                    }
                     else
-                    {
                         ClearSuggestionsDisplay(currentMatchingSuggestions.Count);
-                    }
                     break;
 
                 default:
@@ -239,6 +253,7 @@ public class PromptView
                         RedrawInputLine();
                         UpdateAndDisplaySuggestions();
                     }
+
                     break;
             }
         }
@@ -248,7 +263,7 @@ public class PromptView
         {
             Console.SetCursorPosition(initialConsoleLeft, initialConsoleTop);
             // Write current input, then a space to clear the character if input shrinks, then reposition cursor
-            Console.Write(inputBuilder.ToString() + " ");
+            Console.Write(inputBuilder + " ");
             Console.SetCursorPosition(initialConsoleLeft + cursorPosition, initialConsoleTop);
         }
 
@@ -262,7 +277,8 @@ public class PromptView
                 return;
             }
 
-            ClearSuggestionsDisplay(currentMatchingSuggestions.Count); // Clear previous suggestions before finding new ones
+            ClearSuggestionsDisplay(currentMatchingSuggestions
+                .Count); // Clear previous suggestions before finding new ones
 
             string currentInputLower = inputBuilder.ToString().ToLower();
             currentMatchingSuggestions = suggestions
@@ -270,7 +286,8 @@ public class PromptView
                 .Take(5) // Limit the number of suggestions displayed
                 .ToList();
 
-            currentSelectedSuggestionIndex = currentMatchingSuggestions.Count > 0 ? 0 : -1; // Default to first or no selection
+            currentSelectedSuggestionIndex =
+                currentMatchingSuggestions.Count > 0 ? 0 : -1; // Default to first or no selection
             DrawSuggestionsDisplay();
         }
 
@@ -288,7 +305,8 @@ public class PromptView
 
             for (int i = 0; i < currentMatchingSuggestions.Count; i++)
             {
-                Console.SetCursorPosition(initialConsoleLeft, initialConsoleTop + i + 1); // Draw suggestions one line below input
+                Console.SetCursorPosition(initialConsoleLeft,
+                    initialConsoleTop + i + 1); // Draw suggestions one line below input
                 if (i == currentSelectedSuggestionIndex)
                 {
                     Console.BackgroundColor = ConsoleColor.DarkCyan; // Highlight selected suggestion
@@ -298,12 +316,18 @@ public class PromptView
                 {
                     Console.ForegroundColor = ConsoleColor.Gray; // Non-selected suggestion color
                 }
+
                 // Pad suggestion to a fixed width or console width to ensure proper clearing
                 string suggestionText = currentMatchingSuggestions[i];
-                int displayWidth = Console.WindowWidth > initialConsoleLeft ? Console.WindowWidth - initialConsoleLeft -1 : suggestionText.Length;
-                Console.Write(suggestionText.PadRight(Math.Min(suggestionText.Length + 5, displayWidth) )); // Pad for consistent look
+                int displayWidth = Console.WindowWidth > initialConsoleLeft
+                    ? Console.WindowWidth - initialConsoleLeft - 1
+                    : suggestionText.Length;
+                Console.Write(
+                    suggestionText.PadRight(Math.Min(suggestionText.Length + 5,
+                        displayWidth))); // Pad for consistent look
                 Console.ResetColor();
             }
+
             // Clear any remaining old suggestion lines if new list is shorter
             ClearSuggestionsDisplay(5, currentMatchingSuggestions.Count);
 
@@ -314,7 +338,8 @@ public class PromptView
         // Helper to clear the suggestion display area
         void ClearSuggestionsDisplay(int numberOfLinesToClear, int startIndex = 0)
         {
-            if (!areSuggestionsVisible && startIndex == 0) return; // Don't clear if not visible unless specifically clearing old lines
+            if (!areSuggestionsVisible && startIndex == 0)
+                return; // Don't clear if not visible unless specifically clearing old lines
 
             int originalCursorLeft = Console.CursorLeft;
             int originalCursorTop = Console.CursorTop;
@@ -322,8 +347,12 @@ public class PromptView
             for (int i = startIndex; i < numberOfLinesToClear; i++)
             {
                 Console.SetCursorPosition(initialConsoleLeft, initialConsoleTop + i + 1);
-                Console.Write(new string(' ', Console.WindowWidth > initialConsoleLeft ? Console.WindowWidth - initialConsoleLeft -1 : 0)); // Clear line
+                Console.Write(new string(' ',
+                    Console.WindowWidth > initialConsoleLeft
+                        ? Console.WindowWidth - initialConsoleLeft - 1
+                        : 0)); // Clear line
             }
+
             Console.SetCursorPosition(originalCursorLeft, originalCursorTop); // Restore cursor
         }
     }

@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 namespace CommonUtilities.Services;
 
 /// <summary>
-/// Service for generating and validating Google Authenticator Multi-Factor Authentication (MFA).
+///     Service for generating and validating Google Authenticator Multi-Factor Authentication (MFA).
 /// </summary>
 public class GoogleMfaService : IGoogleMfaService
 {
@@ -13,7 +13,7 @@ public class GoogleMfaService : IGoogleMfaService
     private readonly TwoFactorAuthenticator _twoFactorAuthenticator = new();
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="GoogleMfaService"/> class.
+    ///     Initializes a new instance of the <see cref="GoogleMfaService" /> class.
     /// </summary>
     /// <param name="logger">The logger instance.</param>
     public GoogleMfaService(ILogger<GoogleMfaService> logger)
@@ -22,11 +22,11 @@ public class GoogleMfaService : IGoogleMfaService
     }
 
     /// <summary>
-    /// Generates MFA setup information (QR code URL, manual entry code, secret key).
+    ///     Generates MFA setup information (QR code URL, manual entry code, secret key).
     /// </summary>
     /// <param name="issuer">The issuer name to display in the authenticator app (e.g., your application name).</param>
     /// <param name="email">The user's email address or identifier.</param>
-    /// <returns>A <see cref="GoogleMfa"/> object containing the QR code URL, manual entry code, and secret key.</returns>
+    /// <returns>A <see cref="GoogleMfa" /> object containing the QR code URL, manual entry code, and secret key.</returns>
     public GoogleMfa GenerateMfa(string issuer, string email)
     {
         string secretKey = Guid.NewGuid().ToString().Replace("-", "")[..10];
@@ -43,7 +43,7 @@ public class GoogleMfaService : IGoogleMfaService
     }
 
     /// <summary>
-    /// Validates an MFA code against a secret key.
+    ///     Validates an MFA code against a secret key.
     /// </summary>
     /// <param name="secretKey">The secret key used to generate the MFA codes.</param>
     /// <param name="code">The MFA code entered by the user.</param>

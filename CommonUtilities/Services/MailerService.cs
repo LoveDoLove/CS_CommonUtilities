@@ -8,14 +8,14 @@ using Serilog;
 namespace CommonUtilities.Services;
 
 /// <summary>
-/// Service for sending emails using SMTP.
+///     Service for sending emails using SMTP.
 /// </summary>
 public class MailerService : IMailerService
 {
     private readonly Smtp _smtp;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MailerService"/> class.
+    ///     Initializes a new instance of the <see cref="MailerService" /> class.
     /// </summary>
     /// <param name="smtp">The SMTP configuration settings.</param>
     public MailerService(Smtp smtp)
@@ -24,10 +24,13 @@ public class MailerService : IMailerService
     }
 
     /// <summary>
-    /// Sends an email asynchronously.
+    ///     Sends an email asynchronously.
     /// </summary>
     /// <param name="mail">The mail object containing email details (to, cc, bcc, subject, body).</param>
-    /// <returns>A Task representing the asynchronous operation, with a result of true if the email was sent successfully, false otherwise.</returns>
+    /// <returns>
+    ///     A Task representing the asynchronous operation, with a result of true if the email was sent successfully,
+    ///     false otherwise.
+    /// </returns>
     public async Task<bool> SendEmail(Mail mail)
     {
         MimeMessage message = new();

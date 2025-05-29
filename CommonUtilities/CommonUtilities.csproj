@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <OutputType>Library</OutputType>
-        <ApplicationIcon>www\images\icon.ico</ApplicationIcon>
+        <ApplicationIcon>icon.ico</ApplicationIcon>
         <Copyright>LoveDoLove</Copyright>
         <PackageProjectUrl>https://github.com/LoveDoLove/CS_CommonUtilities</PackageProjectUrl>
         <PackageIcon>icon.png</PackageIcon>
@@ -20,10 +20,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="www\images\icon.ico" />
+      <Compile Remove="www\**" />
+      <EmbeddedResource Remove="www\**" />
+      <None Remove="www\**" />
     </ItemGroup>
 
     <ItemGroup>
+      <Content Include="icon.ico" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\images\icon.png">
+        <Pack>True</Pack>
+        <PackagePath>\</PackagePath>
+      </None>
       <None Include="..\LICENSE">
         <Pack>True</Pack>
         <PackagePath>\</PackagePath>
@@ -82,13 +92,6 @@
         <PackageReference Include="System.ServiceModel.Primitives" Version="8.1.2" />
         <PackageReference Include="X.PagedList.Mvc.Core" Version="10.5.7" />
         <PackageReference Include="ZymLabs.NSwag.FluentValidation" Version="0.7.1" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Update="www\images\icon.png">
-        <Pack>True</Pack>
-        <PackagePath>\</PackagePath>
-      </None>
     </ItemGroup>
 
 </Project>

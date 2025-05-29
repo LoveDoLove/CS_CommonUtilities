@@ -1,18 +1,18 @@
 ﻿using System.Data;
 using System.Data.Common;
-using Microsoft.Data.SqlClient;
 using System.Reflection;
+using Microsoft.Data.SqlClient;
 using Serilog;
 
 namespace CommonUtilities.Utilities;
 
 /// <summary>
-/// Provides utility methods for database operations.
+///     Provides utility methods for database operations.
 /// </summary>
 public static class DatabaseUtilities
 {
     /// <summary>
-    /// Executes a stored procedure asynchronously and maps the results to a list of objects.
+    ///     Executes a stored procedure asynchronously and maps the results to a list of objects.
     /// </summary>
     /// <typeparam name="T">The type of objects to map the results to.</typeparam>
     /// <param name="connectionStrings">The database connection string.</param>
@@ -58,7 +58,7 @@ public static class DatabaseUtilities
     }
 
     /// <summary>
-    /// Maps data from a DbDataReader to a list of objects of type T.
+    ///     Maps data from a DbDataReader to a list of objects of type T.
     /// </summary>
     /// <typeparam name="T">The type of objects to map the data to.</typeparam>
     /// <param name="dr">The DbDataReader containing the data to map.</param>

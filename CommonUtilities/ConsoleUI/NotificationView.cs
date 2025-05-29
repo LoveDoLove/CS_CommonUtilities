@@ -1,40 +1,49 @@
 namespace CommonUtilities.ConsoleUI;
 
 /// <summary>
-/// Provides functionality to display temporary notifications at the top of the console.
+///     Provides functionality to display temporary notifications at the top of the console.
 /// </summary>
 public class NotificationView
 {
     /// <summary>
-    /// Defines the types of notifications, which determine the color scheme and icon.
+    ///     Defines the types of notifications, which determine the color scheme and icon.
     /// </summary>
     public enum NotificationType
     {
         /// <summary>
-        /// Informational message.
+        ///     Informational message.
         /// </summary>
         Info,
+
         /// <summary>
-        /// Success message.
+        ///     Success message.
         /// </summary>
         Success,
+
         /// <summary>
-        /// Warning message.
+        ///     Warning message.
         /// </summary>
         Warning,
+
         /// <summary>
-        /// Error message.
+        ///     Error message.
         /// </summary>
         Error
     }
 
     /// <summary>
-    /// Shows a notification banner at the top of the console.
+    ///     Shows a notification banner at the top of the console.
     /// </summary>
     /// <param name="message">The message to display in the notification.</param>
     /// <param name="type">The type of notification (Info, Success, Warning, Error). Defaults to Info.</param>
-    /// <param name="durationMs">The duration in milliseconds to display the notification if <paramref name="requireKeyPress"/> is false. Defaults to 3000ms.</param>
-    /// <param name="requireKeyPress">If true, the notification will persist until a key is pressed. If false, it will disappear after <paramref name="durationMs"/>. Defaults to false.</param>
+    /// <param name="durationMs">
+    ///     The duration in milliseconds to display the notification if
+    ///     <paramref name="requireKeyPress" /> is false. Defaults to 3000ms.
+    /// </param>
+    /// <param name="requireKeyPress">
+    ///     If true, the notification will persist until a key is pressed. If false, it will
+    ///     disappear after <paramref name="durationMs" />. Defaults to false.
+    /// </param>
     public static void Show(string message, NotificationType type = NotificationType.Info, int durationMs = 3000,
         bool requireKeyPress = false)
     {
@@ -95,10 +104,8 @@ public class NotificationView
         Console.SetCursorPosition(leftPosition, 1);
         string paddedMessage = $" {icon} {message}"; // Add icon and leading/trailing spaces
         if (paddedMessage.Length > bannerWidth) // Check if message exceeds banner width
-        {
             // Truncate the message and add ellipsis if it's too long
             paddedMessage = paddedMessage.Substring(0, bannerWidth - 3) + "...";
-        }
         Console.Write(paddedMessage.PadRight(bannerWidth)); // Pad to fill banner width
 
         // Bottom line (acts as bottom border and background)
@@ -117,7 +124,7 @@ public class NotificationView
             Console.SetCursorPosition(promptLeft, 2); // Position on the bottom line of the banner
             // Temporarily set colors for the prompt text itself
             Console.BackgroundColor = bgColor; // Keep banner background
-            Console.ForegroundColor = fgColor;   // Keep banner foreground
+            Console.ForegroundColor = fgColor; // Keep banner foreground
             Console.Write(keyPressPrompt);
 
             // Reset console colors before waiting for key press

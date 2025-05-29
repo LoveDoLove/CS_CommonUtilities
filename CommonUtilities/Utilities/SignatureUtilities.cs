@@ -4,12 +4,12 @@ using System.Text.Json;
 namespace CommonUtilities.Utilities;
 
 /// <summary>
-/// Provides utility methods for creating digital signatures.
+///     Provides utility methods for creating digital signatures.
 /// </summary>
 public static class SignatureUtilities
 {
     /// <summary>
-    /// Creates a Base64 encoded RSA-SHA256 signature for a given object.
+    ///     Creates a Base64 encoded RSA-SHA256 signature for a given object.
     /// </summary>
     /// <param name="timeStamp">The timestamp to include in the signature data.</param>
     /// <param name="pemKey">The PEM-encoded RSA private key.</param>

@@ -4,15 +4,15 @@ using CommonUtilities.Common;
 namespace CommonUtilities.Utilities;
 
 /// <summary>
-/// Provides utility methods for AES encryption and decryption.
+///     Provides utility methods for AES encryption and decryption.
 /// </summary>
 public static class AesUtilities
 {
     // WARNING: ECB mode is generally insecure as it doesn't use an IV and identical plaintext blocks encrypt to identical ciphertext blocks.
     // Consider using CBC or GCM mode if security is a high priority.
     /// <summary>
-    /// Encrypts a string using AES-256 with ECB mode.
-    /// WARNING: ECB mode is generally insecure.
+    ///     Encrypts a string using AES-256 with ECB mode.
+    ///     WARNING: ECB mode is generally insecure.
     /// </summary>
     /// <param name="szText">The plaintext string to encrypt.</param>
     /// <param name="szKey">The secret key for encryption.</param>
@@ -43,8 +43,8 @@ public static class AesUtilities
 
     // WARNING: ECB mode is generally insecure. See comment on Aes256EcbEncrypt.
     /// <summary>
-    /// Decrypts a string using AES-256 with ECB mode.
-    /// WARNING: ECB mode is generally insecure.
+    ///     Decrypts a string using AES-256 with ECB mode.
+    ///     WARNING: ECB mode is generally insecure.
     /// </summary>
     /// <param name="szText">The Base64 encoded string to decrypt.</param>
     /// <param name="szKey">The secret key for decryption.</param>
@@ -74,7 +74,7 @@ public static class AesUtilities
     }
 
     /// <summary>
-    /// Encrypts a string using AES-256 with CBC mode.
+    ///     Encrypts a string using AES-256 with CBC mode.
     /// </summary>
     /// <param name="szText">The plaintext string to encrypt.</param>
     /// <param name="szKey">The secret key for encryption.</param>
@@ -123,7 +123,7 @@ public static class AesUtilities
     }
 
     /// <summary>
-    /// Decrypts a string using AES-256 with CBC mode.
+    ///     Decrypts a string using AES-256 with CBC mode.
     /// </summary>
     /// <param name="szText">The Base64 encoded string to decrypt.</param>
     /// <param name="szKey">The secret key for decryption.</param>
