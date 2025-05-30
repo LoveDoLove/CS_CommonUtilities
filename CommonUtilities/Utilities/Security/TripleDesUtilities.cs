@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using CommonUtilities.Common;
 
-namespace CommonUtilities.Utilities;
+namespace CommonUtilities.Utilities.Security;
 
 /// <summary>
 ///     Provides utility methods for TripleDES encryption and decryption.

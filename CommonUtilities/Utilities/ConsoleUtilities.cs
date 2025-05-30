@@ -1,6 +1,3 @@
-using CommonUtilities.Config;
-// Assuming Config is a class for managing configuration settings.
-
 // Assuming ReadLineModel is defined here.
 
 namespace CommonUtilities.Utilities;
@@ -21,7 +18,7 @@ public static class ConsoleUtilities
     ///     Optional configuration object to retrieve 'text_color' and 'background_color' settings.
     ///     Colors should be valid <see cref="ConsoleColor" /> enum names.
     /// </param>
-    public static void WriteInfo(string message, Config.Config? config = null)
+    public static void WriteInfo(string message, Config? config = null)
     {
         ConsoleColor originalFg = Console.ForegroundColor;
         ConsoleColor originalBg = Console.BackgroundColor;
@@ -74,7 +71,7 @@ public static class ConsoleUtilities
     ///     Optional configuration object to retrieve the 'error_color' setting.
     ///     The color should be a valid <see cref="ConsoleColor" /> enum name.
     /// </param>
-    public static void WriteError(string message, Config.Config? config = null)
+    public static void WriteError(string message, Config? config = null)
     {
         ConsoleColor originalFg = Console.ForegroundColor;
         ConsoleColor errorColor = ConsoleColor.Red; // Default error color
@@ -102,7 +99,7 @@ public static class ConsoleUtilities
     ///     Optional configuration object to retrieve the 'success_color' setting.
     ///     The color should be a valid <see cref="ConsoleColor" /> enum name.
     /// </param>
-    public static void WriteSuccess(string message, Config.Config? config = null)
+    public static void WriteSuccess(string message, Config? config = null)
     {
         ConsoleColor originalFg = Console.ForegroundColor;
         ConsoleColor successColor = ConsoleColor.Green; // Default success color

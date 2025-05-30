@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text.Json;
 
-namespace CommonUtilities.Utilities;
+namespace CommonUtilities.Utilities.Security;
 
 /// <summary>
 ///     Provides utility methods for creating digital signatures.

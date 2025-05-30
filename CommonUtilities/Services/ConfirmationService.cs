@@ -7,12 +7,12 @@ namespace CommonUtilities.Services;
 /// </summary>
 public class ConfirmationService
 {
-    private readonly Config.Config? _config;
+    private readonly Config? _config;
 
     /// <summary>
     ///     ConfirmationService constructor using the new Config class.
     /// </summary>
-    public ConfirmationService(Config.Config? config = null)
+    public ConfirmationService(Config? config = null)
     {
         _config = config;
     }

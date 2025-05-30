@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 
-namespace CommonUtilities.Utilities;
+namespace CommonUtilities.Utilities.Security;
 
 /// <summary>
 ///     Provides utility methods for computing SHA256 hashes.

@@ -1,5 +1,3 @@
-// Assuming LoggerUtilities is here
-
 namespace CommonUtilities.Utilities;
 
 /// <summary>

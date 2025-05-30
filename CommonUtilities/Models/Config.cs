@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace CommonUtilities.Config;
+namespace CommonUtilities.Models;
 
 /// <summary>
 ///     Application configuration model with load/save and default management.

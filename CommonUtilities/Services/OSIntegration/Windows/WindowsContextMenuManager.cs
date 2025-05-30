@@ -21,59 +21,45 @@ public class WindowsContextMenuManager : IContextMenuManager
     public Task AddEntryAsync(ContextMenuEntry entry)
     {
         // Placeholder for logging: LoggerUtilities.Log($"Adding context menu entry: {entry.Id}");
-        try
+        RegistryKey? baseKey = GetBaseKey(entry.Scope);
+        if (baseKey == null)
+            // Placeholder for logging: LoggerUtilities.Log($"Unsupported scope: {entry.Scope} for entry: {entry.Id}", LogLevel.Error);
+            return Task.CompletedTask; // Or throw an exception
+
+        string targetPath = GetRegistryPathForTarget(entry.TargetType);
+        if (string.IsNullOrEmpty(targetPath))
+            // Placeholder for logging: LoggerUtilities.Log($"Unsupported target type: {entry.TargetType} for entry: {entry.Id}", LogLevel.Error);
+            return Task.CompletedTask; // Or throw an exception
+
+        // Use entry.Id for the key name to ensure uniqueness and easy removal
+        string entryKeyName = entry.Id;
+        if (string.IsNullOrWhiteSpace(entryKeyName))
+            // Placeholder for logging: LoggerUtilities.Log($"Entry Id cannot be empty for entry: {entry.Text}", LogLevel.Error);
+            throw new ArgumentException("Entry Id cannot be empty.", nameof(entry.Id));
+
+        using (RegistryKey? shellKey = baseKey.CreateSubKey(Path.Combine(targetPath, entryKeyName), true))
         {
-            RegistryKey? baseKey = GetBaseKey(entry.Scope);
-            if (baseKey == null)
-                // Placeholder for logging: LoggerUtilities.Log($"Unsupported scope: {entry.Scope} for entry: {entry.Id}", LogLevel.Error);
-                return Task.CompletedTask; // Or throw an exception
+            if (shellKey == null)
+                // Placeholder for logging: LoggerUtilities.Log($"Failed to create shell key for entry: {entry.Id}", LogLevel.Error);
+                return Task.CompletedTask;
+            shellKey.SetValue("", entry.Text); // Set the display text
+            if (!string.IsNullOrWhiteSpace(entry.IconPath)) shellKey.SetValue("Icon", entry.IconPath);
 
-            string targetPath = GetRegistryPathForTarget(entry.TargetType);
-            if (string.IsNullOrEmpty(targetPath))
-                // Placeholder for logging: LoggerUtilities.Log($"Unsupported target type: {entry.TargetType} for entry: {entry.Id}", LogLevel.Error);
-                return Task.CompletedTask; // Or throw an exception
-
-            // Use entry.Id for the key name to ensure uniqueness and easy removal
-            string entryKeyName = entry.Id;
-            if (string.IsNullOrWhiteSpace(entryKeyName))
-                // Placeholder for logging: LoggerUtilities.Log($"Entry Id cannot be empty for entry: {entry.Text}", LogLevel.Error);
-                throw new ArgumentException("Entry Id cannot be empty.", nameof(entry.Id));
-
-            using (RegistryKey? shellKey = baseKey.CreateSubKey(Path.Combine(targetPath, entryKeyName), true))
+            using (RegistryKey? commandKey = shellKey.CreateSubKey("command", true))
             {
-                if (shellKey == null)
-                    // Placeholder for logging: LoggerUtilities.Log($"Failed to create shell key for entry: {entry.Id}", LogLevel.Error);
+                if (commandKey == null)
+                    // Placeholder for logging: LoggerUtilities.Log($"Failed to create command key for entry: {entry.Id}", LogLevel.Error);
                     return Task.CompletedTask;
-                shellKey.SetValue("", entry.Text); // Set the display text
-                if (!string.IsNullOrWhiteSpace(entry.IconPath)) shellKey.SetValue("Icon", entry.IconPath);
-
-                using (RegistryKey? commandKey = shellKey.CreateSubKey("command", true))
-                {
-                    if (commandKey == null)
-                        // Placeholder for logging: LoggerUtilities.Log($"Failed to create command key for entry: {entry.Id}", LogLevel.Error);
-                        return Task.CompletedTask;
-                    string commandValue = $"\"{entry.Command}\" \"%1\"";
-                    if (!string.IsNullOrWhiteSpace(entry.Arguments)) commandValue += $" {entry.Arguments}";
-                    commandKey.SetValue("", commandValue);
-                }
+                string commandValue = $"\"{entry.Command}\" \"%1\"";
+                if (!string.IsNullOrWhiteSpace(entry.Arguments)) commandValue += $" {entry.Arguments}";
+                commandKey.SetValue("", commandValue);
             }
+        }
 
-            // Store metadata for GetEntriesAsync and easier management
-            StoreEntryMetadata(entry);
+        // Store metadata for GetEntriesAsync and easier management
+        StoreEntryMetadata(entry);
 
-            // Placeholder for logging: LoggerUtilities.Log($"Successfully added context menu entry: {entry.Id}");
-        }
-        catch (SecurityException ex)
-        {
-            // Placeholder for logging: LoggerUtilities.Log($"SecurityException while adding entry {entry.Id}: {ex.Message}", LogLevel.Error);
-            // Potentially re-throw or handle as appropriate for the application
-            throw;
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            // Placeholder for logging: LoggerUtilities.Log($"UnauthorizedAccessException while adding entry {entry.Id}: {ex.Message}", LogLevel.Error);
-            throw;
-        }
+        // Placeholder for logging: LoggerUtilities.Log($"Successfully added context menu entry: {entry.Id}");
 
         return Task.CompletedTask;
     }
@@ -111,16 +97,6 @@ public class WindowsContextMenuManager : IContextMenuManager
 
             RemoveStoredEntryMetadata(entryId);
             // Placeholder for logging: LoggerUtilities.Log($"Successfully removed context menu entry: {entryId}");
-        }
-        catch (SecurityException ex)
-        {
-            // Placeholder for logging: LoggerUtilities.Log($"SecurityException while removing entry {entryId}: {ex.Message}", LogLevel.Error);
-            throw;
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            // Placeholder for logging: LoggerUtilities.Log($"UnauthorizedAccessException while removing entry {entryId}: {ex.Message}", LogLevel.Error);
-            throw;
         }
         catch (ArgumentException
                ex) // Can be thrown by DeleteSubKeyTree if key doesn't exist and throwOnMissing is true (though we use false)
