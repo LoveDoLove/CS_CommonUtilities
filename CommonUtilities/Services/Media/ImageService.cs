@@ -1,5 +1,5 @@
 ﻿using System.Text.RegularExpressions;
-using CommonUtilities.Interfaces;
+using CommonUtilities.Interfaces.Media;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;

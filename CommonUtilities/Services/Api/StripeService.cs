@@ -1,5 +1,5 @@
-﻿using CommonUtilities.Interfaces;
-using CommonUtilities.Models;
+﻿using CommonUtilities.Interfaces.Api;
+using CommonUtilities.Models.Api;
 using Stripe;
 using Stripe.Checkout;
 

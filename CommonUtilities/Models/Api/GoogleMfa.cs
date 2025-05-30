@@ -1,4 +1,4 @@
-﻿namespace CommonUtilities.Models;
+﻿namespace CommonUtilities.Models.Api;
 
 /// <summary>
 ///     Represents the details required for setting up Google Authenticator Multi-Factor Authentication (MFA).

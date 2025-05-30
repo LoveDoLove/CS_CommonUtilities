@@ -1,6 +1,6 @@
 using CommonUtilities.Models.Enums;
 
-namespace CommonUtilities.Models;
+namespace CommonUtilities.Models.UI;
 
 /// <summary>
 ///     Represents an entry in the context menu.

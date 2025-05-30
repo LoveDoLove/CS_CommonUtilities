@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 
-namespace CommonUtilities.Interfaces;
+namespace CommonUtilities.Interfaces.Media;
 
 /// <summary>
 ///     Defines the contract for a service that handles image processing,

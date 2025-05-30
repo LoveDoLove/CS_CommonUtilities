@@ -1,4 +1,4 @@
-﻿namespace CommonUtilities.Models;
+﻿namespace CommonUtilities.Models.Core;
 
 /// <summary>
 ///     Represents the parameters for a console read line operation,

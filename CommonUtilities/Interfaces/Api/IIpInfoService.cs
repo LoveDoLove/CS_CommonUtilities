@@ -1,7 +1,7 @@
 ﻿using CommonUtilities.Models.Response.IpInfo;
 using Microsoft.AspNetCore.Http;
 
-namespace CommonUtilities.Interfaces;
+namespace CommonUtilities.Interfaces.Api;
 
 /// <summary>
 ///     Defines the contract for a service that provides information about IP addresses,

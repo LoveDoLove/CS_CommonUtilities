@@ -1,7 +1,7 @@
 ﻿using Stripe;
 using Stripe.Checkout;
 
-namespace CommonUtilities.Interfaces;
+namespace CommonUtilities.Interfaces.Api;
 
 /// <summary>
 ///     Defines the contract for a service that interacts with the Stripe API

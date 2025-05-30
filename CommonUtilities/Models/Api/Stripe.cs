@@ -1,4 +1,4 @@
-﻿namespace CommonUtilities.Models;
+﻿namespace CommonUtilities.Models.Api;
 
 /// <summary>
 ///     Represents configuration settings for Stripe integration, specifically the API key.

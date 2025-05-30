@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CommonUtilities.Models;
+namespace CommonUtilities.Models.Database;
 
 /// <summary>
 ///     Represents a user entity in the application, typically stored in a database.

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CommonUtilities.Models;
+namespace CommonUtilities.Models.Database;
 
 /// <summary>
 ///     Defines the standard user roles within the application.

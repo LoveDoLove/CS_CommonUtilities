@@ -1,7 +1,7 @@
 using System.Security;
-using CommonUtilities.Interfaces;
-using CommonUtilities.Models;
+using CommonUtilities.Interfaces.UI;
 using CommonUtilities.Models.Enums;
+using CommonUtilities.Models.UI;
 using Microsoft.Win32;
 
 namespace CommonUtilities.Services.OSIntegration.Windows;

@@ -1,7 +1,7 @@
 using System.Text;
-using CommonUtilities.Interfaces;
-using CommonUtilities.Models;
+using CommonUtilities.Interfaces.UI;
 using CommonUtilities.Models.Enums;
+using CommonUtilities.Models.UI;
 
 namespace CommonUtilities.Services.OSIntegration.Linux;
 

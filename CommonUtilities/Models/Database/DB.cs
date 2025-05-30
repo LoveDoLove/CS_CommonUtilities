@@ -1,7 +1,7 @@
 ﻿using CommonUtilities.Utilities.Other;
 using Microsoft.EntityFrameworkCore;
 
-namespace CommonUtilities.Models;
+namespace CommonUtilities.Models.Database;
 
 /// <summary>
 ///     Represents the database context for the application, providing access to database tables

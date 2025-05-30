@@ -1,4 +1,4 @@
-using CommonUtilities.Models;
+using CommonUtilities.Models.Core;
 
 namespace CommonUtilities.Utilities.Other;
 

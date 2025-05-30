@@ -1,4 +1,4 @@
-﻿namespace CommonUtilities.Models;
+﻿namespace CommonUtilities.Models.Api;
 
 /// <summary>
 ///     Represents the configuration settings for Cloudflare Turnstile CAPTCHA.

@@ -1,4 +1,4 @@
-﻿namespace CommonUtilities.Models;
+﻿namespace CommonUtilities.Models.Core;
 
 /// <summary>
 ///     Provides common constants and static values used throughout the application.

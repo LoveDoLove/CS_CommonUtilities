@@ -1,6 +1,6 @@
-using CommonUtilities.Models;
+using CommonUtilities.Models.UI;
 
-namespace CommonUtilities.Interfaces;
+namespace CommonUtilities.Interfaces.UI;
 
 /// <summary>
 ///     Defines the contract for managing context menu entries.

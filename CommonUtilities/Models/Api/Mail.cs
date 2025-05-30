@@ -1,4 +1,4 @@
-﻿namespace CommonUtilities.Models;
+﻿namespace CommonUtilities.Models.Api;
 
 /// <summary>
 ///     Represents an email message, including recipients, subject, and body.

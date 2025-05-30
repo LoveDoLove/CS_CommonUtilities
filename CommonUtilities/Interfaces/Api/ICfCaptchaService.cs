@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 
-namespace CommonUtilities.Interfaces;
+namespace CommonUtilities.Interfaces.Api;
 
 /// <summary>
 ///     Defines the contract for a service that handles Cloudflare Turnstile CAPTCHA verification and rendering.

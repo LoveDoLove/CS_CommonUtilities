@@ -1,6 +1,6 @@
-﻿using CommonUtilities.Models;
+﻿using CommonUtilities.Models.Api;
 
-namespace CommonUtilities.Interfaces;
+namespace CommonUtilities.Interfaces.Api;
 
 /// <summary>
 ///     Defines the contract for a service that handles sending emails.
