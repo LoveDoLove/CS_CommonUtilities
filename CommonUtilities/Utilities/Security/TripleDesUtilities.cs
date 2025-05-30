@@ -1,5 +1,7 @@
 ﻿using System.Security.Cryptography;
+using System.Text;
 using CommonUtilities.Common;
+using CommonUtilities.Utilities.Data;
 
 namespace CommonUtilities.Utilities.Security;
 

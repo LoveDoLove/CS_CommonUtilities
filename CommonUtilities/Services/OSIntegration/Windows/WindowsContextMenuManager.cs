@@ -1,5 +1,6 @@
 using System.Security;
 using CommonUtilities.Interfaces;
+using CommonUtilities.Models;
 using CommonUtilities.Models.Enums;
 using Microsoft.Win32;
 

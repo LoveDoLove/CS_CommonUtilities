@@ -1,3 +1,5 @@
+using CommonUtilities.Models;
+
 namespace CommonUtilities.Interfaces;
 
 /// <summary>

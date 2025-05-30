@@ -1,4 +1,6 @@
-﻿namespace CommonUtilities.Interfaces;
+﻿using CommonUtilities.Models;
+
+namespace CommonUtilities.Interfaces;
 
 /// <summary>
 ///     Defines the contract for a service that handles sending emails.

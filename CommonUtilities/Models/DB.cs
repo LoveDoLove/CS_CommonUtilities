@@ -1,4 +1,4 @@
-﻿using CommonUtilities.Utilities;
+﻿using CommonUtilities.Utilities.Other;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommonUtilities.Models;
