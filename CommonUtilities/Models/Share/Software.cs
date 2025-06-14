@@ -2,7 +2,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace CommonUtilities.Models.Shared;
+namespace CommonUtilities.Models.Share;
 
 /// <summary>
 ///     Provides OS platform detection and software presence checks.

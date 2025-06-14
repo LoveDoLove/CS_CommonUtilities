@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
-using CommonUtilities.Common;
+using CommonUtilities.Models.Share;
 using CommonUtilities.Utilities.Data;
 
 namespace CommonUtilities.Utilities.Security;
