@@ -1,6 +1,4 @@
-using CommonUtilities.Models.Enums;
-
-namespace CommonUtilities.Services.ContextMenuManager;
+namespace CommonUtilities.Helpers.ContextMenuManager;
 
 /// <summary>
 ///     Represents an entry in the context menu.

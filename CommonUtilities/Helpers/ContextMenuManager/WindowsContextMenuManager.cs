@@ -1,8 +1,7 @@
 using System.Security;
-using CommonUtilities.Models.Enums;
 using Microsoft.Win32;
 
-namespace CommonUtilities.Services.ContextMenuManager;
+namespace CommonUtilities.Helpers.ContextMenuManager;
 
 /// <summary>
 ///     Manages context menu entries for Windows as a global, reusable utility service.

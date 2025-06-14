@@ -1,7 +1,6 @@
 using System.Text;
-using CommonUtilities.Models.Enums;
 
-namespace CommonUtilities.Services.ContextMenuManager;
+namespace CommonUtilities.Helpers.ContextMenuManager;
 
 /// <summary>
 ///     Manages context menu entries for Linux desktop environments.

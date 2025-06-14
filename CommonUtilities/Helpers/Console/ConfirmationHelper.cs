@@ -1,21 +1,15 @@
-using CommonUtilities.Models.Share;
-using CommonUtilities.Utilities.Other;
-
-namespace CommonUtilities.Services.Shared;
+namespace CommonUtilities.Helpers.Console;
 
 /// <summary>
 ///     Provides confirmation prompts for actions and admin elevation.
 /// </summary>
-public class ConfirmationService
+public class ConfirmationHelper
 {
-    private readonly Config? _config;
-
     /// <summary>
     ///     ConfirmationService constructor using the new Config class.
     /// </summary>
-    public ConfirmationService(Config? config = null)
+    public ConfirmationHelper()
     {
-        _config = config;
     }
 
     /// <summary>
@@ -33,16 +27,16 @@ public class ConfirmationService
     {
         if (displayHeader)
         {
-            Console.Clear();
-            Console.WriteLine("╔═══════════════════════════════════════════════════════╗");
-            Console.WriteLine("║             ADMINISTRATOR RIGHTS REQUIRED             ║");
-            Console.WriteLine("╚═══════════════════════════════════════════════════════╝");
-            Console.WriteLine();
+            System.Console.Clear();
+            System.Console.WriteLine("╔═══════════════════════════════════════════════════════╗");
+            System.Console.WriteLine("║             ADMINISTRATOR RIGHTS REQUIRED             ║");
+            System.Console.WriteLine("╚═══════════════════════════════════════════════════════╝");
+            System.Console.WriteLine();
         }
 
-        Console.WriteLine("This operation requires administrator privileges.");
-        Console.WriteLine("Some features may not work correctly without admin rights.");
-        Console.WriteLine();
+        System.Console.WriteLine("This operation requires administrator privileges.");
+        System.Console.WriteLine("Some features may not work correctly without admin rights.");
+        System.Console.WriteLine();
 
         return ConfirmYesNo("Would you like to restart with admin rights?");
     }
@@ -52,8 +46,8 @@ public class ConfirmationService
     /// </summary>
     private bool ConfirmYesNo(string message, bool defaultYes = true)
     {
-        Console.Write($"{message} [{(defaultYes ? "Y/n" : "y/N")}]: ");
-        var input = Console.ReadLine();
+        System.Console.Write($"{message} [{(defaultYes ? "Y/n" : "y/N")}]: ");
+        var input = System.Console.ReadLine();
         if (string.IsNullOrWhiteSpace(input))
             return defaultYes;
         input = input.Trim().ToLower();
