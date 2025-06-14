@@ -5,12 +5,25 @@ using Microsoft.Win32;
 namespace CommonUtilities.Services.ContextMenuManager;
 
 /// <summary>
-///     Manages context menu entries for Windows.
+///     Manages context menu entries for Windows as a global, reusable utility service.
+///     The registry subkey for storing app-specific entry details is configurable for reusability.
 /// </summary>
 public class WindowsContextMenuManager : IContextMenuManager
 {
-    private const string
-        AppRegistrySubKey = @"Software\EasyKit\ContextMenuEntries"; // A place to store our app-specific entry details
+    private readonly string _appRegistrySubKey;
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="WindowsContextMenuManager"/> class.
+    ///     The registry subkey for storing app-specific entry details is required and must not be null or empty.
+    /// </summary>
+    /// <param name="appRegistrySubKey">The registry subkey to use for storing context menu entry metadata. Must not be null or empty.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="appRegistrySubKey"/> is null or empty.</exception>
+    public WindowsContextMenuManager(string appRegistrySubKey)
+    {
+        if (string.IsNullOrWhiteSpace(appRegistrySubKey))
+            throw new ArgumentNullException(nameof(appRegistrySubKey), "Registry subkey must be provided and cannot be null or empty. See Windows registry best practices: https://github.com/microsoftdocs/windowsserverdocs/blob/main/WindowsServerDocs/administration/windows-commands/reg-add.md");
+        _appRegistrySubKey = appRegistrySubKey;
+    }
 
     /// <summary>
     ///     Adds a new entry to the Windows context menu.
@@ -173,7 +186,7 @@ public class WindowsContextMenuManager : IContextMenuManager
     {
         try
         {
-            using (RegistryKey? appMetaKey = rootKey.OpenSubKey(AppRegistrySubKey, false))
+            using (RegistryKey? appMetaKey = rootKey.OpenSubKey(_appRegistrySubKey, false))
             {
                 if (appMetaKey != null)
                     foreach (string entryId in appMetaKey.GetSubKeyNames())
@@ -226,7 +239,7 @@ public class WindowsContextMenuManager : IContextMenuManager
 
         try
         {
-            using (RegistryKey? entryMetaKey = baseKey.CreateSubKey(Path.Combine(AppRegistrySubKey, entry.Id), true))
+            using (RegistryKey? entryMetaKey = baseKey.CreateSubKey(Path.Combine(_appRegistrySubKey, entry.Id), true))
             {
                 if (entryMetaKey == null) return;
                 entryMetaKey.SetValue("Text", entry.Text);
@@ -264,7 +277,7 @@ public class WindowsContextMenuManager : IContextMenuManager
     {
         try
         {
-            using (RegistryKey? entryMetaKey = baseKey.OpenSubKey(Path.Combine(AppRegistrySubKey, entryId), false))
+            using (RegistryKey? entryMetaKey = baseKey.OpenSubKey(Path.Combine(_appRegistrySubKey, entryId), false))
             {
                 if (entryMetaKey == null) return null;
 
@@ -303,7 +316,7 @@ public class WindowsContextMenuManager : IContextMenuManager
     {
         try
         {
-            using (RegistryKey? appMetaKey = baseKey.OpenSubKey(AppRegistrySubKey, true)) // Open with write access
+            using (RegistryKey? appMetaKey = baseKey.OpenSubKey(_appRegistrySubKey, true)) // Open with write access
             {
                 appMetaKey?.DeleteSubKeyTree(entryId, false); // false: do not throw if not found
             }
