@@ -40,13 +40,10 @@ public class Config
     {
         Settings = new Dictionary<string, object>
         {
-            { "color_scheme", "dark" },
             { "enable_logging", true },
             { "log_path", GetLogPath() },
             { "show_tips", true },
-            { "confirm_exit", true },
-            { "confirm_destructive_actions", true },
-            { "menu_width", 50 },
+            { "menu_width", 100 },
             { "version", _appVersion }
         };
 
@@ -161,13 +158,10 @@ public class Config
     {
         Settings = new Dictionary<string, object>
         {
-            { "color_scheme", "dark" },
             { "enable_logging", true },
             { "log_path", GetLogPath() },
             { "show_tips", true },
-            { "confirm_exit", true },
-            { "confirm_destructive_actions", true },
-            { "menu_width", 50 },
+            { "menu_width", 100 },
             { "version", _appVersion }
         };
         SaveConfig();
