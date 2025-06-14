@@ -1,4 +1,4 @@
-namespace CommonUtilities.Services.ContextMenuManager;
+namespace CommonUtilities.Helpers.ContextMenuManager;
 
 /// <summary>
 ///     Defines the contract for managing context menu entries.

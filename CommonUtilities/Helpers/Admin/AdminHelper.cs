@@ -3,9 +3,9 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Security.Principal;
 
-namespace CommonUtilities.Services.Admin;
+namespace CommonUtilities.Helpers.Admin;
 
-public static class AdminService
+public static class AdminHelper
 {
     /// <summary>
     ///     Checks if the application is running with administrator/root privileges based on the platform

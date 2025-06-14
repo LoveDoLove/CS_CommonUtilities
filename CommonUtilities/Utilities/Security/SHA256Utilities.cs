@@ -6,7 +6,7 @@ namespace CommonUtilities.Utilities.Security;
 /// <summary>
 ///     Provides utility methods for computing SHA256 hashes.
 /// </summary>
-public static class SHA256Utilities
+public static class Sha256Utilities
 {
     /// <summary>
     ///     Computes the SHA256 hash of a given string.
@@ -14,7 +14,7 @@ public static class SHA256Utilities
     /// <param name="key">The input string to hash.</param>
     /// <returns>The lowercase hexadecimal representation of the SHA256 hash.</returns>
     /// <exception cref="CryptographicException">Thrown if an error occurs during hash computation.</exception>
-    public static string ComputeSHA256Hash(string key)
+    public static string ComputeSha256Hash(string key)
     {
         try
         {

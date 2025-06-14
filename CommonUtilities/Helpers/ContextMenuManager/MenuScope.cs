@@ -1,4 +1,4 @@
-namespace CommonUtilities.Models.Enums;
+namespace CommonUtilities.Helpers.ContextMenuManager;
 
 /// <summary>
 ///     Specifies the scope for a context menu entry.
