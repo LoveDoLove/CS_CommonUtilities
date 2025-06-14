@@ -4,7 +4,7 @@ using CommonUtilities.Utilities.Other;
 namespace CommonUtilities.Services.Shared;
 
 /// <summary>
-///     Provides confirmation prompts for actions, destructive operations, and admin elevation.
+///     Provides confirmation prompts for actions and admin elevation.
 /// </summary>
 public class ConfirmationService
 {
@@ -24,28 +24,6 @@ public class ConfirmationService
     public bool ConfirmAction(string message, bool defaultYes = true)
     {
         return ConfirmYesNo(message, defaultYes);
-    }
-
-    /// <summary>
-    ///     Prompts the user to confirm a destructive action, respecting config if available.
-    /// </summary>
-    public bool ConfirmDestructiveAction(string action, string details = "", bool defaultNo = true)
-    {
-        if (_config != null)
-        {
-            var confirmEnabled = _config.Get("confirm_destructive_actions", true);
-            if (confirmEnabled is bool b && !b)
-                return true;
-        }
-
-        ConsoleUtilities.WriteInfo($"You are about to: {action}", _config);
-
-        if (!string.IsNullOrEmpty(details))
-            ConsoleUtilities.WriteInfo(details, _config);
-
-        ConsoleUtilities.WriteInfo(new string('-', 50), _config);
-
-        return ConfirmYesNo("Are you sure you want to proceed?", !defaultNo);
     }
 
     /// <summary>
