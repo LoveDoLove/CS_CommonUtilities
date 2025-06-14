@@ -10,7 +10,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <img src="CommonUtilities/www/images/icon.png" alt="Logo" width="80" height="80">
+  <img src="images/icon.png" alt="CommonUtilities Logo" width="120" height="120">
   <h3 align="center">CommonUtilities</h3>
   <p align="center">
     A modular, production-ready C#/.NET utility library and toolkit for rapid development.<br>
@@ -46,13 +46,13 @@ CommonUtilities is a comprehensive, modular C#/.NET library providing reusable h
 
 ### Key Features
 
-- Console UI: Menus, prompts, notifications, progress, keyboard shortcuts
-- Helpers: Console, enums, HTTP, JSON, processes, QR code, scheduling (Cron)
-- Services: Email, captcha, MFA, image, IP info, Stripe, admin, sync, confirmation
-- Utilities: Encryption (AES, 3DES, SHA256), validation, logging, file/database, signature, timestamp, caching
-- Models: Strongly-typed config, user, role, DB, mail, Stripe, response objects
-- Interfaces: For extensibility and testability
-- Modern .NET project structure, global usings, nullable enabled, best-practice dependencies
+- **Console UI**: Menus, prompts, notifications, progress, keyboard shortcuts
+- **Helpers**: Console, enums, HTTP, JSON, processes, QR code, scheduling (Cron)
+- **Services**: Email, captcha, MFA, image, IP info, Stripe, admin, sync, confirmation
+- **Utilities**: Encryption (AES, 3DES, SHA256), validation, logging, file/database, signature, timestamp, caching
+- **Models**: Strongly-typed config, user, role, DB, mail, Stripe, response objects
+- **Interfaces**: For extensibility and testability
+- **Modern .NET project structure**: global usings, nullable enabled, best-practice dependencies
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
