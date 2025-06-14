@@ -1,4 +1,4 @@
-﻿namespace CommonUtilities.Models.Shared;
+﻿namespace CommonUtilities.Models.Share;
 
 /// <summary>
 ///     Represents a model for making REST API requests.

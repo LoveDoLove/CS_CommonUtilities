@@ -1,4 +1,4 @@
-﻿namespace CommonUtilities.Models.Shared;
+﻿namespace CommonUtilities.Models.Share;
 
 /// <summary>
 ///     Represents the parameters for a console read line operation,

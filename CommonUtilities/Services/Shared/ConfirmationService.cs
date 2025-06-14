@@ -1,4 +1,4 @@
-using CommonUtilities.Models.Shared;
+using CommonUtilities.Models.Share;
 using CommonUtilities.Utilities.Other;
 
 namespace CommonUtilities.Services.Shared;

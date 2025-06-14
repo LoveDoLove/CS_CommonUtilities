@@ -13,15 +13,19 @@ public class WindowsContextMenuManager : IContextMenuManager
     private readonly string _appRegistrySubKey;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="WindowsContextMenuManager"/> class.
+    ///     Initializes a new instance of the <see cref="WindowsContextMenuManager" /> class.
     ///     The registry subkey for storing app-specific entry details is required and must not be null or empty.
     /// </summary>
-    /// <param name="appRegistrySubKey">The registry subkey to use for storing context menu entry metadata. Must not be null or empty.</param>
-    /// <exception cref="ArgumentNullException">Thrown if <paramref name="appRegistrySubKey"/> is null or empty.</exception>
+    /// <param name="appRegistrySubKey">
+    ///     The registry subkey to use for storing context menu entry metadata. Must not be null or
+    ///     empty.
+    /// </param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="appRegistrySubKey" /> is null or empty.</exception>
     public WindowsContextMenuManager(string appRegistrySubKey)
     {
         if (string.IsNullOrWhiteSpace(appRegistrySubKey))
-            throw new ArgumentNullException(nameof(appRegistrySubKey), "Registry subkey must be provided and cannot be null or empty. See Windows registry best practices: https://github.com/microsoftdocs/windowsserverdocs/blob/main/WindowsServerDocs/administration/windows-commands/reg-add.md");
+            throw new ArgumentNullException(nameof(appRegistrySubKey),
+                "Registry subkey must be provided and cannot be null or empty. See Windows registry best practices: https://github.com/microsoftdocs/windowsserverdocs/blob/main/WindowsServerDocs/administration/windows-commands/reg-add.md");
         _appRegistrySubKey = appRegistrySubKey;
     }
 
