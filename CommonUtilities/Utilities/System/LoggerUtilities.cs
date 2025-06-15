@@ -12,11 +12,31 @@ public static class LoggerUtilities
     /// <summary>
     ///     Starts Serilog logging with file and console sinks.
     /// </summary>
-    public static void StartLog(string applicationName = "Application")
+    /// <param name="applicationName">The name of the application for log file naming and enrichment. Required.</param>
+    /// <param name="customLogFilePath">
+    ///     Optional: Custom log file path. If null, defaults to %APPDATA%/
+    ///     <applicationName>/<applicationName>.log
+    /// </param>
+    public static void StartLog(string applicationName, string? customLogFilePath = null)
     {
-        string logDirectory = Path.Combine(Directory.GetCurrentDirectory(), "logs");
-        Directory.CreateDirectory(logDirectory);
-        string logFilePath = Path.Combine(logDirectory, $"{applicationName.ToLowerInvariant()}.log");
+        if (string.IsNullOrWhiteSpace(applicationName))
+            throw new ArgumentException("Application name must be provided.", nameof(applicationName));
+
+        string logFilePath;
+        if (!string.IsNullOrWhiteSpace(customLogFilePath))
+        {
+            string? customDir = Path.GetDirectoryName(customLogFilePath);
+            if (!string.IsNullOrEmpty(customDir))
+                Directory.CreateDirectory(customDir);
+            logFilePath = customLogFilePath;
+        }
+        else
+        {
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string logDirectory = Path.Combine(appData, applicationName);
+            Directory.CreateDirectory(logDirectory);
+            logFilePath = Path.Combine(logDirectory, $"{applicationName}.log");
+        }
 
         Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
