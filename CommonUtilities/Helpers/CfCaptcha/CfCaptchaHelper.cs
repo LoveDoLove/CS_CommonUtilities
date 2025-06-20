@@ -1,9 +1,34 @@
-﻿using System.Text.Json;
+﻿// MIT License
+// 
+// Copyright (c) 2025 LoveDoLove
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+using System.Text.Json;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Http;
 
 namespace CommonUtilities.Helpers.CfCaptcha;
 
+/// <summary>
+///     Provides helper methods for integrating and verifying Cloudflare Turnstile CAPTCHA in ASP.NET Core applications.
+/// </summary>
 public class CfCaptchaHelper : ICfCaptchaHelper
 {
     private const string CfCaptchaUrl = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
@@ -13,11 +38,20 @@ public class CfCaptchaHelper : ICfCaptchaHelper
 
     private readonly CfCaptchaConfig _cfCaptcha;
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="CfCaptchaHelper" /> class with the specified configuration.
+    /// </summary>
+    /// <param name="cfCaptcha">The Cloudflare CAPTCHA configuration.</param>
     public CfCaptchaHelper(CfCaptchaConfig cfCaptcha)
     {
         _cfCaptcha = cfCaptcha;
     }
 
+    /// <summary>
+    ///     Asynchronously verifies the CAPTCHA token with Cloudflare Turnstile service.
+    /// </summary>
+    /// <param name="token">The CAPTCHA response token from the client.</param>
+    /// <returns>True if the CAPTCHA is valid; otherwise, false.</returns>
     public async Task<bool> VerifyCaptchaAsync(string token)
     {
         FormUrlEncodedContent content = new([
@@ -31,12 +65,20 @@ public class CfCaptchaHelper : ICfCaptchaHelper
         return captchaResponse != null && captchaResponse.Success;
     }
 
-
+    /// <summary>
+    ///     Generates the HTML markup required to render the Cloudflare Turnstile CAPTCHA widget.
+    /// </summary>
+    /// <returns>An <see cref="IHtmlContent" /> containing the CAPTCHA widget HTML.</returns>
     public IHtmlContent GetCaptchaHtml()
     {
         return new HtmlString(CfCaptchaHtml.Replace("CF_CAPTCHA_SITE_KEY", _cfCaptcha.SiteKey));
     }
 
+    /// <summary>
+    ///     Validates the CAPTCHA response from the specified HTTP request.
+    /// </summary>
+    /// <param name="request">The HTTP request containing the CAPTCHA response.</param>
+    /// <returns>True if the CAPTCHA response is present and valid; otherwise, false.</returns>
     public bool IsCaptchaResponseValid(HttpRequest request)
     {
         string? turnstileResponse = request.Form[CfTurnstileResponse];
