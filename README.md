@@ -1,3 +1,4 @@
+<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
 <a id="readme-top"></a>
 
 <!-- PROJECT SHIELDS -->
@@ -5,18 +6,21 @@
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-[![License][license-shield]][license-url]
+[![MIT License][license-shield]][license-url]
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <img src="images/icon.png" alt="CommonUtilities Logo" width="120" height="120">
+  <img src="images/icon.png" alt="Logo" width="80" height="80">
   <h3 align="center">CommonUtilities</h3>
   <p align="center">
-    A modular, production-ready C#/.NET utility library and toolkit for rapid development.<br>
-    <a href="#usage"><strong>Explore Usage & Docs »</strong></a>
-    <br /><br />
-    <a href="#project-structure">Project Structure</a>
+    A modular, production-ready C#/.NET utility library and toolkit for rapid development.
+    <br />
+    <a href="https://github.com/LoveDoLove/CS_CommonUtilities"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/LoveDoLove/CS_CommonUtilities">View Demo</a>
     &middot;
     <a href="https://github.com/LoveDoLove/CS_CommonUtilities/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     &middot;
@@ -24,17 +28,25 @@
   </p>
 </div>
 
-<!-- TABLE OF CONTENTS -->
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#about-the-project">About The Project</a></li>
-    <li><a href="#project-structure">Project Structure</a></li>
-    <li><a href="#getting-started">Getting Started</a></li>
+    <li><a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li><a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
-    <li><a href="#funding--support">Funding & Support</a></li>
+    <li><a href="#contact">Contact</a></li>
     <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
@@ -42,189 +54,115 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-CommonUtilities is a comprehensive, modular C#/.NET library providing reusable helpers, services, utilities, and UI components for .NET 8+ projects. It is designed for rapid development, maintainability, and best practices, supporting a wide range of common application needs.
+CommonUtilities is a modular, production-ready C#/.NET utility library and toolkit designed to accelerate development for .NET 8+ projects. It provides a comprehensive set of helpers, utilities, and models for common tasks such as security, data formatting, HTTP, scheduling, mailing, image processing, and more. The library is structured for easy integration and extension, making it ideal for both small and large-scale applications.
 
-### Key Features
+### Features
+- Modular helpers for Captcha, Google MFA, IP info, mailing, media, scheduling, Stripe, and more
+- Utility classes for data conversion, formatting, JSON, database, HTTP, enums, QR codes, security, system operations, and logging
+- Strong focus on security, input validation, and error handling
+- Designed for .NET 8.0 and above
+- MIT licensed and open for contributions
 
-- **Console UI**: Menus, prompts, notifications, progress, keyboard shortcuts
-- **Helpers**: Console, enums, HTTP, JSON, processes, QR code, scheduling (Cron)
-- **Services**: Email, captcha, MFA, image, IP info, Stripe, admin, sync, confirmation
-- **Utilities**: Encryption (AES, 3DES, SHA256), validation, logging, file/database, signature, timestamp, caching
-- **Models**: Strongly-typed config, user, role, DB, mail, Stripe, response objects
-- **Interfaces**: For extensibility and testability
-- **Modern .NET project structure**: global usings, nullable enabled, best-practice dependencies
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- PROJECT STRUCTURE -->
-## Project Structure
-
-```
-.
-├── .github/                # GitHub workflows, issue templates, funding config
-│   ├── FUNDING.yml
-│   ├── ISSUE_TEMPLATE/
-│   └── workflows/
-├── .vs/                    # Visual Studio local settings (not source-controlled)
-├── CommonUtilities/        # Main library source
-│   ├── Common/             # Shared logic/constants
-│   ├── ConsoleUI/          # Console UI components
-│   ├── Helpers/            # Helper classes (Console, Enum, Http, Json, Process, QrCode, Scheduler)
-│   ├── Interfaces/         # Service and utility interfaces
-│   ├── Models/             # Data models (Config, User, Role, DB, etc.)
-│   ├── Services/           # Service implementations (Mailer, Captcha, MFA, etc.)
-│   ├── Utilities/          # Utility classes (encryption, validation, logging, etc.)
-│   ├── www/                # Static assets (images/icons)
-│   ├── GlobalUsings.cs     # Project-wide usings
-│   ├── Program.cs          # Entry point (empty for library)
-│   ├── CommonUtilities.csproj
-│   └── CommonUtilities.csproj.user
-├── .gitattributes
-├── .gitignore
-├── CommonUtilities.sln     # Solution file
-├── LICENSE                 # MIT License
-├── README.md               # This file
-├── README_TEMPLATES.md     # README template and reference
-```
-
-### Notable Files & Directories
-
-- **.github/**: Contains [FUNDING.yml](.github/FUNDING.yml) for sponsorship, issue templates, and CI workflows.
-- **CommonUtilities/CommonUtilities.csproj**: .NET 8.0 project file, lists all NuGet dependencies (e.g., Serilog, FluentValidation, Stripe, MailKit, MediatR, EntityFrameworkCore, QRCoder, etc.).
-- **CommonUtilities/www/images/**: Project icon and static assets.
-- **README_TEMPLATES.md**: Reference template for maintaining README quality and structure.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+### Built With
+- .NET 8.0
+- [Cronos](https://github.com/HangfireIO/Cronos)
+- [FluentValidation](https://fluentvalidation.net/)
+- [GoogleAuthenticator](https://github.com/brandonpotter/GoogleAuthenticator)
+- [IPinfo](https://github.com/ipinfo/csharp)
+- [MailKit](https://github.com/jstedfast/MailKit)
+- [MediatR](https://github.com/jbogard/MediatR)
+- [Serilog](https://serilog.net/)
+- [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp)
+- [Stripe.net](https://github.com/stripe/stripe-dotnet)
+- [QRCoder](https://github.com/codebude/QRCoder)
+- [RestSharp](https://github.com/restsharp/RestSharp)
+- [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
+- [Newtonsoft.Json](https://www.newtonsoft.com/json)
 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-### Prerequisites
+To use CommonUtilities in your .NET project, follow these steps:
 
-- [.NET 8 SDK or later](https://dotnet.microsoft.com/download)
-- Visual Studio 2022+ or compatible IDE
+### Prerequisites
+- .NET 8.0 SDK or later
 
 ### Installation
-
-1. **Clone the repository**
+1. Clone the repository:
    ```sh
    git clone https://github.com/LoveDoLove/CS_CommonUtilities.git
    ```
-2. **Open the solution**
-   - Open `CommonUtilities.sln` in Visual Studio or your preferred IDE.
-3. **Build the solution**
-   ```sh
-   dotnet build
-   ```
-4. **Reference the library**
-   - Add a project reference to `CommonUtilities/CommonUtilities.csproj` in your .NET project, or copy required modules.
+2. Add a reference to the `CommonUtilities` project or build and reference the generated DLL in your solution.
+3. (Optional) Configure any required settings (e.g., for mailing, Stripe, etc.) in your appsettings or via dependency injection.
 
-### Directory Reference
-
-- **CommonUtilities/Common/**: Shared constants and logic
-- **CommonUtilities/ConsoleUI/**: UI components for console apps
-- **CommonUtilities/Helpers/**: Utility helpers (Console, Enum, Http, etc.)
-- **CommonUtilities/Interfaces/**: Service and utility interfaces
-- **CommonUtilities/Models/**: Data models for config, users, roles, etc.
-- **CommonUtilities/Services/**: Service implementations (Mailer, Captcha, etc.)
-- **CommonUtilities/Utilities/**: Encryption, validation, logging, etc.
-- **CommonUtilities/www/**: Static assets (icons)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- USAGE -->
+<!-- USAGE EXAMPLES -->
 ## Usage
 
-Import and use helpers, services, or utilities as needed:
+Below are some example usages. For more, see the source code and documentation.
 
+### Example: Sending an Email
 ```csharp
-using CommonUtilities.Helpers;
-using CommonUtilities.Services;
-using CommonUtilities.Utilities;
-
-// Example: Using ConsoleHelper
-ConsoleHelper.WriteLineSuccess("Operation completed successfully!");
-
-// Example: Using AesUtilities for encryption
-string encrypted = AesUtilities.Encrypt("mySecret", "password123");
+var mailer = new MailerHelper(new MailerConfig { /* ... */ });
+await mailer.SendAsync("to@example.com", "Subject", "Body");
 ```
 
-_Refer to the source code in each subfolder for more examples and XML documentation comments._
-
-### Example: Using a Service
-
+### Example: Validating a Captcha
 ```csharp
-using CommonUtilities.Services;
-
-IMailerService mailer = new MailerService();
-mailer.Send("to@example.com", "Subject", "Body");
+var captcha = new CfCaptchaHelper(new CfCaptchaConfig { /* ... */ });
+bool isValid = await captcha.ValidateAsync("user-response");
 ```
 
-### Example: Using a Model
-
+### Example: Generating a QR Code
 ```csharp
-using CommonUtilities.Models;
-
-var config = new Config { AppName = "MyApp", Version = "1.0" };
+var qr = QrCodeUtilities.Generate("Hello World");
 ```
 
-### Example: Using a Console UI Component
+_For more examples, please refer to the [Documentation](https://github.com/LoveDoLove/CS_CommonUtilities)_
 
-```csharp
-using CommonUtilities.ConsoleUI;
+<!-- ROADMAP -->
+## Roadmap
+- [x] Modular helpers for common services
+- [x] Security and validation utilities
+- [x] Logging and diagnostics
+- [ ] Add more integration samples
+- [ ] Expand documentation and usage guides
 
-MenuBuilder menu = new MenuBuilder();
-menu.AddItem("Option 1", () => { /* action */ });
-menu.Show();
-```
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+See the [open issues](https://github.com/LoveDoLove/CS_CommonUtilities/issues) for a full list of proposed features (and known issues).
 
 <!-- CONTRIBUTING -->
 ## Contributing
 
-Contributions are welcome! Please review the [README_TEMPLATES.md](README_TEMPLATES.md) for style and structure guidelines.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
+Don't forget to give the project a star! Thanks again!
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-### Issue & PR Templates
-
-- Use the templates in `.github/ISSUE_TEMPLATE/` for bug reports and feature requests.
-- CI/CD and workflow files are in `.github/workflows/`.
-
-### Funding
-
-- See [.github/FUNDING.yml](.github/FUNDING.yml) for sponsorship options.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See [`LICENSE`](LICENSE) for details.
+Distributed under the MIT License. See `LICENSE` for more information.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<!-- CONTACT -->
+## Contact
 
-<!-- FUNDING & SUPPORT -->
-## Funding & Support
+LoveDoLove - [@LoveDoLove](https://github.com/LoveDoLove)
 
-If you find this project useful, consider sponsoring via GitHub Sponsors or other platforms listed in [.github/FUNDING.yml](.github/FUNDING.yml).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+Project Link: [https://github.com/LoveDoLove/CS_CommonUtilities](https://github.com/LoveDoLove/CS_CommonUtilities)
 
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-- [.NET Documentation](https://docs.microsoft.com/dotnet/)
-- [Best README Template](https://github.com/othneildrew/Best-README-Template)
+- [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 - [Choose an Open Source License](https://choosealicense.com)
+- [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
 - [Img Shields](https://shields.io)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+- [Font Awesome](https://fontawesome.com)
 
 <!-- MARKDOWN LINKS & IMAGES -->
 [contributors-shield]: https://img.shields.io/github/contributors/LoveDoLove/CS_CommonUtilities.svg?style=for-the-badge
@@ -237,4 +175,5 @@ If you find this project useful, consider sponsoring via GitHub Sponsors or othe
 [issues-url]: https://github.com/LoveDoLove/CS_CommonUtilities/issues
 [license-shield]: https://img.shields.io/github/license/LoveDoLove/CS_CommonUtilities.svg?style=for-the-badge
 [license-url]: https://github.com/LoveDoLove/CS_CommonUtilities/blob/master/LICENSE
-[product-screenshot]: CommonUtilities/www/images/icon.png
+[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[linkedin-url]: https://linkedin.com/in/LoveDoLove
