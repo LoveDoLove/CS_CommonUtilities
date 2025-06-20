@@ -2,35 +2,18 @@
 using MimeKit;
 using Serilog;
 
-// Added for logging
+namespace CommonUtilities.Helpers.Mailer;
 
-namespace CommonUtilities.Services.Email;
-
-/// <summary>
-///     Service for sending emails using SMTP.
-/// </summary>
-public class MailService : IMailService
+public class MailerHelper : IMailerHelper
 {
     private readonly SmtpConfig _smtp;
 
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="MailService" /> class.
-    /// </summary>
-    /// <param name="smtp">The SMTP configuration settings.</param>
-    public MailService(SmtpConfig smtp)
+    public MailerHelper(SmtpConfig smtp)
     {
         _smtp = smtp;
     }
 
-    /// <summary>
-    ///     Sends an email asynchronously.
-    /// </summary>
-    /// <param name="mail">The mail object containing email details (to, cc, bcc, subject, body).</param>
-    /// <returns>
-    ///     A Task representing the asynchronous operation, with a result of true if the email was sent successfully,
-    ///     false otherwise.
-    /// </returns>
-    public async Task<bool> SendEmail(MailConfig mail)
+    public async Task<bool> SendEmail(MailerConfig mail)
     {
         MimeMessage message = new();
 
