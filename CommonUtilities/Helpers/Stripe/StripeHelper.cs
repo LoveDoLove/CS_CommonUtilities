@@ -1,56 +1,66 @@
-﻿using Stripe;
+﻿// MIT License
+// 
+// Copyright (c) 2025 LoveDoLove
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+using Stripe;
 using Stripe.Checkout;
 
-namespace CommonUtilities.Services.Stripe;
+namespace CommonUtilities.Helpers.Stripe;
 
 /// <summary>
-///     Service for interacting with the Stripe API.
+///     Provides helper methods for interacting with the Stripe API for payment processing, customer management, and
+///     related operations.
 /// </summary>
-public class StripeService : IStripeService
+public class StripeHelper : IStripeHelper
 {
-    /// <summary>
-    ///     The StripeClient instance used for making API calls.
-    /// </summary>
     public readonly StripeClient StripeClient;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="StripeService" /> class.
+    ///     Initializes a new instance of the <see cref="StripeHelper" /> class with the specified Stripe configuration.
     /// </summary>
-    /// <param name="stripeApp">The Stripe application configuration containing the API key.</param>
-    /// <exception cref="ArgumentException">Thrown if the Stripe API key is not configured.</exception>
-    public StripeService(StripeApp stripeApp)
+    /// <param name="stripeConfig">The Stripe configuration containing the API key.</param>
+    public StripeHelper(StripeConfig stripeConfig)
     {
-        if (string.IsNullOrEmpty(stripeApp.ApiKey))
+        if (string.IsNullOrEmpty(stripeConfig.ApiKey))
             throw new ArgumentException("Stripe API key is not configured. Please set a valid API key.");
-
-        StripeClient = new StripeClient(stripeApp.ApiKey);
+        StripeClient = new StripeClient(stripeConfig.ApiKey);
     }
 
     /// <summary>
-    ///     Creates a new tax rate asynchronously.
+    ///     Asynchronously creates a new tax rate in Stripe.
     /// </summary>
     /// <param name="taxRateCreateOptions">The options for creating the tax rate.</param>
-    /// <returns>
-    ///     A Task representing the asynchronous operation, with a result of the created <see cref="TaxRate" />, or null
-    ///     if creation failed.
-    /// </returns>
+    /// <returns>The created <see cref="TaxRate" />, or null if creation failed.</returns>
     public async Task<TaxRate?> CreateTaxRateAsync(TaxRateCreateOptions taxRateCreateOptions)
     {
         TaxRateService taxRateService = new(StripeClient);
         TaxRate? taxRate = await taxRateService.CreateAsync(taxRateCreateOptions);
-        // Consider throwing an exception if taxRate is null and a tax rate is always expected
-        // if (taxRate == null) throw new Exception("Failed to create tax rate.");
         return taxRate;
     }
 
     /// <summary>
-    ///     Creates a new customer asynchronously.
+    ///     Asynchronously creates a new customer in Stripe.
     /// </summary>
     /// <param name="customerCreateOptions">The options for creating the customer.</param>
-    /// <returns>
-    ///     A Task representing the asynchronous operation, with a result of the created <see cref="Customer" />, or null
-    ///     if creation failed.
-    /// </returns>
+    /// <returns>The created <see cref="Customer" />, or null if creation failed.</returns>
     public async Task<Customer?> CreateCustomerAsync(CustomerCreateOptions customerCreateOptions)
     {
         CustomerService customerService = new(StripeClient);
@@ -59,13 +69,10 @@ public class StripeService : IStripeService
     }
 
     /// <summary>
-    ///     Creates a new checkout session asynchronously.
+    ///     Asynchronously creates a new checkout session in Stripe.
     /// </summary>
     /// <param name="sessionCreateOptions">The options for creating the checkout session.</param>
-    /// <returns>
-    ///     A Task representing the asynchronous operation, with a result of the created <see cref="Session" />, or null
-    ///     if creation failed.
-    /// </returns>
+    /// <returns>The created <see cref="Session" />, or null if creation failed.</returns>
     public async Task<Session?> CreateCheckoutSessionAsync(SessionCreateOptions sessionCreateOptions)
     {
         SessionService sessionService = new(StripeClient);
@@ -74,13 +81,10 @@ public class StripeService : IStripeService
     }
 
     /// <summary>
-    ///     Retrieves a checkout session asynchronously.
+    ///     Asynchronously retrieves a checkout session by its ID.
     /// </summary>
-    /// <param name="sessionId">The ID of the checkout session to retrieve.</param>
-    /// <returns>
-    ///     A Task representing the asynchronous operation, with a result of the retrieved <see cref="Session" />, or null
-    ///     if not found.
-    /// </returns>
+    /// <param name="sessionId">The ID of the checkout session.</param>
+    /// <returns>The <see cref="Session" /> if found; otherwise, null.</returns>
     public async Task<Session?> GetCheckoutSessionAsync(string sessionId)
     {
         SessionService sessionService = new(StripeClient);
@@ -89,13 +93,10 @@ public class StripeService : IStripeService
     }
 
     /// <summary>
-    ///     Retrieves a payment intent asynchronously.
+    ///     Asynchronously retrieves a payment intent by its ID.
     /// </summary>
-    /// <param name="paymentIntentId">The ID of the payment intent to retrieve.</param>
-    /// <returns>
-    ///     A Task representing the asynchronous operation, with a result of the retrieved <see cref="PaymentIntent" />,
-    ///     or null if not found.
-    /// </returns>
+    /// <param name="paymentIntentId">The ID of the payment intent.</param>
+    /// <returns>The <see cref="PaymentIntent" /> if found; otherwise, null.</returns>
     public async Task<PaymentIntent?> GetPaymentIntentAsync(string paymentIntentId)
     {
         PaymentIntentService paymentIntentService = new(StripeClient);
@@ -104,13 +105,10 @@ public class StripeService : IStripeService
     }
 
     /// <summary>
-    ///     Retrieves a charge asynchronously.
+    ///     Asynchronously retrieves a charge by its ID.
     /// </summary>
-    /// <param name="chargeId">The ID of the charge to retrieve.</param>
-    /// <returns>
-    ///     A Task representing the asynchronous operation, with a result of the retrieved <see cref="Charge" />, or null
-    ///     if not found.
-    /// </returns>
+    /// <param name="chargeId">The ID of the charge.</param>
+    /// <returns>The <see cref="Charge" /> if found; otherwise, null.</returns>
     public async Task<Charge?> GetChargeAsync(string chargeId)
     {
         ChargeService chargeService = new(StripeClient);
@@ -119,13 +117,10 @@ public class StripeService : IStripeService
     }
 
     /// <summary>
-    ///     Retrieves a customer asynchronously.
+    ///     Asynchronously retrieves a customer by its ID.
     /// </summary>
-    /// <param name="customerId">The ID of the customer to retrieve.</param>
-    /// <returns>
-    ///     A Task representing the asynchronous operation, with a result of the retrieved <see cref="Customer" />, or
-    ///     null if not found.
-    /// </returns>
+    /// <param name="customerId">The ID of the customer.</param>
+    /// <returns>The <see cref="Customer" /> if found; otherwise, null.</returns>
     public async Task<Customer?> GetCustomerAsync(string customerId)
     {
         CustomerService customerService = new(StripeClient);
@@ -134,14 +129,11 @@ public class StripeService : IStripeService
     }
 
     /// <summary>
-    ///     Refunds a payment intent asynchronously.
+    ///     Asynchronously refunds a payment intent for the specified amount.
     /// </summary>
     /// <param name="paymentIntentId">The ID of the payment intent to refund.</param>
     /// <param name="amount">The amount to refund.</param>
-    /// <returns>
-    ///     A Task representing the asynchronous operation, with a result of the created <see cref="Refund" />, or null if
-    ///     refund failed.
-    /// </returns>
+    /// <returns>The <see cref="Refund" /> if successful; otherwise, null.</returns>
     public async Task<Refund?> RefundPaymentIntentAsync(string paymentIntentId, decimal amount)
     {
         RefundService refundService = new RefundService(StripeClient);

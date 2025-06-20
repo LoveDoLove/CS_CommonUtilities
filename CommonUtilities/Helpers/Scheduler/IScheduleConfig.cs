@@ -1,4 +1,4 @@
-﻿// MIT License
+// MIT License
 // 
 // Copyright (c) 2025 LoveDoLove
 // 
@@ -20,37 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace CommonUtilities.Utilities.Security;
+namespace CommonUtilities.Helpers.Scheduler;
 
 /// <summary>
-///     Provides utility methods for validation.
+///     Defines the schedule configuration interface for a cron job, including the cron expression and time zone.
 /// </summary>
-public static class ValidationUtilities
+public interface IScheduleConfig<T>
 {
     /// <summary>
-    ///     Checks if a string is a valid hexadecimal representation.
+    ///     Gets or sets the cron expression that defines the job schedule.
     /// </summary>
-    /// <param name="szText">The string to validate.</param>
-    /// <returns>True if the string is a valid hex string, false otherwise.</returns>
-    public static bool IsValidHex(string szText)
-    {
-        if (string.IsNullOrEmpty(szText))
-            return false;
+    string CronExpression { get; set; }
 
-        // Hex strings often have an even length (each byte is two hex chars).
-        // This check can be added if strictness is required:
-        // if (szText.Length % 2 != 0)
-        // return false;
-
-        foreach (char c in szText)
-        {
-            bool isHexChar = (c >= '0' && c <= '9') ||
-                             (c >= 'a' && c <= 'f') ||
-                             (c >= 'A' && c <= 'F');
-            if (!isHexChar)
-                return false;
-        }
-
-        return true;
-    }
+    /// <summary>
+    ///     Gets or sets the time zone information for the job schedule.
+    /// </summary>
+    TimeZoneInfo TimeZoneInfo { get; set; }
 }

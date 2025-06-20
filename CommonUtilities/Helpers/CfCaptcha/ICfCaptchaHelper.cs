@@ -20,37 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace CommonUtilities.Utilities.Security;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Http;
+
+namespace CommonUtilities.Helpers.CfCaptcha;
 
 /// <summary>
-///     Provides utility methods for validation.
+///     Defines methods for rendering and verifying Cloudflare Turnstile CAPTCHA in ASP.NET Core applications.
 /// </summary>
-public static class ValidationUtilities
+public interface ICfCaptchaHelper
 {
     /// <summary>
-    ///     Checks if a string is a valid hexadecimal representation.
+    ///     Asynchronously verifies the CAPTCHA token with Cloudflare Turnstile service.
     /// </summary>
-    /// <param name="szText">The string to validate.</param>
-    /// <returns>True if the string is a valid hex string, false otherwise.</returns>
-    public static bool IsValidHex(string szText)
-    {
-        if (string.IsNullOrEmpty(szText))
-            return false;
+    /// <param name="token">The CAPTCHA response token from the client.</param>
+    /// <returns>True if the CAPTCHA is valid; otherwise, false.</returns>
+    Task<bool> VerifyCaptchaAsync(string token);
 
-        // Hex strings often have an even length (each byte is two hex chars).
-        // This check can be added if strictness is required:
-        // if (szText.Length % 2 != 0)
-        // return false;
+    /// <summary>
+    ///     Generates the HTML markup required to render the Cloudflare Turnstile CAPTCHA widget.
+    /// </summary>
+    /// <returns>An <see cref="IHtmlContent" /> containing the CAPTCHA widget HTML.</returns>
+    IHtmlContent GetCaptchaHtml();
 
-        foreach (char c in szText)
-        {
-            bool isHexChar = (c >= '0' && c <= '9') ||
-                             (c >= 'a' && c <= 'f') ||
-                             (c >= 'A' && c <= 'F');
-            if (!isHexChar)
-                return false;
-        }
-
-        return true;
-    }
+    /// <summary>
+    ///     Validates the CAPTCHA response from the specified HTTP request.
+    /// </summary>
+    /// <param name="request">The HTTP request containing the CAPTCHA response.</param>
+    /// <returns>True if the CAPTCHA response is present and valid; otherwise, false.</returns>
+    bool IsCaptchaResponseValid(HttpRequest request);
 }

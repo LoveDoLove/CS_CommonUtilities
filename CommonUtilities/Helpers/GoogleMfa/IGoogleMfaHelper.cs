@@ -20,37 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace CommonUtilities.Utilities.Security;
+namespace CommonUtilities.Helpers.GoogleMfa;
 
 /// <summary>
-///     Provides utility methods for validation.
+///     Defines methods for generating and validating Google Authenticator MFA codes.
 /// </summary>
-public static class ValidationUtilities
+public interface IGoogleMfaHelper
 {
     /// <summary>
-    ///     Checks if a string is a valid hexadecimal representation.
+    ///     Generates a new Google MFA configuration, including secret key, QR code URL, and manual entry code.
     /// </summary>
-    /// <param name="szText">The string to validate.</param>
-    /// <returns>True if the string is a valid hex string, false otherwise.</returns>
-    public static bool IsValidHex(string szText)
-    {
-        if (string.IsNullOrEmpty(szText))
-            return false;
+    /// <param name="issuer">The name of the service or application issuing the MFA.</param>
+    /// <param name="email">The user's email address for MFA registration.</param>
+    /// <returns>A <see cref="GoogleMfaConfig" /> containing the MFA setup details.</returns>
+    GoogleMfaConfig GenerateMfa(string issuer, string email);
 
-        // Hex strings often have an even length (each byte is two hex chars).
-        // This check can be added if strictness is required:
-        // if (szText.Length % 2 != 0)
-        // return false;
-
-        foreach (char c in szText)
-        {
-            bool isHexChar = (c >= '0' && c <= '9') ||
-                             (c >= 'a' && c <= 'f') ||
-                             (c >= 'A' && c <= 'F');
-            if (!isHexChar)
-                return false;
-        }
-
-        return true;
-    }
+    /// <summary>
+    ///     Validates the provided MFA code against the secret key.
+    /// </summary>
+    /// <param name="secretKey">The secret key associated with the user.</param>
+    /// <param name="code">The MFA code to validate.</param>
+    /// <returns>True if the code is valid; otherwise, false.</returns>
+    bool ValidateMfa(string secretKey, string code);
 }

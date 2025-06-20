@@ -1,16 +1,38 @@
-﻿using System.Text.RegularExpressions;
+﻿// MIT License
+// 
+// Copyright (c) 2025 LoveDoLove
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using File = System.IO.File;
 
-namespace CommonUtilities.Services.Media;
+namespace CommonUtilities.Helpers.Media;
 
 /// <summary>
-///     Service for handling image uploads, validation, resizing, and deletion.
+///     Provides helper methods for validating, saving, resizing, and deleting image files in the web application.
 /// </summary>
-public class ImageService : IImageService
+public class ImageHelper : IImageHelper
 {
     private const string ImageType = @"^image\/(jpeg|png)$";
     private const string ImageName = @"^.+\.(jpeg|jpg|png)$";
@@ -22,19 +44,19 @@ public class ImageService : IImageService
     private readonly IWebHostEnvironment _environment;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="ImageService" /> class.
+    ///     Initializes a new instance of the <see cref="ImageHelper" /> class with the specified web host environment.
     /// </summary>
-    /// <param name="environment">The web host environment, used to determine file paths.</param>
-    public ImageService(IWebHostEnvironment environment)
+    /// <param name="environment">The web host environment for file storage.</param>
+    public ImageHelper(IWebHostEnvironment environment)
     {
         _environment = environment;
     }
 
     /// <summary>
-    ///     Validates an uploaded photo based on type (JPEG/PNG) and size (max 5MB).
+    ///     Validates the uploaded photo file for type and size constraints.
     /// </summary>
-    /// <param name="f">The IFormFile representing the uploaded photo.</param>
-    /// <returns>An empty string if the photo is valid, otherwise an error message.</returns>
+    /// <param name="f">The uploaded form file to validate.</param>
+    /// <returns>An error message if validation fails; otherwise, an empty string.</returns>
     public string ValidatePhoto(IFormFile f)
     {
         if (!ImageTypeRegex.IsMatch(f.ContentType) || !ImageNameRegex.IsMatch(f.FileName))
@@ -44,13 +66,11 @@ public class ImageService : IImageService
     }
 
     /// <summary>
-    ///     Saves an uploaded photo to the specified folder after resizing it.
-    ///     The photo is resized to 200x200 pixels using a crop mode.
-    ///     The saved filename is a GUID.
+    ///     Saves the uploaded photo file to the specified folder, resizing it as needed.
     /// </summary>
-    /// <param name="f">The IFormFile representing the uploaded photo.</param>
-    /// <param name="folder">The subfolder within the web root's 'wwwroot' directory to save the photo.</param>
-    /// <returns>The filename of the saved photo.</returns>
+    /// <param name="f">The uploaded form file to save.</param>
+    /// <param name="folder">The target folder for saving the image.</param>
+    /// <returns>The saved file name.</returns>
     public string SavePhoto(IFormFile f, string folder)
     {
         string originalExtension = Path.GetExtension(f.FileName).ToLowerInvariant();
@@ -85,10 +105,10 @@ public class ImageService : IImageService
     }
 
     /// <summary>
-    ///     Deletes a photo from the specified folder.
+    ///     Deletes the specified photo file from the given folder.
     /// </summary>
-    /// <param name="file">The filename of the photo to delete.</param>
-    /// <param name="folder">The subfolder within the web root's 'wwwroot' directory where the photo is located.</param>
+    /// <param name="file">The file name to delete.</param>
+    /// <param name="folder">The folder containing the file.</param>
     public void DeletePhoto(string file, string folder)
     {
         file = Path.GetFileName(file);

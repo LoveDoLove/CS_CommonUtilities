@@ -20,37 +20,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace CommonUtilities.Utilities.Security;
+using System.Text.Json.Serialization;
+
+namespace CommonUtilities.Helpers.CfCaptcha;
 
 /// <summary>
-///     Provides utility methods for validation.
+///     Represents the response from the Cloudflare Turnstile CAPTCHA verification API.
 /// </summary>
-public static class ValidationUtilities
+public class CfCaptchaResponse
 {
     /// <summary>
-    ///     Checks if a string is a valid hexadecimal representation.
+    ///     Gets or sets a value indicating whether the CAPTCHA verification was successful.
     /// </summary>
-    /// <param name="szText">The string to validate.</param>
-    /// <returns>True if the string is a valid hex string, false otherwise.</returns>
-    public static bool IsValidHex(string szText)
-    {
-        if (string.IsNullOrEmpty(szText))
-            return false;
+    [JsonPropertyName("success")]
+    public bool Success { get; set; }
 
-        // Hex strings often have an even length (each byte is two hex chars).
-        // This check can be added if strictness is required:
-        // if (szText.Length % 2 != 0)
-        // return false;
-
-        foreach (char c in szText)
-        {
-            bool isHexChar = (c >= '0' && c <= '9') ||
-                             (c >= 'a' && c <= 'f') ||
-                             (c >= 'A' && c <= 'F');
-            if (!isHexChar)
-                return false;
-        }
-
-        return true;
-    }
+    // Cloudflare's response can include other fields like 'error-codes', 'challenge_ts', 'hostname', 'action', 'cdata'.
+    // These can be added here if needed for more detailed logging or handling.
+    // Example:
+    // [JsonPropertyName("error-codes")]
+    // public List<string>? ErrorCodes { get; set; }
+    //
+    // [JsonPropertyName("hostname")]
+    // public string? Hostname { get; set; }
 }

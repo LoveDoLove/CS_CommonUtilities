@@ -20,37 +20,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace CommonUtilities.Utilities.Security;
+namespace CommonUtilities.Helpers.CfCaptcha;
 
 /// <summary>
-///     Provides utility methods for validation.
+///     Represents the configuration settings for Cloudflare Turnstile CAPTCHA integration.
 /// </summary>
-public static class ValidationUtilities
+public class CfCaptchaConfig
 {
     /// <summary>
-    ///     Checks if a string is a valid hexadecimal representation.
+    ///     Gets or sets the site key provided by Cloudflare for the CAPTCHA widget.
     /// </summary>
-    /// <param name="szText">The string to validate.</param>
-    /// <returns>True if the string is a valid hex string, false otherwise.</returns>
-    public static bool IsValidHex(string szText)
-    {
-        if (string.IsNullOrEmpty(szText))
-            return false;
+    public string SiteKey { get; set; } = string.Empty;
 
-        // Hex strings often have an even length (each byte is two hex chars).
-        // This check can be added if strictness is required:
-        // if (szText.Length % 2 != 0)
-        // return false;
-
-        foreach (char c in szText)
-        {
-            bool isHexChar = (c >= '0' && c <= '9') ||
-                             (c >= 'a' && c <= 'f') ||
-                             (c >= 'A' && c <= 'F');
-            if (!isHexChar)
-                return false;
-        }
-
-        return true;
-    }
+    /// <summary>
+    ///     Gets or sets the secret key used for server-side CAPTCHA verification.
+    /// </summary>
+    public string SecretKey { get; set; } = string.Empty;
 }

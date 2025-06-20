@@ -1,28 +1,46 @@
-﻿using CommonUtilities.Services.Scheduler;
+﻿// MIT License
+// 
+// Copyright (c) 2025 LoveDoLove
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+using CommonUtilities.Helpers.Scheduler;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace CommonUtilities.Services.Sync;
 
 /// <summary>
-///     Handles scheduled synchronization tasks.
-///     This service inherits from <see cref="CronJobService" /> to execute tasks based on a CRON expression.
+///     Represents a scheduled background service that performs periodic synchronization tasks using a cron schedule.
 /// </summary>
-/// <remarks>
-///     Author: LoveDoLove
-/// </remarks>
-public class SyncService : CronJobService
+public class SyncService : CronJobHelper
 {
     private readonly ILogger<SyncService> _logger;
     private readonly IServiceScopeFactory _scopeFactory;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="SyncService" /> class.
+    ///     Initializes a new instance of the <see cref="SyncService" /> class with the specified schedule configuration,
+    ///     logger, and scope factory.
     /// </summary>
-    /// <param name="config">The schedule configuration for this service.</param>
-    /// <param name="logger">The logger instance.</param>
-    /// <param name="scopeFactory">The service scope factory.</param>
-    /// <exception cref="ArgumentNullException">Thrown if logger or scopeFactory is null.</exception>
+    /// <param name="config">The schedule configuration for the cron job.</param>
+    /// <param name="logger">The logger instance for logging service activity.</param>
+    /// <param name="scopeFactory">The service scope factory for resolving scoped services.</param>
     public SyncService(IScheduleConfig<SyncService> config, ILogger<SyncService> logger,
         IServiceScopeFactory scopeFactory)
         : base(config.CronExpression, config.TimeZoneInfo)
@@ -32,10 +50,9 @@ public class SyncService : CronJobService
     }
 
     /// <summary>
-    ///     Starts the synchronization service asynchronously.
+    ///     Starts the synchronization service and schedules the first job occurrence.
     /// </summary>
-    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
-    /// <returns>A <see cref="Task" /> that represents the asynchronous start operation.</returns>
+    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
     public override Task StartAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation($"{nameof(SyncService)} starts.");
@@ -43,10 +60,9 @@ public class SyncService : CronJobService
     }
 
     /// <summary>
-    ///     Performs the work of the synchronization service. This method is called at the scheduled time.
+    ///     Performs the main synchronization work when triggered by the cron schedule.
     /// </summary>
-    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
-    /// <returns>A <see cref="Task" /> representing the work to be done.</returns>
+    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
     public override Task DoWork(CancellationToken cancellationToken)
     {
         _logger.LogInformation($"{DateTime.Now:hh:mm:ss} {nameof(SyncService)} is working.");
@@ -61,10 +77,9 @@ public class SyncService : CronJobService
     }
 
     /// <summary>
-    ///     Stops the synchronization service asynchronously.
+    ///     Stops the synchronization service and releases any running resources.
     /// </summary>
-    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
-    /// <returns>A <see cref="Task" /> that represents the asynchronous stop operation.</returns>
+    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
     public override Task StopAsync(CancellationToken cancellationToken)
     {
         _logger.LogInformation($"{nameof(SyncService)} is stopping.");

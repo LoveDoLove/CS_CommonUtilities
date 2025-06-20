@@ -20,37 +20,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace CommonUtilities.Utilities.Security;
+using Microsoft.AspNetCore.Http;
+
+namespace CommonUtilities.Helpers.IpInfo;
 
 /// <summary>
-///     Provides utility methods for validation.
+///     Defines methods for retrieving IP information and extracting client IP addresses from HTTP requests.
 /// </summary>
-public static class ValidationUtilities
+public interface IIpInfoHelper
 {
     /// <summary>
-    ///     Checks if a string is a valid hexadecimal representation.
+    ///     Asynchronously retrieves IP information for the client making the HTTP request.
     /// </summary>
-    /// <param name="szText">The string to validate.</param>
-    /// <returns>True if the string is a valid hex string, false otherwise.</returns>
-    public static bool IsValidHex(string szText)
-    {
-        if (string.IsNullOrEmpty(szText))
-            return false;
+    /// <param name="context">The HTTP context containing the client request.</param>
+    /// <returns>An <see cref="IpInfoResponse" /> with details about the client's IP address, or null if not found.</returns>
+    Task<IpInfoResponse?> GetIpInfo(HttpContext context);
 
-        // Hex strings often have an even length (each byte is two hex chars).
-        // This check can be added if strictness is required:
-        // if (szText.Length % 2 != 0)
-        // return false;
-
-        foreach (char c in szText)
-        {
-            bool isHexChar = (c >= '0' && c <= '9') ||
-                             (c >= 'a' && c <= 'f') ||
-                             (c >= 'A' && c <= 'F');
-            if (!isHexChar)
-                return false;
-        }
-
-        return true;
-    }
+    /// <summary>
+    ///     Extracts the client's IP address from the HTTP context, considering common proxy headers.
+    /// </summary>
+    /// <param name="context">The HTTP context containing the client request.</param>
+    /// <returns>The client's IP address as a string.</returns>
+    string GetClientIp(HttpContext context);
 }

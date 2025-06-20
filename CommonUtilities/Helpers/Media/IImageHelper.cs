@@ -20,37 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace CommonUtilities.Utilities.Security;
+using Microsoft.AspNetCore.Http;
+
+namespace CommonUtilities.Helpers.Media;
 
 /// <summary>
-///     Provides utility methods for validation.
+///     Defines methods for validating, saving, and deleting image files in the web application.
 /// </summary>
-public static class ValidationUtilities
+public interface IImageHelper
 {
     /// <summary>
-    ///     Checks if a string is a valid hexadecimal representation.
+    ///     Validates the uploaded photo file for type and size constraints.
     /// </summary>
-    /// <param name="szText">The string to validate.</param>
-    /// <returns>True if the string is a valid hex string, false otherwise.</returns>
-    public static bool IsValidHex(string szText)
-    {
-        if (string.IsNullOrEmpty(szText))
-            return false;
+    /// <param name="f">The uploaded form file to validate.</param>
+    /// <returns>An error message if validation fails; otherwise, an empty string.</returns>
+    string ValidatePhoto(IFormFile f);
 
-        // Hex strings often have an even length (each byte is two hex chars).
-        // This check can be added if strictness is required:
-        // if (szText.Length % 2 != 0)
-        // return false;
+    /// <summary>
+    ///     Saves the uploaded photo file to the specified folder, resizing it as needed.
+    /// </summary>
+    /// <param name="f">The uploaded form file to save.</param>
+    /// <param name="folder">The target folder for saving the image.</param>
+    /// <returns>The saved file name.</returns>
+    string SavePhoto(IFormFile f, string folder);
 
-        foreach (char c in szText)
-        {
-            bool isHexChar = (c >= '0' && c <= '9') ||
-                             (c >= 'a' && c <= 'f') ||
-                             (c >= 'A' && c <= 'F');
-            if (!isHexChar)
-                return false;
-        }
-
-        return true;
-    }
+    /// <summary>
+    ///     Deletes the specified photo file from the given folder.
+    /// </summary>
+    /// <param name="file">The file name to delete.</param>
+    /// <param name="folder">The folder containing the file.</param>
+    void DeletePhoto(string file, string folder);
 }
