@@ -22,7 +22,7 @@
 
 using QRCoder;
 
-namespace CommonUtilities.Utilities.Other;
+namespace CommonUtilities.Helpers.QrCode;
 
 /// <summary>
 ///     Utility class for generating QR codes.
@@ -32,7 +32,7 @@ namespace CommonUtilities.Utilities.Other;
 /// <remarks>
 ///     Author: LoveDoLove
 /// </remarks>
-public static class QrCodeUtilities
+public static class QrCodeHelper
 {
     /// <summary>
     ///     Generates a QR code image from the specified URL or text.
