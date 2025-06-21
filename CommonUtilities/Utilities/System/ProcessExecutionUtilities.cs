@@ -20,42 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.ComponentModel;
 using System.Diagnostics;
 
 namespace CommonUtilities.Utilities.System;
 
 /// <summary>
-///     Provides utility methods for executing external processes.
+///     Minimal utility for executing external processes using system PATH.
 /// </summary>
 public static class ProcessExecutionUtilities
 {
     /// <summary>
     ///     Runs a process and captures its standard output, standard error, and exit code.
-    ///     This method does not provide real-time output.
     /// </summary>
-    /// <param name="executablePath">The full path to the executable file to run.</param>
-    /// <param name="arguments">The arguments to pass to the executable.</param>
-    /// <param name="workingDirectory">The working directory for the process. Defaults to the current directory if null.</param>
-    /// <param name="loadUserProfile">
-    ///     For Windows, whether to load the user's profile. Defaults to true if OS is Windows, false
-    ///     otherwise.
-    /// </param>
-    /// <returns>A tuple containing (string output, string error, int exitCode).</returns>
-    public static (string output, string error, int exitCode) RunProcessAndCaptureOutput(string executablePath,
-        string arguments, string? workingDirectory = null, bool? loadUserProfile = null)
+    /// <param name="command">The command to run (e.g., "npm", "php").</param>
+    /// <param name="arguments">Arguments to pass to the command.</param>
+    /// <param name="workingDirectory">Optional working directory.</param>
+    /// <returns>Tuple of (output, error, exitCode).</returns>
+    public static (string output, string error, int exitCode) RunProcessAndCaptureOutput(string command,
+        string arguments, string? workingDirectory = null)
     {
-        string output = string.Empty;
-        string error = string.Empty;
-        int exitCode = -1;
-
-        bool actualLoadUserProfile = loadUserProfile ?? Environment.OSVersion.Platform == PlatformID.Win32NT;
-
         try
         {
-            using (Process process = new Process())
+            using (var process = new Process())
             {
-                process.StartInfo.FileName = executablePath;
+                process.StartInfo.FileName = command;
                 process.StartInfo.Arguments = arguments;
                 process.StartInfo.WorkingDirectory = workingDirectory ?? Environment.CurrentDirectory;
                 process.StartInfo.UseShellExecute = false;
@@ -63,65 +51,36 @@ public static class ProcessExecutionUtilities
                 process.StartInfo.RedirectStandardError = true;
                 process.StartInfo.CreateNoWindow = true;
 
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                    process.StartInfo.LoadUserProfile = actualLoadUserProfile;
-
                 process.Start();
-
-                output = process.StandardOutput.ReadToEnd();
-                error = process.StandardError.ReadToEnd();
-
+                string output = process.StandardOutput.ReadToEnd();
+                string error = process.StandardError.ReadToEnd();
                 process.WaitForExit();
-                exitCode = process.ExitCode;
+                return (output, error, process.ExitCode);
             }
-        }
-        catch (Win32Exception ex)
-        {
-            string message =
-                $"Win32Exception (NativeErrorCode: {ex.NativeErrorCode}) while trying to run '{executablePath} {arguments}'. Message: {ex.Message}";
-            if (ex.NativeErrorCode == 2) // ERROR_FILE_NOT_FOUND
-                message =
-                    $"Executable not found: '{executablePath}'. Ensure it is correctly installed and in PATH or configured path.";
-            LoggerUtilities.Error(ex, message);
-            error = message; // Capture the error message
-            exitCode = ex.NativeErrorCode != 0 ? ex.NativeErrorCode : -1; // Use NativeErrorCode if available
         }
         catch (Exception ex)
         {
-            string message = $"Exception while trying to run '{executablePath} {arguments}'. Message: {ex.Message}";
-            LoggerUtilities.Error(ex, message);
-            error = message; // Capture the error message
-            exitCode = -1; // General error
+            return ("", ex.Message, -1);
         }
-
-        return (output, error, exitCode);
     }
 
     /// <summary>
-    ///     Runs a process, optionally streaming its standard output and standard error.
+    ///     Runs a process and streams its output and error in real time.
     /// </summary>
-    /// <param name="executablePath">The full path to the executable file to run.</param>
-    /// <param name="arguments">The arguments to pass to the executable.</param>
-    /// <param name="workingDirectory">The working directory for the process. Defaults to the current directory if null.</param>
-    /// <param name="loadUserProfile">
-    ///     For Windows, whether to load the user's profile. Defaults to true if OS is Windows, false
-    ///     otherwise.
-    /// </param>
-    /// <param name="outputDataReceived">Optional callback for standard output lines.</param>
-    /// <param name="errorDataReceived">Optional callback for standard error lines.</param>
-    /// <returns>The exit code of the process.</returns>
-    public static int RunProcessWithStreaming(string executablePath, string arguments, string? workingDirectory = null,
-        bool? loadUserProfile = null, Action<string>? outputDataReceived = null,
-        Action<string>? errorDataReceived = null)
+    /// <param name="command">The command to run.</param>
+    /// <param name="arguments">Arguments to pass to the command.</param>
+    /// <param name="workingDirectory">Optional working directory.</param>
+    /// <param name="onOutput">Callback for each output line.</param>
+    /// <param name="onError">Callback for each error line.</param>
+    /// <returns>Exit code of the process.</returns>
+    public static int RunProcessWithStreaming(string command, string arguments, string? workingDirectory = null,
+        Action<string>? onOutput = null, Action<string>? onError = null)
     {
-        bool actualLoadUserProfile = loadUserProfile ?? Environment.OSVersion.Platform == PlatformID.Win32NT;
-        int exitCode = -1;
-
         try
         {
-            using (Process process = new Process())
+            using (var process = new Process())
             {
-                process.StartInfo.FileName = executablePath;
+                process.StartInfo.FileName = command;
                 process.StartInfo.Arguments = arguments;
                 process.StartInfo.WorkingDirectory = workingDirectory ?? Environment.CurrentDirectory;
                 process.StartInfo.UseShellExecute = false;
@@ -129,55 +88,28 @@ public static class ProcessExecutionUtilities
                 process.StartInfo.RedirectStandardError = true;
                 process.StartInfo.CreateNoWindow = true;
 
-                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
-                    process.StartInfo.LoadUserProfile = actualLoadUserProfile;
-
-                if (outputDataReceived != null)
-                    process.OutputDataReceived += (sender, e) =>
+                if (onOutput != null)
+                    process.OutputDataReceived += (s, e) =>
                     {
-                        if (e.Data != null) outputDataReceived(e.Data);
+                        if (e.Data != null) onOutput(e.Data);
                     };
-                else
-                    // Consume output to prevent buffer issues if no callback is provided
-                    process.OutputDataReceived += (sender, e) => { _ = e.Data; };
-
-                if (errorDataReceived != null)
-                    process.ErrorDataReceived += (sender, e) =>
+                if (onError != null)
+                    process.ErrorDataReceived += (s, e) =>
                     {
-                        if (e.Data != null) errorDataReceived(e.Data);
+                        if (e.Data != null) onError(e.Data);
                     };
-                else
-                    // Consume error to prevent buffer issues if no callback is provided
-                    process.ErrorDataReceived += (sender, e) => { _ = e.Data; };
 
                 process.Start();
-
                 process.BeginOutputReadLine();
                 process.BeginErrorReadLine();
-
                 process.WaitForExit();
-                exitCode = process.ExitCode;
+                return process.ExitCode;
             }
-        }
-        catch (Win32Exception ex)
-        {
-            string message =
-                $"Win32Exception (NativeErrorCode: {ex.NativeErrorCode}) while trying to run '{executablePath} {arguments}'. Message: {ex.Message}";
-            if (ex.NativeErrorCode == 2) // ERROR_FILE_NOT_FOUND
-                message =
-                    $"Executable not found: '{executablePath}'. Ensure it is correctly installed and in PATH or configured path.";
-            LoggerUtilities.Error(ex, message);
-            errorDataReceived?.Invoke(message); // Send error to callback if available
-            exitCode = ex.NativeErrorCode != 0 ? ex.NativeErrorCode : -1;
         }
         catch (Exception ex)
         {
-            string message = $"Exception while trying to run '{executablePath} {arguments}'. Message: {ex.Message}";
-            LoggerUtilities.Error(ex, message);
-            errorDataReceived?.Invoke(message); // Send error to callback if available
-            exitCode = -1;
+            onError?.Invoke(ex.Message);
+            return -1;
         }
-
-        return exitCode;
     }
 }
