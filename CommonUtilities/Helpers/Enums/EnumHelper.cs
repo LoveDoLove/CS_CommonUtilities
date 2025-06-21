@@ -25,14 +25,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 // Required for SelectList
 
-namespace CommonUtilities.Utilities.Other;
+namespace CommonUtilities.Helpers.Enums;
 
 /// <summary>
 ///     Provides utility methods for working with enumerations (enums).
 ///     This includes converting enums to lists or <see cref="SelectList" /> objects,
 ///     and retrieving display names from <see cref="DisplayAttribute" />.
 /// </summary>
-public static class EnumUtilities
+public static class EnumHelper
 {
     /// <summary>
     ///     Converts an enumeration to a list of its values.

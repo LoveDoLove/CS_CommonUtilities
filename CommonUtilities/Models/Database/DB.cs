@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using CommonUtilities.Utilities.Other;
+using CommonUtilities.Helpers.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace CommonUtilities.Models.Database;
@@ -64,7 +64,7 @@ public class DB : DbContext
 
         // Retrieve a list of all UserRoles enum values.
         // EnumHelper.ToList<UserRoles>() is assumed to be a custom helper method.
-        List<UserRoles> userRoles = EnumUtilities.ToList<UserRoles>();
+        List<UserRoles> userRoles = EnumHelper.ToList<UserRoles>();
 
         // Seed the 'Roles' table with data derived from the UserRoles enum.
         // Each role from the enum will be added as a new Role entity.
