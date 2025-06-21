@@ -112,4 +112,23 @@ public static class ProcessExecutionUtilities
             return -1;
         }
     }
+
+    /// <summary>
+    ///     Runs a process in a new cmd.exe window (best for interactive or environment-sensitive commands on Windows).
+    /// </summary>
+    /// <param name="command">The command to run (e.g., "npm", "php").</param>
+    /// <param name="arguments">Arguments to pass to the command.</param>
+    /// <param name="workingDirectory">Optional working directory.</param>
+    public static void RunProcessInNewCmdWindow(string command, string arguments, string? workingDirectory = null)
+    {
+        var cmdArgs = $"/k \"{command} {arguments}\"";
+        var psi = new ProcessStartInfo
+        {
+            FileName = "cmd.exe",
+            Arguments = cmdArgs,
+            UseShellExecute = true,
+            WorkingDirectory = workingDirectory ?? Environment.CurrentDirectory
+        };
+        Process.Start(psi);
+    }
 }
