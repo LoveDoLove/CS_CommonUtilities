@@ -22,12 +22,12 @@
 
 using System.Diagnostics;
 
-namespace CommonUtilities.Utilities.System;
+namespace CommonUtilities.Helpers.Processes;
 
 /// <summary>
 ///     Minimal utility for executing external processes using system PATH.
 /// </summary>
-public static class ProcessExecutionUtilities
+public static class ProcessExecutionHelper
 {
     /// <summary>
     ///     Runs a process and captures its standard output, standard error, and exit code.
@@ -114,21 +114,97 @@ public static class ProcessExecutionUtilities
     }
 
     /// <summary>
-    ///     Runs a process in a new cmd.exe window (best for interactive or environment-sensitive commands on Windows).
+    ///     Runs a process using cmd.exe and captures its output, error, and exit code.
     /// </summary>
-    /// <param name="command">The command to run (e.g., "npm", "php").</param>
-    /// <param name="arguments">Arguments to pass to the command.</param>
-    /// <param name="workingDirectory">Optional working directory.</param>
-    public static void RunProcessInNewCmdWindow(string command, string arguments, string? workingDirectory = null)
+    public static (string output, string error, int exitCode) RunProcessWithCmd(string command, string args,
+        string? workingDirectory = null)
     {
-        var cmdArgs = $"/k \"{command} {arguments}\"";
-        var psi = new ProcessStartInfo
+        try
         {
-            FileName = "cmd.exe",
-            Arguments = cmdArgs,
-            UseShellExecute = true,
-            WorkingDirectory = workingDirectory ?? Environment.CurrentDirectory
-        };
-        Process.Start(psi);
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = $"/c \"{command} {args}\"",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                WorkingDirectory = workingDirectory ?? Environment.CurrentDirectory,
+                CreateNoWindow = true
+            };
+            using var process = new Process { StartInfo = psi };
+            process.Start();
+            string output = process.StandardOutput.ReadToEnd();
+            string error = process.StandardError.ReadToEnd();
+            process.WaitForExit();
+            int exitCode = process.ExitCode;
+            return (output, error, exitCode);
+        }
+        catch (Exception ex)
+        {
+            return ("", ex.Message, -1);
+        }
+    }
+
+    /// <summary>
+    ///     Runs a process using cmd.exe and streams its output and error in real time.
+    /// </summary>
+    public static int RunProcessWithCmdStreaming(string command, string args, string? workingDirectory = null,
+        Action<string>? onOutput = null, Action<string>? onError = null)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = $"/c \"{command} {args}\"",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                WorkingDirectory = workingDirectory ?? Environment.CurrentDirectory,
+                CreateNoWindow = true
+            };
+            using var process = new Process { StartInfo = psi };
+            process.OutputDataReceived += (s, e) =>
+            {
+                if (e.Data != null) onOutput?.Invoke(e.Data);
+            };
+            process.ErrorDataReceived += (s, e) =>
+            {
+                if (e.Data != null) onError?.Invoke(e.Data);
+            };
+            process.Start();
+            process.BeginOutputReadLine();
+            process.BeginErrorReadLine();
+            process.WaitForExit();
+            return process.ExitCode;
+        }
+        catch (Exception ex)
+        {
+            onError?.Invoke(ex.Message);
+            return -1;
+        }
+    }
+
+    /// <summary>
+    ///     Runs a process in a new cmd.exe window (non-blocking, visible window).
+    /// </summary>
+    public static void RunProcessInNewCmdWindow(string command, string args, string? workingDirectory = null)
+    {
+        try
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "cmd.exe",
+                Arguments = $"/k \"{command} {args}\"",
+                UseShellExecute = true,
+                WorkingDirectory = workingDirectory ?? Environment.CurrentDirectory,
+                CreateNoWindow = false
+            };
+            Process.Start(psi);
+        }
+        catch (Exception)
+        {
+            // Optionally log or handle error
+        }
     }
 }
