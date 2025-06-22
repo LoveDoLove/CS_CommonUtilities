@@ -39,17 +39,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CommonUtilities;
 
-public class ConfigureService
+public static class CommonUtilitiesServiceRegistrar
 {
     /// <summary>
-    ///     Configures and injects all CommonUtilities services and middleware for a new project.
-    ///     Usage: var provider = ConfigureService.ConfigureServices();
+    ///     Registers all CommonUtilities services and middleware for a new project.
+    ///     Usage: var provider = CommonUtilitiesServiceRegistrar.RegisterAllServices();
     /// </summary>
     /// <param name="appSettingsFile">The appsettings file to use (default: "appsettings.json").</param>
     /// <param name="connectionStringName">The connection string name (default: "DBConnection").</param>
     /// <param name="configureExtras">Optional: Action to register additional services or override defaults.</param>
     /// <returns>IServiceProvider with all CommonUtilities services registered.</returns>
-    public static IServiceProvider ConfigureServices(
+    public static IServiceProvider RegisterAllServices(
         string appSettingsFile = "appsettings.json",
         string connectionStringName = "DBConnection",
         Action<IServiceCollection>? configureExtras = null)
@@ -97,10 +97,10 @@ public class ConfigureService
 
         // Step 6: Bind configuration sections
         ConfigurationManager configuration = builder.Configuration;
-        ConfigureAndRegister<SmtpConfig>(services, configuration, "Smtp");
-        ConfigureAndRegister<CfCaptchaConfig>(services, configuration, "CfCaptcha");
-        ConfigureAndRegister<IpInfoConfig>(services, configuration, "IpInfo");
-        ConfigureAndRegister<StripeConfig>(services, configuration, "Stripe");
+        RegisterConfigSection<SmtpConfig>(services, configuration, "Smtp");
+        RegisterConfigSection<CfCaptchaConfig>(services, configuration, "CfCaptcha");
+        RegisterConfigSection<IpInfoConfig>(services, configuration, "IpInfo");
+        RegisterConfigSection<StripeConfig>(services, configuration, "Stripe");
 
         // Step 7: Add application services
         services.AddScoped<IStripeHelper, StripeHelper>();
@@ -126,10 +126,13 @@ public class ConfigureService
         return services.BuildServiceProvider();
     }
 
-    private static T ConfigureAndRegister<T>(IServiceCollection services, IConfiguration configuration,
+    public static T RegisterConfigSection<T>(IServiceCollection services, IConfiguration configuration,
         string sectionName) where T : class, new()
     {
         T? configValue = configuration.GetSection(sectionName).Get<T>();
+        if (configValue == null)
+            throw new InvalidOperationException(
+                $"Configuration section '{sectionName}' is missing or invalid for type {typeof(T).Name}.");
         services.AddSingleton(configValue);
         return configValue;
     }
