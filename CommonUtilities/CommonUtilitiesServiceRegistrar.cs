@@ -145,12 +145,14 @@ public static class CommonUtilitiesServiceRegistrar
         services.AddHttpContextAccessor();
         services.AddControllersWithViews();
         services.AddRazorTemplating();
-        // Example for registering a cron job (place in configureExtras):
-        // services.AddCronJob<SyncService>(config =>
+        // Example for registering a custom sync cron job (place in configureExtras):
+        // services.AddCronJob<MyCustomSyncService>(config =>
         // {
+        //     config.CronExpression = "*/10 * * * *"; // every 10 minutes
         //     config.TimeZoneInfo = TimeZoneInfo.Local;
-        //     config.CronExpression = @"*/5 * * * *";
         // });
+        // To implement: public class MyCustomSyncService : SyncServiceBase<MyCustomSyncService> { ... override ExecuteSyncAsync ... }
+        // See SyncService.cs for a template.
 
         // Step 9: Allow consumer to register additional services
         configureExtras?.Invoke(services);
