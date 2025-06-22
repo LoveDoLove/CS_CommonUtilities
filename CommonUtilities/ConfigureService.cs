@@ -21,7 +21,6 @@
 // THE SOFTWARE.
 
 using CommonUtilities.Helpers.CfCaptcha;
-using CommonUtilities.Helpers.GoogleMfa;
 using CommonUtilities.Helpers.IpInfo;
 using CommonUtilities.Helpers.Mailer;
 using CommonUtilities.Helpers.Media;
@@ -55,15 +54,15 @@ public static class CommonUtilitiesServiceRegistrar
         Action<IServiceCollection>? configureExtras = null)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder();
-        var services = builder.Services;
+        IServiceCollection services = builder.Services;
 
         // Step 1: Configure appsettings.json
         builder.Configuration.AddJsonFile(appSettingsFile, false, true);
 
         // Step 2: Configure database context
-        var connectionString = builder.Configuration.GetConnectionString(connectionStringName) ??
-                               throw new InvalidOperationException(
-                                   $"Connection string '{connectionStringName}' not found.");
+        string connectionString = builder.Configuration.GetConnectionString(connectionStringName) ??
+                                  throw new InvalidOperationException(
+                                      $"Connection string '{connectionStringName}' not found.");
         services.AddDbContext<DB>(options => options.UseSqlServer(connectionString));
 
         // Step 3: Configure authentication and authorization
@@ -108,7 +107,6 @@ public static class CommonUtilitiesServiceRegistrar
         services.AddTransient<IMailerHelper, MailerHelper>();
         services.AddTransient<ICfCaptchaHelper, CfCaptchaHelper>();
         services.AddTransient<IIpInfoHelper, IpInfoHelper>();
-        services.AddTransient<IGoogleMfaHelper, GoogleMfaHelper>();
 
         // Step 8: Add essential services and middleware
         services.AddHttpContextAccessor();
