@@ -22,12 +22,12 @@
 
 using System.Diagnostics;
 
-namespace CommonUtilities.Helpers.Processes;
+namespace CommonUtilities.Helpers.Command;
 
 /// <summary>
 ///     Minimal utility for executing external processes using system PATH.
 /// </summary>
-public static class ProcessExecutionHelper
+public static class CmdHelper
 {
     /// <summary>
     ///     Runs a process and captures its standard output, standard error, and exit code.

@@ -27,9 +27,9 @@ namespace CommonUtilities.Helpers.GoogleMfa;
 /// <summary>
 ///     Provides helper methods for generating and validating Google Authenticator MFA codes.
 /// </summary>
-public class GoogleMfaHelper : IGoogleMfaHelper
+public static class GoogleMfaHelper
 {
-    private readonly TwoFactorAuthenticator _twoFactorAuthenticator = new();
+    private static readonly TwoFactorAuthenticator TwoFactorAuthenticator = new();
 
     /// <summary>
     ///     Generates a new Google MFA configuration, including secret key, QR code URL, and manual entry code.
@@ -37,11 +37,11 @@ public class GoogleMfaHelper : IGoogleMfaHelper
     /// <param name="issuer">The name of the service or application issuing the MFA.</param>
     /// <param name="email">The user's email address for MFA registration.</param>
     /// <returns>A <see cref="GoogleMfaConfig" /> containing the MFA setup details.</returns>
-    public GoogleMfaConfig GenerateMfa(string issuer, string email)
+    public static GoogleMfaConfig GenerateMfa(string issuer, string email)
     {
         string secretKey = Guid.NewGuid().ToString().Replace("-", "")[..10];
 
-        SetupCode? setupInfo = _twoFactorAuthenticator.GenerateSetupCode(issuer, email, secretKey, false);
+        SetupCode? setupInfo = TwoFactorAuthenticator.GenerateSetupCode(issuer, email, secretKey, false);
 
         GoogleMfaConfig googleMfa = new()
         {
@@ -58,8 +58,8 @@ public class GoogleMfaHelper : IGoogleMfaHelper
     /// <param name="secretKey">The secret key associated with the user.</param>
     /// <param name="code">The MFA code to validate.</param>
     /// <returns>True if the code is valid; otherwise, false.</returns>
-    public bool ValidateMfa(string secretKey, string code)
+    public static bool ValidateMfa(string secretKey, string code)
     {
-        return _twoFactorAuthenticator.ValidateTwoFactorPIN(secretKey, code);
+        return TwoFactorAuthenticator.ValidateTwoFactorPIN(secretKey, code);
     }
 }
