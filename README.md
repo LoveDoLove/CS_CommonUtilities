@@ -79,6 +79,8 @@ CommonUtilities is a modular, production-ready C#/.NET utility library and toolk
 - [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
 - [Newtonsoft.Json](https://www.newtonsoft.com/json)
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -94,6 +96,8 @@ To use CommonUtilities in your .NET project, follow these steps:
    ```
 2. Add a reference to the `CommonUtilities` project or build and reference the generated DLL in your solution.
 3. (Optional) Configure any required settings (e.g., for mailing, Stripe, etc.) in your appsettings or via dependency injection.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -119,6 +123,8 @@ var qr = QrCodeUtilities.Generate("Hello World");
 
 _For more examples, please refer to the [Documentation](https://github.com/LoveDoLove/CS_CommonUtilities)_
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- ROADMAP -->
 ## Roadmap
 - [x] Modular helpers for common services
@@ -128,6 +134,8 @@ _For more examples, please refer to the [Documentation](https://github.com/LoveD
 - [ ] Expand documentation and usage guides
 
 See the [open issues](https://github.com/LoveDoLove/CS_CommonUtilities/issues) for a full list of proposed features (and known issues).
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
 ## Contributing
@@ -143,10 +151,14 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTACT -->
 ## Contact
@@ -155,14 +167,22 @@ LoveDoLove - [@LoveDoLove](https://github.com/LoveDoLove)
 
 Project Link: [https://github.com/LoveDoLove/CS_CommonUtilities](https://github.com/LoveDoLove/CS_CommonUtilities)
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
 - [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 - [Choose an Open Source License](https://choosealicense.com)
 - [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
+- [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
+- [Malven's Grid Cheatsheet](https://grid.malven.co/)
 - [Img Shields](https://shields.io)
+- [GitHub Pages](https://pages.github.com)
 - [Font Awesome](https://fontawesome.com)
+- [React Icons](https://react-icons.github.io/react-icons/search)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 [contributors-shield]: https://img.shields.io/github/contributors/LoveDoLove/CS_CommonUtilities.svg?style=for-the-badge
@@ -174,6 +194,6 @@ Project Link: [https://github.com/LoveDoLove/CS_CommonUtilities](https://github.
 [issues-shield]: https://img.shields.io/github/issues/LoveDoLove/CS_CommonUtilities.svg?style=for-the-badge
 [issues-url]: https://github.com/LoveDoLove/CS_CommonUtilities/issues
 [license-shield]: https://img.shields.io/github/license/LoveDoLove/CS_CommonUtilities.svg?style=for-the-badge
-[license-url]: https://github.com/LoveDoLove/CS_CommonUtilities/blob/master/LICENSE
+[license-url]: https://github.com/LoveDoLove/CS_CommonUtilities/blob/main/LICENSE
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/LoveDoLove
