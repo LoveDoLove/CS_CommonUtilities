@@ -27,62 +27,33 @@ using Microsoft.Extensions.Logging;
 namespace CommonUtilities.Services.Sync;
 
 /// <summary>
-///     Represents a scheduled background service that performs periodic synchronization tasks using a cron schedule.
+///     Example implementation of a scheduled background sync service.
+///     To use: Register with AddHostedService
+///     <SyncService>
+///         and provide IScheduleConfig
+///         <SyncService>
+///             .
+///             Override <see cref="ExecuteSyncAsync" /> for your custom logic.
 /// </summary>
-public class SyncService : CronJobHelper
+public class SyncService : SyncServiceBase<SyncService>
 {
-    private readonly ILogger<SyncService> _logger;
-    private readonly IServiceScopeFactory _scopeFactory;
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="SyncService" /> class with the specified schedule configuration,
-    ///     logger, and scope factory.
-    /// </summary>
-    /// <param name="config">The schedule configuration for the cron job.</param>
-    /// <param name="logger">The logger instance for logging service activity.</param>
-    /// <param name="scopeFactory">The service scope factory for resolving scoped services.</param>
     public SyncService(IScheduleConfig<SyncService> config, ILogger<SyncService> logger,
         IServiceScopeFactory scopeFactory)
-        : base(config.CronExpression, config.TimeZoneInfo)
+        : base(config, logger, scopeFactory)
     {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
     }
 
-    /// <summary>
-    ///     Starts the synchronization service and schedules the first job occurrence.
-    /// </summary>
-    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
-    public override Task StartAsync(CancellationToken cancellationToken)
+    /// <inheritdoc />
+    protected override Task ExecuteSyncAsync(CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"{nameof(SyncService)} starts.");
-        return base.StartAsync(cancellationToken);
-    }
-
-    /// <summary>
-    ///     Performs the main synchronization work when triggered by the cron schedule.
-    /// </summary>
-    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
-    public override Task DoWork(CancellationToken cancellationToken)
-    {
-        _logger.LogInformation($"{DateTime.Now:hh:mm:ss} {nameof(SyncService)} is working.");
-
-        using IServiceScope scope = _scopeFactory.CreateScope();
-        //IResetPasswordService resetPasswordService = scope.ServiceProvider.GetRequiredService<IResetPasswordService>();
-
-        _logger.LogInformation("Syncing status");
-        //await resetPasswordService.SyncExpiredResetPasswordAsync();
-
+        using var scope = ScopeFactory.CreateScope();
+        // var myService = scope.ServiceProvider.GetRequiredService<IMyService>();
+        // await myService.DoSomethingAsync();
+        Logger.LogInformation("Default sync logic executed. Override this in your own service.");
         return Task.CompletedTask;
     }
-
-    /// <summary>
-    ///     Stops the synchronization service and releases any running resources.
-    /// </summary>
-    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
-    public override Task StopAsync(CancellationToken cancellationToken)
-    {
-        _logger.LogInformation($"{nameof(SyncService)} is stopping.");
-        return base.StopAsync(cancellationToken);
-    }
 }
+
+// Usage Example:
+// services.AddHostedService<MyCustomSyncService>();
+// public class MyCustomSyncService : SyncServiceBase<MyCustomSyncService> { ... override ExecuteSyncAsync ... }
