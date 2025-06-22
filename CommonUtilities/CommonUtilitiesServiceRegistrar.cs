@@ -24,14 +24,10 @@ using CommonUtilities.Helpers.CfCaptcha;
 using CommonUtilities.Helpers.IpInfo;
 using CommonUtilities.Helpers.Mailer;
 using CommonUtilities.Helpers.Media;
-using CommonUtilities.Helpers.Scheduler;
 using CommonUtilities.Helpers.Stripe;
 using CommonUtilities.Models.Database;
-using CommonUtilities.Services.Sync;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,7 +38,34 @@ public static class CommonUtilitiesServiceRegistrar
 {
     /// <summary>
     ///     Registers all CommonUtilities services and middleware for a new project.
-    ///     Usage: var provider = CommonUtilitiesServiceRegistrar.RegisterAllServices();
+    ///     <b>Core Steps:</b>
+    ///     1. Loads configuration from appsettings.json.
+    ///     2. Registers the database context.
+    ///     3. Configures authentication and session.
+    ///     4. Binds configuration sections for SMTP, Captcha, etc.
+    ///     5. Registers core utility services (mailer, captcha, etc.).
+    ///     6. Adds essential ASP.NET Core services (controllers, views, etc.).
+    ///     <b>Extension Point:</b>
+    ///     Use the <paramref name="configureExtras" /> parameter to append custom logic, such as:
+    ///     - Registering your own services
+    ///     - Overriding default implementations
+    ///     - Adding project-specific configuration
+    ///     <b>Example:</b>
+    ///     <code>
+    /// var provider = CommonUtilitiesServiceRegistrar.RegisterAllServices(
+    ///     configureExtras: services =>
+    ///     {
+    ///         // Register your custom services here
+    ///         services.AddScoped&lt;IMyService, MyService&gt;();
+    ///         // Add custom configuration, middleware, etc.
+    ///     });
+    /// </code>
+    ///     <b>Best Practice:</b>
+    ///     For complex or grouped registrations, consider using extension methods:
+    ///     <code>
+    /// services.AddMyCustomServices(configuration);
+    /// </code>
+    ///     See official ASP.NET Core documentation for more patterns.
     /// </summary>
     /// <param name="appSettingsFile">The appsettings file to use (default: "appsettings.json").</param>
     /// <param name="connectionStringName">The connection string name (default: "DBConnection").</param>
@@ -65,34 +88,40 @@ public static class CommonUtilitiesServiceRegistrar
                                       $"Connection string '{connectionStringName}' not found.");
         services.AddDbContext<DB>(options => options.UseSqlServer(connectionString));
 
-        // Step 3: Configure authentication and authorization
+        // Step 3: Configure authentication (minimal, project-specific options should be set via configureExtras)
         services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            .AddCookie("Cookies", options =>
-            {
-                options.LoginPath = "/Login";
-                options.LogoutPath = "/Account/Logout";
-                options.AccessDeniedPath = "/Home/AccessDenied";
-                options.Cookie.Name = "logged_in";
-                options.SlidingExpiration = true;
-                options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            });
+            .AddCookie();
+        // Example for custom authentication options (place in configureExtras):
+        // services.ConfigureApplicationCookie(options =>
+        // {
+        //     options.LoginPath = "/Login";
+        //     options.LogoutPath = "/Account/Logout";
+        //     options.AccessDeniedPath = "/Home/AccessDenied";
+        //     options.Cookie.Name = "logged_in";
+        //     options.SlidingExpiration = true;
+        //     options.Cookie.HttpOnly = true;
+        //     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        // });
 
-        // Step 4: Configure session
-        services.AddSession(options =>
-        {
-            options.IdleTimeout = TimeSpan.FromMinutes(30);
-            options.Cookie.HttpOnly = true;
-            options.Cookie.IsEssential = true;
-        });
+        // Step 4: Configure session (minimal, project-specific options should be set via configureExtras)
+        services.AddSession();
+        // Example for custom session options (place in configureExtras):
+        // services.Configure<SessionOptions>(options =>
+        // {
+        //     options.IdleTimeout = TimeSpan.FromMinutes(30);
+        //     options.Cookie.HttpOnly = true;
+        //     options.Cookie.IsEssential = true;
+        // });
 
-        // Step 5: Configure CORS
-        services.Configure<ForwardedHeadersOptions>(options =>
-        {
-            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-            options.KnownNetworks.Clear();
-            options.KnownProxies.Clear();
-        });
+        // Step 5: Configure forwarded headers (minimal, project-specific options should be set via configureExtras)
+        services.Configure<ForwardedHeadersOptions>(options => { });
+        // Example for custom forwarded headers options (place in configureExtras):
+        // services.Configure<ForwardedHeadersOptions>(options =>
+        // {
+        //     options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+        //     options.KnownNetworks.Clear();
+        //     options.KnownProxies.Clear();
+        // });
 
         // Step 6: Bind configuration sections
         ConfigurationManager configuration = builder.Configuration;
@@ -112,11 +141,12 @@ public static class CommonUtilitiesServiceRegistrar
         services.AddHttpContextAccessor();
         services.AddControllersWithViews();
         services.AddRazorTemplating();
-        services.AddCronJob<SyncService>(config =>
-        {
-            config.TimeZoneInfo = TimeZoneInfo.Local;
-            config.CronExpression = @"*/5 * * * *";
-        });
+        // Example for registering a cron job (place in configureExtras):
+        // services.AddCronJob<SyncService>(config =>
+        // {
+        //     config.TimeZoneInfo = TimeZoneInfo.Local;
+        //     config.CronExpression = @"*/5 * * * *";
+        // });
 
         // Step 9: Allow consumer to register additional services
         configureExtras?.Invoke(services);
