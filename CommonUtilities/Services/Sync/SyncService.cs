@@ -27,62 +27,91 @@ using Microsoft.Extensions.Logging;
 namespace CommonUtilities.Services.Sync;
 
 /// <summary>
-///     Represents a scheduled background service that performs periodic synchronization tasks using a cron schedule.
+///     Base class for scheduled background jobs using cron syntax.
+///     Inherit from this class to implement your own periodic sync logic.
+///     Register your derived service with AddHostedService in your DI setup.
+///     See Context7/ASP.NET Core docs for background service best practices.
 /// </summary>
-public class SyncService : CronJobHelper
+public abstract class SyncServiceBase<T> : CronJobHelper
 {
-    private readonly ILogger<SyncService> _logger;
-    private readonly IServiceScopeFactory _scopeFactory;
+    /// <summary>
+    ///     The logger instance for logging service activity.
+    /// </summary>
+    protected readonly ILogger Logger;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="SyncService" /> class with the specified schedule configuration,
+    ///     The service scope factory for resolving scoped services.
+    /// </summary>
+    protected readonly IServiceScopeFactory ScopeFactory;
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="SyncServiceBase{T}" /> class with the specified schedule
+    ///     configuration,
     ///     logger, and scope factory.
     /// </summary>
     /// <param name="config">The schedule configuration for the cron job.</param>
     /// <param name="logger">The logger instance for logging service activity.</param>
     /// <param name="scopeFactory">The service scope factory for resolving scoped services.</param>
-    public SyncService(IScheduleConfig<SyncService> config, ILogger<SyncService> logger,
-        IServiceScopeFactory scopeFactory)
+    protected SyncServiceBase(IScheduleConfig<T> config, ILogger logger, IServiceScopeFactory scopeFactory)
         : base(config.CronExpression, config.TimeZoneInfo)
     {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
+        Logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        ScopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
     }
 
     /// <summary>
-    ///     Starts the synchronization service and schedules the first job occurrence.
+    ///     Override this method to implement your sync logic.
+    ///     Use ScopeFactory to resolve scoped services as needed.
+    ///     Always handle exceptions and log appropriately.
     /// </summary>
-    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
-    public override Task StartAsync(CancellationToken cancellationToken)
-    {
-        _logger.LogInformation($"{nameof(SyncService)} starts.");
-        return base.StartAsync(cancellationToken);
-    }
+    protected abstract Task ExecuteSyncAsync(CancellationToken cancellationToken);
 
     /// <summary>
-    ///     Performs the main synchronization work when triggered by the cron schedule.
+    ///     Called by the cron scheduler. Handles error logging and calls <see cref="ExecuteSyncAsync" />.
     /// </summary>
     /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
-    public override Task DoWork(CancellationToken cancellationToken)
+    public override async Task DoWork(CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"{DateTime.Now:hh:mm:ss} {nameof(SyncService)} is working.");
-
-        using IServiceScope scope = _scopeFactory.CreateScope();
-        //IResetPasswordService resetPasswordService = scope.ServiceProvider.GetRequiredService<IResetPasswordService>();
-
-        _logger.LogInformation("Syncing status");
-        //await resetPasswordService.SyncExpiredResetPasswordAsync();
-
-        return Task.CompletedTask;
-    }
-
-    /// <summary>
-    ///     Stops the synchronization service and releases any running resources.
-    /// </summary>
-    /// <param name="cancellationToken">A cancellation token to observe while waiting for the task to complete.</param>
-    public override Task StopAsync(CancellationToken cancellationToken)
-    {
-        _logger.LogInformation($"{nameof(SyncService)} is stopping.");
-        return base.StopAsync(cancellationToken);
+        try
+        {
+            Logger.LogInformation($"{DateTime.Now:hh:mm:ss} {GetType().Name} is working.");
+            await ExecuteSyncAsync(cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            Logger.LogError(ex, "Error during sync job execution.");
+        }
     }
 }
+
+/// <summary>
+///     Example implementation of a scheduled background sync service.
+///     To use: Register with AddHostedService
+///     <SyncService>
+///         and provide IScheduleConfig
+///         <SyncService>
+///             .
+///             Override <see cref="ExecuteSyncAsync" /> for your custom logic.
+/// </summary>
+public class SyncService : SyncServiceBase<SyncService>
+{
+    public SyncService(IScheduleConfig<SyncService> config, ILogger<SyncService> logger,
+        IServiceScopeFactory scopeFactory)
+        : base(config, logger, scopeFactory)
+    {
+    }
+
+    /// <inheritdoc />
+    protected override Task ExecuteSyncAsync(CancellationToken cancellationToken)
+    {
+        using var scope = ScopeFactory.CreateScope();
+        // var myService = scope.ServiceProvider.GetRequiredService<IMyService>();
+        // await myService.DoSomethingAsync();
+        Logger.LogInformation("Default sync logic executed. Override this in your own service.");
+        return Task.CompletedTask;
+    }
+}
+
+// Usage Example:
+// services.AddHostedService<MyCustomSyncService>();
+// public class MyCustomSyncService : SyncServiceBase<MyCustomSyncService> { ... override ExecuteSyncAsync ... }
