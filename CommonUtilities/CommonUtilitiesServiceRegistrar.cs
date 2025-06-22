@@ -37,22 +37,21 @@ namespace CommonUtilities;
 public static class CommonUtilitiesServiceRegistrar
 {
     /// <summary>
-    /// Registers all CommonUtilities services and middleware for a new project in a clear, user-friendly sequence.
-    ///
-    /// <b>Core Steps (in order):</b>
-    /// 1. <b>Load configuration</b> from appsettings.json (or custom file).
-    /// 2. <b>Register the database context</b> (using the provided connection string name).
-    /// 3. <b>Register authentication and session</b> (minimal, project-specific options via <paramref name="configureExtras" />).
-    /// 4. <b>Bind configuration sections</b> for SMTP, Captcha, etc. (strongly-typed config).
-    /// 5. <b>Register core utility services</b> (mailer, captcha, image, etc.).
-    /// 6. <b>Add essential ASP.NET Core services</b> (controllers, views, HTTP context, etc.).
-    /// 7. <b>Extension point:</b> Use <paramref name="configureExtras" /> to append custom logic, such as:
-    ///    - Registering your own services
-    ///    - Overriding default implementations
-    ///    - Adding project-specific configuration, middleware, or jobs
-    ///
-    /// <b>Usage Example:</b>
-    /// <code>
+    ///     Registers all CommonUtilities services and middleware for a new project in a clear, user-friendly sequence.
+    ///     <b>Core Steps (in order):</b>
+    ///     1. <b>Load configuration</b> from appsettings.json (or custom file).
+    ///     2. <b>Register the database context</b> (using the provided connection string name).
+    ///     3. <b>Register authentication and session</b> (minimal, project-specific options via
+    ///     <paramref name="configureExtras" />).
+    ///     4. <b>Bind configuration sections</b> for SMTP, Captcha, etc. (strongly-typed config).
+    ///     5. <b>Register core utility services</b> (mailer, captcha, image, etc.).
+    ///     6. <b>Add essential ASP.NET Core services</b> (controllers, views, HTTP context, etc.).
+    ///     7. <b>Extension point:</b> Use <paramref name="configureExtras" /> to append custom logic, such as:
+    ///     - Registering your own services
+    ///     - Overriding default implementations
+    ///     - Adding project-specific configuration, middleware, or jobs
+    ///     <b>Usage Example:</b>
+    ///     <code>
     /// var provider = CommonUtilitiesServiceRegistrar.RegisterAllServices(
     ///     appSettingsFile: "appsettings.Development.json",
     ///     connectionStringName: "MyDbConnection",
@@ -64,14 +63,13 @@ public static class CommonUtilitiesServiceRegistrar
     ///         // services.AddCronJob&lt;MyJob&gt;(config => { ... });
     ///     });
     /// </code>
-    ///
-    /// <b>Best Practice:</b> For complex or grouped registrations, use extension methods:
-    /// <code>
+    ///     <b>Best Practice:</b> For complex or grouped registrations, use extension methods:
+    ///     <code>
     /// services.AddMyCustomServices(configuration);
     /// </code>
-    ///
-    /// <b>Note:</b> Project-specific options for authentication, session, forwarded headers, CORS, and jobs should be set in <paramref name="configureExtras" /> for maximum flexibility and maintainability.
-    /// See official ASP.NET Core documentation for more patterns and guidance.
+    ///     <b>Note:</b> Project-specific options for authentication, session, forwarded headers, CORS, and jobs should be set
+    ///     in <paramref name="configureExtras" /> for maximum flexibility and maintainability.
+    ///     See official ASP.NET Core documentation for more patterns and guidance.
     /// </summary>
     /// <param name="appSettingsFile">The appsettings file to use (default: "appsettings.json").</param>
     /// <param name="connectionStringName">The connection string name (default: "DBConnection").</param>
