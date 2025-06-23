@@ -71,23 +71,26 @@ public static class ConfigureServices
     ///     in <paramref name="configureExtras" /> for maximum flexibility and maintainability.
     ///     See official ASP.NET Core documentation for more patterns and guidance.
     /// </summary>
+    /// <param name="services">The IServiceCollection to register services into.</param>
+    /// <param name="configuration">The IConfiguration to use for config binding.</param>
     /// <param name="appSettingsFile">The appsettings file to use (default: "appsettings.json").</param>
     /// <param name="connectionStringName">The connection string name (default: "DBConnection").</param>
     /// <param name="configureExtras">Optional: Action to register additional services or override defaults.</param>
-    /// <returns>IServiceProvider with all CommonUtilities services registered.</returns>
-    public static IServiceProvider RegisterAllServices(
+    public static void RegisterAllServices(
+        IServiceCollection services,
+        IConfiguration configuration,
         string appSettingsFile = "appsettings.json",
         string connectionStringName = "DBConnection",
         Action<IServiceCollection>? configureExtras = null)
     {
-        WebApplicationBuilder builder = WebApplication.CreateBuilder();
-        IServiceCollection services = builder.Services;
-
         // Step 1: Configure appsettings.json
-        builder.Configuration.AddJsonFile(appSettingsFile, false, true);
+        var configBuilder = new ConfigurationBuilder();
+        configBuilder.AddConfiguration(configuration);
+        configBuilder.AddJsonFile(appSettingsFile, false, true);
+        var mergedConfig = configBuilder.Build();
 
         // Step 2: Configure database context
-        string connectionString = builder.Configuration.GetConnectionString(connectionStringName) ??
+        string connectionString = mergedConfig.GetConnectionString(connectionStringName) ??
                                   throw new InvalidOperationException(
                                       $"Connection string '{connectionStringName}' not found.");
         services.AddDbContext<DB>(options => options.UseSqlServer(connectionString));
@@ -128,11 +131,10 @@ public static class ConfigureServices
         // });
 
         // Step 6: Bind configuration sections
-        ConfigurationManager configuration = builder.Configuration;
-        RegisterConfigSection<SmtpConfig>(services, configuration, "Smtp");
-        RegisterConfigSection<CfCaptchaConfig>(services, configuration, "CfCaptcha");
-        RegisterConfigSection<IpInfoConfig>(services, configuration, "IpInfo");
-        RegisterConfigSection<StripeConfig>(services, configuration, "Stripe");
+        RegisterConfigSection<SmtpConfig>(services, mergedConfig, "Smtp");
+        RegisterConfigSection<CfCaptchaConfig>(services, mergedConfig, "CfCaptcha");
+        RegisterConfigSection<IpInfoConfig>(services, mergedConfig, "IpInfo");
+        RegisterConfigSection<StripeConfig>(services, mergedConfig, "Stripe");
 
         // Step 7: Add application services
         services.AddScoped<IStripeHelper, StripeHelper>();
@@ -156,8 +158,6 @@ public static class ConfigureServices
 
         // Step 9: Allow consumer to register additional services
         configureExtras?.Invoke(services);
-
-        return services.BuildServiceProvider();
     }
 
     public static T RegisterConfigSection<T>(IServiceCollection services, IConfiguration configuration,
