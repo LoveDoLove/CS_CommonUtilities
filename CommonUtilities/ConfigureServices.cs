@@ -34,7 +34,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CommonUtilities;
 
-public static class CommonUtilitiesServiceRegistrar
+public static class ConfigureServices
 {
     /// <summary>
     ///     Registers all CommonUtilities services and middleware for a new project in a clear, user-friendly sequence.
