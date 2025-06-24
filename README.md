@@ -7,12 +7,13 @@
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <img src="images/icon.png" alt="Logo" width="80" height="80">
+  <a href="https://github.com/LoveDoLove/CS_CommonUtilities">
+    <img src="images/icon.png" alt="Logo" width="80" height="80">
+  </a>
   <h3 align="center">CommonUtilities</h3>
   <p align="center">
     A modular, production-ready C#/.NET utility library and toolkit for rapid development.
@@ -33,6 +34,7 @@
   <ol>
     <li><a href="#about-the-project">About The Project</a>
       <ul>
+        <li><a href="#features">Features</a></li>
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
@@ -54,30 +56,31 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-CommonUtilities is a modular, production-ready C#/.NET utility library and toolkit designed to accelerate development for .NET 8+ projects. It provides a comprehensive set of helpers, utilities, and models for common tasks such as security, data formatting, HTTP, scheduling, mailing, image processing, and more. The library is structured for easy integration and extension, making it ideal for both small and large-scale applications.
+CommonUtilities is a modular, production-ready C#/.NET utility library and toolkit designed to accelerate development for .NET 8+ projects. It provides a comprehensive set of helpers, models, and utilities for common application needs, including security, data, HTTP, scheduling, media, and more. The project is structured for easy extension and integration into any .NET solution.
 
 ### Features
-- Modular helpers for Captcha, Google MFA, IP info, mailing, media, scheduling, Stripe, and more
-- Utility classes for data conversion, formatting, JSON, database, HTTP, enums, QR codes, security, system operations, and logging
-- Strong focus on security, input validation, and error handling
+- Modular helpers for:
+  - Security (AES, SHA256, 3DES, signature, validation)
+  - Data (conversion, formatting, JSON file operations)
+  - HTTP (basic and advanced utilities)
+  - System (app settings, caching, file/process utilities, logging, timestamps)
+  - Scheduler (cron jobs, scheduled services)
+  - Media (image processing)
+  - QR code generation
+  - Stripe payment integration
+  - Google MFA and Cloudflare Captcha
+  - Email (SMTP, mailer)
+  - IP info lookup
+- Strongly-typed models for database and shared data
 - Designed for .NET 8.0 and above
-- MIT licensed and open for contributions
+- MIT licensed, open source
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
-- .NET 8.0
-- [Cronos](https://github.com/HangfireIO/Cronos)
-- [FluentValidation](https://fluentvalidation.net/)
-- [GoogleAuthenticator](https://github.com/brandonpotter/GoogleAuthenticator)
-- [IPinfo](https://github.com/ipinfo/csharp)
-- [MailKit](https://github.com/jstedfast/MailKit)
-- [MediatR](https://github.com/jbogard/MediatR)
-- [Serilog](https://serilog.net/)
-- [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp)
-- [Stripe.net](https://github.com/stripe/stripe-dotnet)
-- [QRCoder](https://github.com/codebude/QRCoder)
-- [RestSharp](https://github.com/restsharp/RestSharp)
-- [Swashbuckle.AspNetCore](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
-- [Newtonsoft.Json](https://www.newtonsoft.com/json)
+- [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) ([Context7 documentation used](https://github.com/dotnet/docs))
+- [xUnit.net](https://xunit.net/) ([Context7 documentation used](https://xunit.net/docs/getting-started/netcore/cmdline))
+- [.NET Community Toolkit](https://github.com/CommunityToolkit/dotnet) ([Context7 documentation used](https://aka.ms/mvvmtoolkit))
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -87,51 +90,48 @@ CommonUtilities is a modular, production-ready C#/.NET utility library and toolk
 To use CommonUtilities in your .NET project, follow these steps:
 
 ### Prerequisites
-- .NET 8.0 SDK or later
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- (Optional) [xUnit.net](https://xunit.net/) for testing
 
 ### Installation
 1. Clone the repository:
-   ```sh
+   ```cmd
    git clone https://github.com/LoveDoLove/CS_CommonUtilities.git
    ```
-2. Add a reference to the `CommonUtilities` project or build and reference the generated DLL in your solution.
-3. (Optional) Configure any required settings (e.g., for mailing, Stripe, etc.) in your appsettings or via dependency injection.
+2. Add the project or reference the compiled DLL in your solution.
+3. (Optional) Restore and run tests:
+   ```cmd
+   dotnet restore
+   dotnet test
+   ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Below are some example usages. For more, see the source code and documentation.
+Import the relevant namespaces from `CommonUtilities` and use the helpers as needed. Example:
 
-### Example: Sending an Email
 ```csharp
-var mailer = new MailerHelper(new MailerConfig { /* ... */ });
-await mailer.SendAsync("to@example.com", "Subject", "Body");
+using CommonUtilities.Utilities.Security;
+
+string encrypted = AesUtilities.Encrypt("mydata", "password");
+string hash = Sha256Utilities.ComputeHash("mydata");
 ```
 
-### Example: Validating a Captcha
-```csharp
-var captcha = new CfCaptchaHelper(new CfCaptchaConfig { /* ... */ });
-bool isValid = await captcha.ValidateAsync("user-response");
-```
-
-### Example: Generating a QR Code
-```csharp
-var qr = QrCodeUtilities.Generate("Hello World");
-```
-
-_For more examples, please refer to the [Documentation](https://github.com/LoveDoLove/CS_CommonUtilities)_
+For more usage examples, see the source code and XML documentation in each helper class.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ROADMAP -->
 ## Roadmap
-- [x] Modular helpers for common services
-- [x] Security and validation utilities
-- [x] Logging and diagnostics
+- [x] Modular helper structure
+- [x] .NET 8.0 support
+- [x] Security, data, HTTP, and system utilities
+- [x] Scheduler, media, QR code, Stripe, Google MFA, Cloudflare Captcha, mailer, and IP info helpers
+- [ ] Add more advanced examples and documentation
+- [ ] Expand test coverage
 - [ ] Add more integration samples
-- [ ] Expand documentation and usage guides
 
 See the [open issues](https://github.com/LoveDoLove/CS_CommonUtilities/issues) for a full list of proposed features (and known issues).
 
@@ -142,14 +142,14 @@ See the [open issues](https://github.com/LoveDoLove/CS_CommonUtilities/issues) f
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
+To contribute:
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+Please follow the [Context7](https://context7.com/) and .NET Foundation code of conduct and best practices.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -163,7 +163,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-LoveDoLove - [@LoveDoLove](https://github.com/LoveDoLove)
+LoveDoLove - [GitHub](https://github.com/LoveDoLove)
 
 Project Link: [https://github.com/LoveDoLove/CS_CommonUtilities](https://github.com/LoveDoLove/CS_CommonUtilities)
 
@@ -174,13 +174,10 @@ Project Link: [https://github.com/LoveDoLove/CS_CommonUtilities](https://github.
 
 - [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 - [Choose an Open Source License](https://choosealicense.com)
-- [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-- [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
-- [Malven's Grid Cheatsheet](https://grid.malven.co/)
-- [Img Shields](https://shields.io)
-- [GitHub Pages](https://pages.github.com)
-- [Font Awesome](https://fontawesome.com)
-- [React Icons](https://react-icons.github.io/react-icons/search)
+- [.NET Foundation](https://dotnetfoundation.org/)
+- [Context7 Documentation](https://context7.com/)
+- [xUnit.net](https://xunit.net/)
+- [CommunityToolkit](https://github.com/CommunityToolkit/dotnet)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -195,5 +192,4 @@ Project Link: [https://github.com/LoveDoLove/CS_CommonUtilities](https://github.
 [issues-url]: https://github.com/LoveDoLove/CS_CommonUtilities/issues
 [license-shield]: https://img.shields.io/github/license/LoveDoLove/CS_CommonUtilities.svg?style=for-the-badge
 [license-url]: https://github.com/LoveDoLove/CS_CommonUtilities/blob/main/LICENSE
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/LoveDoLove
+[product-screenshot]: images/icon.png
