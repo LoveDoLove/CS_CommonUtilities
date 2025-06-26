@@ -31,4 +31,9 @@ public class StripeConfig
     ///     Gets or sets the Stripe API key used for authentication.
     /// </summary>
     public string ApiKey { get; set; } = string.Empty;
+
+    /// <summary>
+    ///     Gets or sets the Stripe Webhook secret used for validating webhook signatures.
+    /// </summary>
+    public string WebhookSecret { get; set; } = string.Empty;
 }
