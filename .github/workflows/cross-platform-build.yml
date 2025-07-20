@@ -7,6 +7,14 @@ on:
         description: "Desired Release Version (e.g., v1.0.0)"
         required: true
         type: string
+      release_type:
+        description: "Release type (release or prerelease)"
+        required: true
+        default: "release"
+        type: choice
+        options:
+          - release
+          - prerelease
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -20,6 +28,27 @@ jobs:
           - os: windows-latest
             arch: x86
             runtime: win-x86
+          - os: windows-latest
+            arch: arm
+            runtime: win-arm
+          - os: windows-latest
+            arch: arm64
+            runtime: win-arm64
+          - os: macos-latest
+            arch: x64
+            runtime: osx-x64
+          - os: macos-latest
+            arch: arm64
+            runtime: osx-arm64
+          - os: ubuntu-latest
+            arch: x64
+            runtime: linux-x64
+          - os: ubuntu-latest
+            arch: arm
+            runtime: linux-arm
+          - os: ubuntu-latest
+            arch: arm64
+            runtime: linux-arm64
 
     steps:
       - name: Checkout repository
@@ -39,16 +68,16 @@ jobs:
       - name: Publish library
         run: dotnet publish CommonUtilities/CommonUtilities.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained false /p:UseAppHost=false -o ./publish/${{ matrix.os }}-${{ matrix.arch }}/CommonUtilities
 
-      - name: Zip ${{ matrix.arch }} output
+      - name: Zip ${{ matrix.os }}-${{ matrix.arch }} output
         run: |
-          Compress-Archive -Path ./publish/${{ matrix.os }}-${{ matrix.arch }}/CommonUtilities/* -DestinationPath ./CommonUtilities-${{ inputs.release_version }}-${{ matrix.arch }}.zip
+          Compress-Archive -Path ./publish/${{ matrix.os }}-${{ matrix.arch }}/CommonUtilities/* -DestinationPath ./CommonUtilities-${{ inputs.release_version }}-${{ matrix.os }}-${{ matrix.arch }}.zip
         shell: pwsh
 
-      - name: Upload ${{ matrix.arch }} artifact
+      - name: Upload ${{ matrix.os }}-${{ matrix.arch }} artifact
         uses: actions/upload-artifact@v4
         with:
-          name: CommonUtilities-${{ inputs.release_version }}-${{ matrix.arch }}.zip
-          path: ./CommonUtilities-${{ inputs.release_version }}-${{ matrix.arch }}.zip
+          name: CommonUtilities-${{ inputs.release_version }}-${{ matrix.os }}-${{ matrix.arch }}.zip
+          path: ./CommonUtilities-${{ inputs.release_version }}-${{ matrix.os }}-${{ matrix.arch }}.zip
           overwrite: true
 
   release:
@@ -57,25 +86,17 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Download Windows x64 artifact
+      - name: Download all platform artifacts
         uses: actions/download-artifact@v4
         with:
-          name: CommonUtilities-${{ inputs.release_version }}-x64.zip
           path: ./release-assets
-      - name: Download Windows x86 artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: CommonUtilities-${{ inputs.release_version }}-x86.zip
-          path: ./release-assets
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
         with:
           tag_name: ${{ github.event.inputs.release_version }}
           name: ${{ github.event.inputs.release_version }}
-          files: |
-            ./release-assets/CommonUtilities-${{ inputs.release_version }}-x64.zip
-            ./release-assets/CommonUtilities-${{ inputs.release_version }}-x86.zip
+          prerelease: ${{ github.event.inputs.release_type == 'prerelease' }}
+          files: ./release-assets/**/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
