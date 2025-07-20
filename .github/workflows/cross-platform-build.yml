@@ -7,6 +7,14 @@ on:
         description: "Desired Release Version (e.g., v1.0.0)"
         required: true
         type: string
+      release_type:
+        description: "Release type (release or prerelease)"
+        required: true
+        default: "release"
+        type: choice
+        options:
+          - release
+          - prerelease
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -88,6 +96,7 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.release_version }}
           name: ${{ github.event.inputs.release_version }}
+          prerelease: ${{ github.event.inputs.release_type == 'prerelease' }}
           files: |
             ./release-assets/CommonUtilities-${{ inputs.release_version }}-windows-latest-x64.zip
             ./release-assets/CommonUtilities-${{ inputs.release_version }}-windows-latest-x86.zip
