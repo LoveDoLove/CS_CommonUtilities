@@ -60,16 +60,16 @@ jobs:
       - name: Publish library
         run: dotnet publish CommonUtilities/CommonUtilities.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained false /p:UseAppHost=false -o ./publish/${{ matrix.os }}-${{ matrix.arch }}/CommonUtilities
 
-      - name: Zip ${{ matrix.arch }} output
+      - name: Zip ${{ matrix.os }}-${{ matrix.arch }} output
         run: |
-          Compress-Archive -Path ./publish/${{ matrix.os }}-${{ matrix.arch }}/CommonUtilities/* -DestinationPath ./CommonUtilities-${{ inputs.release_version }}-${{ matrix.arch }}.zip
+          Compress-Archive -Path ./publish/${{ matrix.os }}-${{ matrix.arch }}/CommonUtilities/* -DestinationPath ./CommonUtilities-${{ inputs.release_version }}-${{ matrix.os }}-${{ matrix.arch }}.zip
         shell: pwsh
 
-      - name: Upload ${{ matrix.arch }} artifact
+      - name: Upload ${{ matrix.os }}-${{ matrix.arch }} artifact
         uses: actions/upload-artifact@v4
         with:
-          name: CommonUtilities-${{ inputs.release_version }}-${{ matrix.arch }}.zip
-          path: ./CommonUtilities-${{ inputs.release_version }}-${{ matrix.arch }}.zip
+          name: CommonUtilities-${{ inputs.release_version }}-${{ matrix.os }}-${{ matrix.arch }}.zip
+          path: ./CommonUtilities-${{ inputs.release_version }}-${{ matrix.os }}-${{ matrix.arch }}.zip
           overwrite: true
 
   release:
@@ -89,14 +89,14 @@ jobs:
           tag_name: ${{ github.event.inputs.release_version }}
           name: ${{ github.event.inputs.release_version }}
           files: |
-            ./release-assets/CommonUtilities-${{ inputs.release_version }}-x64.zip
-            ./release-assets/CommonUtilities-${{ inputs.release_version }}-x86.zip
-            ./release-assets/CommonUtilities-${{ inputs.release_version }}-arm.zip
-            ./release-assets/CommonUtilities-${{ inputs.release_version }}-arm64.zip
-            ./release-assets/CommonUtilities-${{ inputs.release_version }}-osx-x64.zip
-            ./release-assets/CommonUtilities-${{ inputs.release_version }}-osx-arm64.zip
-            ./release-assets/CommonUtilities-${{ inputs.release_version }}-linux-x64.zip
-            ./release-assets/CommonUtilities-${{ inputs.release_version }}-linux-arm.zip
-            ./release-assets/CommonUtilities-${{ inputs.release_version }}-linux-arm64.zip
+            ./release-assets/CommonUtilities-${{ inputs.release_version }}-windows-latest-x64.zip
+            ./release-assets/CommonUtilities-${{ inputs.release_version }}-windows-latest-x86.zip
+            ./release-assets/CommonUtilities-${{ inputs.release_version }}-windows-latest-arm.zip
+            ./release-assets/CommonUtilities-${{ inputs.release_version }}-windows-latest-arm64.zip
+            ./release-assets/CommonUtilities-${{ inputs.release_version }}-macos-latest-x64.zip
+            ./release-assets/CommonUtilities-${{ inputs.release_version }}-macos-latest-arm64.zip
+            ./release-assets/CommonUtilities-${{ inputs.release_version }}-ubuntu-latest-x64.zip
+            ./release-assets/CommonUtilities-${{ inputs.release_version }}-ubuntu-latest-arm.zip
+            ./release-assets/CommonUtilities-${{ inputs.release_version }}-ubuntu-latest-arm64.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
