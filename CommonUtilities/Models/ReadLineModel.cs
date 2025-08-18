@@ -20,48 +20,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using System.ComponentModel.DataAnnotations;
-
-namespace CommonUtilities.Models.Database;
+namespace CommonUtilities.Models;
 
 /// <summary>
-///     Defines the standard user roles within the application.
+///     Represents the parameters for a console read line operation,
+///     including the prompt question, a default value for cancellation,
+///     and whether empty input is allowed.
 /// </summary>
-public enum UserRoles
+public class ReadLineModel
 {
     /// <summary>
-    ///     Represents a Super Administrator with the highest level of permissions.
+    ///     Gets or sets the question or prompt message to display to the user.
     /// </summary>
-    SuperAdmin,
+    /// <value>The question string. Defaults to <see cref="string.Empty" />.</value>
+    public string Question { get; set; } = string.Empty;
 
     /// <summary>
-    ///     Represents an Administrator with elevated permissions, typically below SuperAdmin.
+    ///     Gets or sets the default value to be used if the user cancels the input.
     /// </summary>
-    Admin,
+    /// <value>The default value string. Defaults to <see cref="string.Empty" />.</value>
+    public string Value { get; set; } = string.Empty;
 
     /// <summary>
-    ///     Represents a standard Member or regular user with basic permissions.
+    ///     Gets or sets a value indicating whether empty or whitespace input is allowed.
     /// </summary>
-    Member
-}
-
-/// <summary>
-///     Represents a user role entity, typically stored in a database.
-/// </summary>
-public class Role
-{
-    /// <summary>
-    ///     Gets or sets the unique identifier for the role.
-    ///     This is typically the primary key in the database.
-    /// </summary>
-    [Key]
-    public int Id { get; set; }
-
-    /// <summary>
-    ///     Gets or sets the name of the role (e.g., "SuperAdmin", "Admin", "Member").
-    ///     The maximum length is 100 characters.
-    /// </summary>
-    /// <value>The role name. Defaults to an empty string.</value>
-    [MaxLength(100)]
-    public string Name { get; set; } = string.Empty;
+    /// <value>True if empty input is allowed; otherwise, false. Defaults to false.</value>
+    public bool AllowedEmpty { get; set; } = false;
 }
