@@ -1,7 +1,9 @@
 <!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
+
 <a id="readme-top"></a>
 
 <!-- PROJECT SHIELDS -->
+
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -54,46 +56,57 @@
 </details>
 
 <!-- ABOUT THE PROJECT -->
+
 ## About The Project
 
 CommonUtilities is a modular, production-ready C#/.NET utility library and toolkit designed to accelerate development for .NET 8+ projects. It provides a comprehensive set of helpers, models, and utilities for common application needs, including security, data, HTTP, scheduling, media, and more. The project is structured for easy extension and integration into any .NET solution.
 
 ### Features
-- Modular helpers for:
-  - Security (AES, SHA256, 3DES, signature, validation)
-  - Data (conversion, formatting, JSON file operations)
-  - HTTP (basic and advanced utilities)
-  - System (app settings, caching, file/process utilities, logging, timestamps)
-  - Scheduler (cron jobs, scheduled services)
-  - Media (image processing)
-  - QR code generation
-  - Stripe payment integration
-  - Google MFA and Cloudflare Captcha
-  - Email (SMTP, mailer)
-  - IP info lookup
-- Strongly-typed models for database and shared data
-- Designed for .NET 8.0 and above
-- MIT licensed, open source
+
+- **Security**: AES, SHA256, 3DES, signature, validation helpers
+- **Data**: Conversion, formatting, JSON file operations
+- **HTTP**: Basic and advanced HTTP utilities
+- **System**: App settings, caching, file/process utilities, logging, timestamps
+- **Scheduler**: Cron jobs, scheduled services, extensible SyncService base
+- **Media**: Image processing helpers
+- **QR Code**: QR code generation utilities
+- **Stripe**: Payment integration helpers
+- **Google MFA**: Multi-factor authentication helpers
+- **Cloudflare Captcha**: Captcha validation helpers
+- **Mailer**: SMTP and email sending helpers
+- **IP Info**: IP geolocation and lookup helpers
+- **Command**: Command-line helper utilities
+- **Enum**: Enum parsing and conversion helpers
+- **Database**: Strongly-typed models and DbContext
+- **SyncService**: Base and example for scheduled background jobs
+- **Configuration**: Easy integration with appsettings.json
+- **Extensible**: Modular, production-ready, and open source
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
-- [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) ([Context7 documentation used](https://github.com/dotnet/docs))
-- [xUnit.net](https://xunit.net/) ([Context7 documentation used](https://xunit.net/docs/getting-started/netcore/cmdline))
-- [.NET Community Toolkit](https://github.com/CommunityToolkit/dotnet) ([Context7 documentation used](https://aka.ms/mvvmtoolkit))
+
+- [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [xUnit.net](https://xunit.net/) (for testing)
+- [.NET Community Toolkit](https://github.com/CommunityToolkit/dotnet)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
+
 ## Getting Started
 
 To use CommonUtilities in your .NET project, follow these steps:
 
 ### Prerequisites
+
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 - (Optional) [xUnit.net](https://xunit.net/) for testing
 
 ### Installation
+
 1. Clone the repository:
    ```cmd
    git clone https://github.com/LoveDoLove/CS_CommonUtilities.git
@@ -105,9 +118,40 @@ To use CommonUtilities in your .NET project, follow these steps:
    dotnet test
    ```
 
+### Configuration
+
+Many helpers require configuration via `appsettings.json` (or `appsettings.Development.json`). Example:
+
+```json
+{
+  "Smtp": {
+    "Host": "smtp.example.com",
+    "Port": 587,
+    "Username": "xxx@example.com",
+    "Password": "example",
+    "From": "no-reply@example.com",
+    "Name": "example"
+  },
+  "CfCaptcha": {
+    "SiteKey": "xxx",
+    "SecretKey": "xxx"
+  },
+  "IpInfo": {
+    "Token": "xxx"
+  },
+  "Stripe": {
+    "ApiKey": "sk_test_xxx",
+    "WebhookSecret": "whsec_xxx"
+  }
+}
+```
+
+Adjust these values for your environment. See the sample files for all options.
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- USAGE EXAMPLES -->
+
 ## Usage
 
 Import the relevant namespaces from `CommonUtilities` and use the helpers as needed. Example:
@@ -119,16 +163,50 @@ string encrypted = AesUtilities.Encrypt("mydata", "password");
 string hash = Sha256Utilities.ComputeHash("mydata");
 ```
 
+### Advanced Usage
+
+**MailerHelper with configuration:**
+
+```csharp
+using CommonUtilities.Helpers.Mailer;
+using Microsoft.Extensions.Configuration;
+
+var config = new ConfigurationBuilder()
+  .AddJsonFile("appsettings.json")
+  .Build();
+var smtpConfig = config.GetSection("Smtp").Get<SmtpConfig>();
+var mailer = new MailerHelper(smtpConfig);
+await mailer.SendAsync("to@example.com", "Subject", "Body");
+```
+
+**StripeHelper:**
+
+```csharp
+using CommonUtilities.Helpers.Stripe;
+var stripeConfig = new StripeConfig { ApiKey = "sk_test_xxx" };
+var stripe = new StripeHelper(stripeConfig);
+// Use stripe methods for payment, customer, etc.
+```
+
+**SyncService (scheduled job):**
+
+```csharp
+// Inherit from SyncServiceBase<T> and override ExecuteSyncAsync for your job logic.
+```
+
 For more usage examples, see the source code and XML documentation in each helper class.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ROADMAP -->
+
 ## Roadmap
+
 - [x] Modular helper structure
 - [x] .NET 8.0 support
-- [x] Security, data, HTTP, and system utilities
-- [x] Scheduler, media, QR code, Stripe, Google MFA, Cloudflare Captcha, mailer, and IP info helpers
+- [x] Security, data, HTTP, system, and scheduler utilities
+- [x] Media, QR code, Stripe, Google MFA, Cloudflare Captcha, mailer, and IP info helpers
+- [x] Command, Enum, Database, SyncService helpers
 - [ ] Add more advanced examples and documentation
 - [ ] Expand test coverage
 - [ ] Add more integration samples
@@ -138,11 +216,13 @@ See the [open issues](https://github.com/LoveDoLove/CS_CommonUtilities/issues) f
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTRIBUTING -->
+
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 To contribute:
+
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
@@ -154,6 +234,7 @@ Please follow the [Context7](https://context7.com/) and .NET Foundation code of 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- LICENSE -->
+
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
@@ -161,6 +242,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- CONTACT -->
+
 ## Contact
 
 LoveDoLove - [GitHub](https://github.com/LoveDoLove)
@@ -170,6 +252,7 @@ Project Link: [https://github.com/LoveDoLove/CS_CommonUtilities](https://github.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ACKNOWLEDGMENTS -->
+
 ## Acknowledgments
 
 - [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
@@ -182,6 +265,7 @@ Project Link: [https://github.com/LoveDoLove/CS_CommonUtilities](https://github.
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
+
 [contributors-shield]: https://img.shields.io/github/contributors/LoveDoLove/CS_CommonUtilities.svg?style=for-the-badge
 [contributors-url]: https://github.com/LoveDoLove/CS_CommonUtilities/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/LoveDoLove/CS_CommonUtilities.svg?style=for-the-badge
