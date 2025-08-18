@@ -22,7 +22,7 @@
 
 using System.Security.Cryptography;
 using System.Text;
-using CommonUtilities.Models.Share;
+using CommonUtilities.Models;
 using CommonUtilities.Utilities.Data;
 
 namespace CommonUtilities.Utilities.Security;
