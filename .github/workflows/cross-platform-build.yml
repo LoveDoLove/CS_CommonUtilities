@@ -59,9 +59,6 @@ jobs:
         with:
           dotnet-version: "8.0.x"
 
-      - name: Restore dependencies
-        run: dotnet restore CommonUtilities/CommonUtilities.csproj
-
       - name: Clean project
         run: dotnet clean CommonUtilities/CommonUtilities.csproj
 
