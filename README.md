@@ -44,10 +44,10 @@
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
+        <li><a href="#configuration">Configuration</a></li>
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -63,7 +63,7 @@ CommonUtilities is a modular, production-ready C#/.NET utility library and toolk
 
 ### Features
 
-- **Security**: AES, SHA256, 3DES, signature, validation helpers
+- **Security**: AES, SHA256, 3DES, signature, and validation helpers
 - **Data**: Conversion, formatting, JSON file operations
 - **HTTP**: Basic and advanced HTTP utilities
 - **System**: App settings, caching, file/process utilities, logging, timestamps
@@ -78,17 +78,14 @@ CommonUtilities is a modular, production-ready C#/.NET utility library and toolk
 - **Command**: Command-line helper utilities
 - **Enum**: Enum parsing and conversion helpers
 - **Database**: Strongly-typed models and DbContext
-- **SyncService**: Base and example for scheduled background jobs
-- **Configuration**: Easy integration with appsettings.json
 - **Extensible**: Modular, production-ready, and open source
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
 
 - [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [C#](https://docs.microsoft.com/en-us/dotnet/csharp/)
 - [xUnit.net](https://xunit.net/) (for testing)
 - [.NET Community Toolkit](https://github.com/CommunityToolkit/dotnet)
 
@@ -124,6 +121,16 @@ Many helpers require configuration via `appsettings.json` (or `appsettings.Devel
 
 ```json
 {
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ConnectionStrings": {
+    "DBConnection": "Server=(localdb)\\mssqllocaldb;Database=NetCore-Mvc-Setup-Kit;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true"
+  },
   "Smtp": {
     "Host": "smtp.example.com",
     "Port": 587,
@@ -146,7 +153,9 @@ Many helpers require configuration via `appsettings.json` (or `appsettings.Devel
 }
 ```
 
-Adjust these values for your environment. See the sample files for all options.
+- Adjust these values for your environment.
+- For development, use `appsettings.Development.json` to override settings as needed.
+- See the sample files for all available options.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -154,7 +163,9 @@ Adjust these values for your environment. See the sample files for all options.
 
 ## Usage
 
-Import the relevant namespaces from `CommonUtilities` and use the helpers as needed. Example:
+Import the relevant namespaces from `CommonUtilities` and use the helpers as needed.
+
+**Basic Security Example:**
 
 ```csharp
 using CommonUtilities.Utilities.Security;
@@ -162,8 +173,6 @@ using CommonUtilities.Utilities.Security;
 string encrypted = AesUtilities.Encrypt("mydata", "password");
 string hash = Sha256Utilities.ComputeHash("mydata");
 ```
-
-### Advanced Usage
 
 **MailerHelper with configuration:**
 
@@ -195,23 +204,6 @@ var stripe = new StripeHelper(stripeConfig);
 ```
 
 For more usage examples, see the source code and XML documentation in each helper class.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- ROADMAP -->
-
-## Roadmap
-
-- [x] Modular helper structure
-- [x] .NET 8.0 support
-- [x] Security, data, HTTP, system, and scheduler utilities
-- [x] Media, QR code, Stripe, Google MFA, Cloudflare Captcha, mailer, and IP info helpers
-- [x] Command, Enum, Database, SyncService helpers
-- [ ] Add more advanced examples and documentation
-- [ ] Expand test coverage
-- [ ] Add more integration samples
-
-See the [open issues](https://github.com/LoveDoLove/CS_CommonUtilities/issues) for a full list of proposed features (and known issues).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
