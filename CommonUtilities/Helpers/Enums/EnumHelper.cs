@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 // Required for SelectList
@@ -79,7 +80,7 @@ public static class EnumHelper
     public static SelectList ToSelectListWithAllowed<T>(string? selectedValue = null, T[]? allowedValues = default)
         where T : Enum
     {
-        var enumListQuery = Enum.GetValues(typeof(T)).Cast<T>();
+        IEnumerable<T> enumListQuery = Enum.GetValues(typeof(T)).Cast<T>();
 
         if (allowedValues != null && allowedValues.Length > 0)
             enumListQuery = enumListQuery.Where(e => allowedValues.Contains(e));
@@ -108,7 +109,7 @@ public static class EnumHelper
     public static SelectList ToSelectListWithExcluded<T>(string? selectedValue = null, T? valueToExclude = default)
         where T : Enum
     {
-        var enumListQuery = Enum.GetValues(typeof(T)).Cast<T>();
+        IEnumerable<T> enumListQuery = Enum.GetValues(typeof(T)).Cast<T>();
 
         if (valueToExclude != null) enumListQuery = enumListQuery.Where(e => !e.Equals(valueToExclude));
 
@@ -131,7 +132,7 @@ public static class EnumHelper
     public static SelectList ToSelectListWithExcluded<T>(string? selectedValue = null, T[]? valuesToExclude = default)
         where T : Enum
     {
-        var enumListQuery = Enum.GetValues(typeof(T)).Cast<T>();
+        IEnumerable<T> enumListQuery = Enum.GetValues(typeof(T)).Cast<T>();
 
         if (valuesToExclude != null && valuesToExclude.Length > 0)
             enumListQuery = enumListQuery.Where(e => !valuesToExclude.Contains(e));
@@ -153,12 +154,12 @@ public static class EnumHelper
     public static string GetDisplayName<T>(T enumValue) where T : Enum
     {
         // Get the FieldInfo for the specific enum value.
-        var fieldInfo = typeof(T).GetField(enumValue.ToString());
+        FieldInfo? fieldInfo = typeof(T).GetField(enumValue.ToString());
 
         if (fieldInfo == null) return enumValue.ToString(); // Should not happen for valid enum values
 
         // Get DisplayAttribute if present.
-        var displayAttributes = fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false)
+        DisplayAttribute[]? displayAttributes = fieldInfo.GetCustomAttributes(typeof(DisplayAttribute), false)
             as DisplayAttribute[];
 
         // If DisplayAttribute is found and its Name property is not null or empty, use it.
@@ -173,7 +174,7 @@ public static class EnumHelper
     /// <param name="currentValue">The enum value to check.</param>
     /// <param name="allowedValues">An array of allowed enum values. If null or empty, the method returns false.</param>
     /// <returns>True if <paramref name="currentValue" /> is found in <paramref name="allowedValues" />; otherwise, false.</returns>
-    public static bool IsAllowedValue<T>(T currentValue, T[]? allowedValues = default)
+    public static bool IsAllowedValue<T>(T currentValue, T[]? allowedValues = null)
         where T : struct, Enum // 'struct' constraint for enums
     {
         // If allowedValues is null or empty, the currentValue cannot be in it.
