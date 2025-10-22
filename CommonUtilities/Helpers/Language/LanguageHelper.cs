@@ -52,4 +52,12 @@ public static class LanguageHelper
             ? name
             : languageCode.ToString();
     }
+
+    /// <summary>
+    ///     Gets the language name for a given language code string.
+    /// </summary>
+    public static string GetLanguageName(string languageCode)
+    {
+        return Enum.TryParse<LanguageCodeType>(languageCode, out var code) ? GetLanguageName(code) : languageCode;
+    }
 }
