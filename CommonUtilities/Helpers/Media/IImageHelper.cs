@@ -20,13 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using CommonUtilities.Helpers.GoogleDrive;
 using Microsoft.AspNetCore.Http;
 
 namespace CommonUtilities.Helpers.Media;
 
-/// <summary>
-///     Defines methods for validating, saving, and deleting image files in the web application.
-/// </summary>
 public interface IImageHelper
 {
     /// <summary>
@@ -43,6 +41,14 @@ public interface IImageHelper
     /// <param name="folder">The target folder for saving the image.</param>
     /// <returns>The saved file name.</returns>
     string SavePhoto(IFormFile f, string folder);
+
+    /// <summary>
+    ///     Saves the uploaded photo file to Google Drive, resizing it as needed.
+    /// </summary>
+    /// <param name="f">The uploaded form file to save.</param>
+    /// <param name="driveHelper">An instance of GoogleDriveHelper for uploading.</param>
+    /// <returns>The Google Drive file ID.</returns>
+    string SavePhotoToGoogleDrive(IFormFile f, GoogleDriveHelper driveHelper);
 
     /// <summary>
     ///     Deletes the specified photo file from the given folder.
