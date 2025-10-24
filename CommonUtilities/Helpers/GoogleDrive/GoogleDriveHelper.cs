@@ -33,12 +33,12 @@ namespace CommonUtilities.Helpers.GoogleDrive;
 /// <summary>
 ///     Helper class for Google Drive CRUD operations.
 /// </summary>
-public class GoogleDriveHelper
+public class GoogleDriveHelper : IGoogleDriveHelper
 {
     private readonly DriveService _driveService;
 
     /// <summary>
-    ///    Initializes a new instance of the <see cref="GoogleDriveHelper" /> class.
+    ///     Initializes a new instance of the <see cref="GoogleDriveHelper" /> class.
     /// </summary>
     /// <param name="googleDriveConfig"></param>
     public GoogleDriveHelper(GoogleDriveConfig googleDriveConfig)
