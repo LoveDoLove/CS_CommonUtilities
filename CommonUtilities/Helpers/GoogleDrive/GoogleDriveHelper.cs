@@ -38,16 +38,15 @@ public class GoogleDriveHelper
     private readonly DriveService _driveService;
 
     /// <summary>
-    ///     Initializes the Google Drive service using OAuth2 credentials.
+    ///    Initializes a new instance of the <see cref="GoogleDriveHelper" /> class.
     /// </summary>
-    /// <param name="credentialsPath">Path to client_secret.json.</param>
-    /// <param name="tokenPath">Path to store user token.</param>
-    public GoogleDriveHelper(string credentialsPath, string tokenPath)
+    /// <param name="googleDriveConfig"></param>
+    public GoogleDriveHelper(GoogleDriveConfig googleDriveConfig)
     {
         UserCredential credential;
-        using (FileStream stream = new FileStream(credentialsPath, FileMode.Open, FileAccess.Read))
+        using (FileStream stream = new FileStream(googleDriveConfig.CredentialsPath, FileMode.Open, FileAccess.Read))
         {
-            string credPath = tokenPath;
+            string credPath = googleDriveConfig.TokenPath;
             credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                 GoogleClientSecrets.FromStream(stream).Secrets,
                 [DriveService.Scope.Drive],
