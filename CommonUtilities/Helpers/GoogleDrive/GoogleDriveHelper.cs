@@ -38,26 +38,15 @@ public class GoogleDriveHelper : IGoogleDriveHelper
     private readonly DriveService _driveService;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="GoogleDriveHelper" /> class.
+    ///     Initializes a new instance of the <see cref="GoogleDriveHelper" /> class using API Key authentication.
     /// </summary>
-    /// <param name="googleDriveConfig"></param>
+    /// <param name="googleDriveConfig">Configuration containing the API Key.</param>
     public GoogleDriveHelper(GoogleDriveConfig googleDriveConfig)
     {
-        UserCredential credential;
-        using (FileStream stream = new FileStream(googleDriveConfig.CredentialsPath, FileMode.Open, FileAccess.Read))
-        {
-            string credPath = googleDriveConfig.TokenPath;
-            credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
-                GoogleClientSecrets.FromStream(stream).Secrets,
-                [DriveService.Scope.Drive],
-                "user",
-                CancellationToken.None,
-                new FileDataStore(credPath, true)).Result;
-        }
-
+        // Initialize DriveService with API Key authentication.
         _driveService = new DriveService(new BaseClientService.Initializer
         {
-            HttpClientInitializer = credential,
+            ApiKey = googleDriveConfig.ApiKey,
             ApplicationName = "GoogleDriveHelper"
         });
     }
@@ -100,7 +89,7 @@ public class GoogleDriveHelper : IGoogleDriveHelper
     /// <summary>
     ///     Updates a file's metadata or content.
     /// </summary>
-    public File UpdateFile(string fileId, string newName = null, Stream newContent = null, string newMimeType = null)
+    public File UpdateFile(string fileId, string? newName = null, Stream? newContent = null, string? newMimeType = null)
     {
         File fileMetadata = new File();
         if (!string.IsNullOrEmpty(newName)) fileMetadata.Name = newName;

@@ -28,12 +28,7 @@ namespace CommonUtilities.Helpers.GoogleDrive;
 public class GoogleDriveConfig
 {
     /// <summary>
-    ///     Path to the OAuth2 credentials file (client_secret.json).
+    ///     API Key for accessing Google Drive API.
     /// </summary>
-    public string CredentialsPath { get; set; } = string.Empty;
-
-    /// <summary>
-    ///     Path to store the user token.
-    /// </summary>
-    public string TokenPath { get; set; } = string.Empty;
+    public string ApiKey { get; set; } = string.Empty;
 }
