@@ -44,7 +44,7 @@ public interface IGoogleDriveHelper
     /// <summary>
     ///     Updates a file's metadata or content.
     /// </summary>
-    File UpdateFile(string fileId, string newName = null, Stream newContent = null, string newMimeType = null);
+    File UpdateFile(string fileId, string? newName = null, Stream? newContent = null, string? newMimeType = null);
 
     /// <summary>
     ///     Deletes a file by ID.
