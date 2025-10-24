@@ -21,9 +21,12 @@
 // THE SOFTWARE.
 
 using System.Text.RegularExpressions;
+using CommonUtilities.Helpers.GoogleDrive;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Formats.Jpeg;
+using SixLabors.ImageSharp.Formats.Png;
 using SixLabors.ImageSharp.Processing;
 using File = System.IO.File;
 
@@ -102,6 +105,41 @@ public class ImageHelper : IImageHelper
         img.Save(path); // ImageSharp will attempt to save in the format indicated by the path's extension
 
         return fileName;
+    }
+
+    /// <summary>
+    ///     Saves the uploaded photo file to Google Drive, resizing it as needed.
+    /// </summary>
+    /// <param name="f">The uploaded form file to save.</param>
+    /// <param name="driveHelper">An instance of GoogleDriveHelper for uploading.</param>
+    /// <returns>The Google Drive file ID.</returns>
+    public string SavePhotoToGoogleDrive(IFormFile f, GoogleDriveHelper driveHelper)
+    {
+        string originalExtension = Path.GetExtension(f.FileName).ToLowerInvariant();
+        string targetExtension = ".jpg";
+        if (originalExtension == ".png" || originalExtension == ".jpeg" || originalExtension == ".jpg")
+            targetExtension = originalExtension;
+        if (targetExtension != ".png" && targetExtension != ".jpeg" && targetExtension != ".jpg")
+            targetExtension = ".jpg";
+
+        ResizeOptions options = new()
+        {
+            Size = new Size(200, 200),
+            Mode = ResizeMode.Crop
+        };
+
+        using Stream inputStream = f.OpenReadStream();
+        using Image img = Image.Load(inputStream);
+        img.Mutate(x => x.Resize(options));
+        using MemoryStream outputStream = new MemoryStream();
+        if (targetExtension == ".png")
+            img.Save(outputStream, PngFormat.Instance);
+        else
+            img.Save(outputStream, JpegFormat.Instance);
+        outputStream.Position = 0;
+
+        var driveFile = driveHelper.CreateFile(f.FileName, f.ContentType, outputStream);
+        return driveFile.Id;
     }
 
     /// <summary>
