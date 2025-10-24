@@ -13,8 +13,8 @@
 		<Description>A modular, production-ready C#/.NET utility library and toolkit for rapid development.</Description>
 		<RepositoryUrl>https://github.com/LoveDoLove/CS_CommonUtilities</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<AssemblyVersion>1.7.0</AssemblyVersion>
-		<FileVersion>1.7.0</FileVersion>
+		<AssemblyVersion>1.7.1</AssemblyVersion>
+		<FileVersion>1.7.1</FileVersion>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
@@ -46,6 +46,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Cronos" Version="0.11.1" />
+		<PackageReference Include="Google.Apis.Drive.v3" Version="1.72.0.3938" />
 		<PackageReference Include="GoogleAuthenticator" Version="3.2.0" />
 		<PackageReference Include="MailKit" Version="4.14.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.3.0" />
