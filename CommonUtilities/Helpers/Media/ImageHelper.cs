@@ -110,10 +110,10 @@ public class ImageHelper : IImageHelper
     /// <summary>
     ///     Saves the uploaded photo file to Google Drive, resizing it as needed.
     /// </summary>
-    /// <param name="f">The uploaded form file to save.</param>
-    /// <param name="driveHelper">An instance of GoogleDriveHelper for uploading.</param>
-    /// <returns>The Google Drive file ID.</returns>
-    public string SavePhotoToGoogleDrive(IFormFile f, GoogleDriveHelper driveHelper)
+    /// <param name="f"></param>
+    /// <param name="driveHelper"></param>
+    /// <returns></returns>
+    public string SavePhotoToGoogleDrive(IFormFile f, IGoogleDriveHelper driveHelper)
     {
         string originalExtension = Path.GetExtension(f.FileName).ToLowerInvariant();
         string targetExtension = ".jpg";

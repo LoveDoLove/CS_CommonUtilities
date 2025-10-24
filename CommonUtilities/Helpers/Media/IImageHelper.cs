@@ -48,7 +48,7 @@ public interface IImageHelper
     /// <param name="f">The uploaded form file to save.</param>
     /// <param name="driveHelper">An instance of GoogleDriveHelper for uploading.</param>
     /// <returns>The Google Drive file ID.</returns>
-    string SavePhotoToGoogleDrive(IFormFile f, GoogleDriveHelper driveHelper);
+    string SavePhotoToGoogleDrive(IFormFile f, IGoogleDriveHelper driveHelper);
 
     /// <summary>
     ///     Deletes the specified photo file from the given folder.
