@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using Microsoft.AspNetCore.Http;
 using Serilog;
 
 namespace CommonUtilities.Utilities.System;
@@ -112,5 +113,42 @@ public static class FileUtilities
             Log.Error(ex, "Generic error writing file: {Path}", path);
             throw new Exception($"Error writing file: {path}", ex);
         }
+    }
+
+    /// <summary>
+    ///     Saves the uploaded ebook file to the specified logical path using IWebHostEnvironment.
+    /// </summary>
+    /// <param name="file">The uploaded form file.</param>
+    /// <param name="logicalPath">The logical path under web root (e.g., 'ebooks').</param>
+    /// <param name="fileName">The target filename.</param>
+    public static string SaveFile(IFormFile file, string logicalPath, string fileName)
+    {
+        EnsureDirectory(logicalPath);
+        string filePath = Path.Combine(logicalPath, fileName);
+        using FileStream stream = new(filePath, FileMode.Create);
+        file.CopyTo(stream);
+        return filePath;
+    }
+
+    /// <summary>
+    ///     Deletes a file from the specified logical path using IWebHostEnvironment.
+    /// </summary>
+    /// <param name="logicalPath">The logical path under web root (e.g., 'ebooks').</param>
+    /// <param name="fileName">The filename to delete.</param>
+    public static void DeleteFile(string logicalPath, string fileName)
+    {
+        string filePath = Path.Combine(logicalPath, fileName);
+        if (File.Exists(filePath)) File.Delete(filePath);
+    }
+
+    /// <summary>
+    ///     Ensures the target directory exists, creating it if necessary.
+    ///     Internal use only.
+    /// </summary>
+    /// <param name="directory">The directory path to check/create.</param>
+    public static void EnsureDirectory(string directory)
+    {
+        if (!Directory.Exists(directory))
+            Directory.CreateDirectory(directory);
     }
 }
