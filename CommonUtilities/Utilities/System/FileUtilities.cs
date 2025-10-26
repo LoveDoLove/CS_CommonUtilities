@@ -135,10 +135,15 @@ public static class FileUtilities
     /// </summary>
     /// <param name="logicalPath">The logical path under web root (e.g., 'ebooks').</param>
     /// <param name="fileName">The filename to delete.</param>
-    public static void DeleteFile(string logicalPath, string fileName)
+    public static bool DeleteFile(string logicalPath, string fileName)
     {
         string filePath = Path.Combine(logicalPath, fileName);
-        if (File.Exists(filePath)) File.Delete(filePath);
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+            return true;
+        }
+        return false;
     }
 
     /// <summary>
