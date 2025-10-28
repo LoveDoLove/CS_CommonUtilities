@@ -21,6 +21,7 @@
 // THE SOFTWARE.
 
 using System.Text.RegularExpressions;
+using CG.Web.MegaApiClient;
 using CommonUtilities.Helpers.MegaDrive;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -143,7 +144,7 @@ public class ImageHelper : IImageHelper
         await using Stream inputStream = f.OpenReadStream();
         using Image img = await Image.LoadAsync(inputStream);
         img.Mutate(x => x.Resize(options));
-        using MemoryStream outputStream = new MemoryStream();
+        using MemoryStream outputStream = new();
         if (targetExtension == ".png")
             await img.SaveAsync(outputStream, PngFormat.Instance);
         else
@@ -152,7 +153,7 @@ public class ImageHelper : IImageHelper
 
         // Save to temp file for upload
         string tempFile = Path.GetTempFileName() + targetExtension;
-        await using (FileStream fs = new FileStream(tempFile, FileMode.Create, FileAccess.Write))
+        await using (FileStream fs = new(tempFile, FileMode.Create, FileAccess.Write))
         {
             await outputStream.CopyToAsync(fs);
         }
@@ -184,5 +185,130 @@ public class ImageHelper : IImageHelper
         IMegaDriveHelper megaDriveHelper)
     {
         return await megaDriveHelper.DownloadFileAsync(fileId, destinationPath);
+    }
+
+    /// <summary>
+    ///     Downloads and caches an image from a public Mega.nz URL.
+    ///     This method handles downloading, caching, and MIME type detection for Mega.nz public image links.
+    /// </summary>
+    /// <param name="megaPublicUrl">The public Mega.nz URL (e.g., https://mega.nz/file/xxx#yyy).</param>
+    /// <param name="cacheDirectory">The directory where cached images should be stored.</param>
+    /// <param name="filePrefix">Optional prefix for the cached filename (default: "cached").</param>
+    /// <returns>Result containing the cached file path, MIME type, and success status.</returns>
+    public async Task<MegaImageCacheResult> DownloadAndCacheMegaImageAsync(string megaPublicUrl,
+        string cacheDirectory, string filePrefix = "cached")
+    {
+        // Validate input
+        if (string.IsNullOrEmpty(megaPublicUrl))
+            return new MegaImageCacheResult
+            {
+                Success = false,
+                ErrorMessage = "Image URL is required"
+            };
+
+        if (!megaPublicUrl.StartsWith("https://mega.nz/", StringComparison.OrdinalIgnoreCase))
+            return new MegaImageCacheResult
+            {
+                Success = false,
+                ErrorMessage = "Only Mega.nz URLs are supported"
+            };
+
+        try
+        {
+            // Create cache directory if it doesn't exist
+            if (!Directory.Exists(cacheDirectory)) Directory.CreateDirectory(cacheDirectory);
+
+            // Use hash for cache filename (without extension initially)
+            string fileHash = $"{filePrefix}_{Math.Abs(megaPublicUrl.GetHashCode())}";
+
+            // Check if any cached file with this hash exists (with any extension)
+            string[] cachedFiles = Directory.GetFiles(cacheDirectory, $"{fileHash}.*");
+            if (cachedFiles.Length > 0)
+            {
+                string cachedFile = cachedFiles[0];
+                string mimeType = GetMimeTypeFromExtension(Path.GetExtension(cachedFile));
+                return new MegaImageCacheResult
+                {
+                    Success = true,
+                    CachedFilePath = cachedFile,
+                    MimeType = mimeType
+                };
+            }
+
+            // Download from Mega.nz using MegaApiClient for public URLs
+            MegaApiClient megaClient = new();
+            await megaClient.LoginAnonymousAsync();
+
+            try
+            {
+                // Get file info from public URL to determine the actual filename
+                Uri megaUri = new(megaPublicUrl);
+                INode? nodeInfo = await megaClient.GetNodeFromLinkAsync(megaUri);
+
+                if (nodeInfo == null)
+                    return new MegaImageCacheResult
+                    {
+                        Success = false,
+                        ErrorMessage = "Unable to retrieve file information from Mega.nz"
+                    };
+
+                // Get actual file extension from the node name
+                string actualExtension = Path.GetExtension(nodeInfo.Name);
+                if (string.IsNullOrEmpty(actualExtension)) actualExtension = ".jpg"; // Default fallback
+
+                string cachePath = Path.Combine(cacheDirectory, $"{fileHash}{actualExtension}");
+
+                // Download the file
+                await megaClient.DownloadFileAsync(megaUri, cachePath);
+
+                // Verify the file was downloaded
+                if (!File.Exists(cachePath))
+                    return new MegaImageCacheResult
+                    {
+                        Success = false,
+                        ErrorMessage = "Failed to download image from Mega.nz"
+                    };
+
+                string mimeType = GetMimeTypeFromExtension(actualExtension);
+                return new MegaImageCacheResult
+                {
+                    Success = true,
+                    CachedFilePath = cachePath,
+                    MimeType = mimeType
+                };
+            }
+            finally
+            {
+                await megaClient.LogoutAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            return new MegaImageCacheResult
+            {
+                Success = false,
+                ErrorMessage = $"Failed to download image: {ex.Message}"
+            };
+        }
+    }
+
+    /// <summary>
+    ///     Gets the MIME type for an image file based on its extension.
+    /// </summary>
+    /// <param name="extension">The file extension (with or without leading dot).</param>
+    /// <returns>The MIME type string.</returns>
+    public string GetMimeTypeFromExtension(string extension)
+    {
+        return extension.ToLowerInvariant() switch
+        {
+            ".png" => "image/png",
+            ".jpg" => "image/jpeg",
+            ".jpeg" => "image/jpeg",
+            ".webp" => "image/webp",
+            ".gif" => "image/gif",
+            ".bmp" => "image/bmp",
+            ".svg" => "image/svg+xml",
+            _ => "image/jpeg" // Default fallback
+        };
     }
 }
