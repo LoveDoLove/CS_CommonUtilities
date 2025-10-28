@@ -104,6 +104,6 @@ public class DropboxHelper : IDropboxHelper
         SharedLinkMetadata? sharedLinkResult = await _client.Sharing.CreateSharedLinkWithSettingsAsync(dropboxPath);
         // Dropbox shared links can be modified for direct image preview
         // Replace ?dl=0 with ?raw=1 for direct image rendering
-        return sharedLinkResult.Url.Replace("?dl=0", "?raw=1");
+        return sharedLinkResult.Url.Replace("dl=0", "raw=1");
     }
 }
