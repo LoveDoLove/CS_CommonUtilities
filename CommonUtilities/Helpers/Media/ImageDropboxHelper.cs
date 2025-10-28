@@ -35,13 +35,13 @@ namespace CommonUtilities.Helpers.Media;
 /// </summary>
 public class ImageDropboxHelper : IImageDropboxHelper
 {
-    private readonly DropboxHelper _dropboxHelper;
+    private readonly IDropboxHelper _dropboxHelper;
 
     /// <summary>
     ///     Initializes a new instance of ImageDropboxHelper with the specified environment and DropboxHelper.
     /// </summary>
     /// <param name="dropboxHelper">DropboxHelper instance for Dropbox operations.</param>
-    public ImageDropboxHelper(DropboxHelper dropboxHelper)
+    public ImageDropboxHelper(IDropboxHelper dropboxHelper)
     {
         _dropboxHelper = dropboxHelper;
     }
