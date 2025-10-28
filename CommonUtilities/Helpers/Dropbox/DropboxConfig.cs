@@ -20,30 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace CommonUtilities.Helpers.Media;
+namespace CommonUtilities.Helpers.Dropbox;
 
 /// <summary>
-///     Result info for Mega.nz image caching operations.
+///     Dropbox Configuration
 /// </summary>
-public class MegaImageCacheResult
+public class DropboxConfig
 {
     /// <summary>
-    ///     Indicates whether the operation was successful.
+    ///     Access Token
     /// </summary>
-    public bool Success { get; set; }
-
-    /// <summary>
-    ///     The local file path where the image is cached.
-    /// </summary>
-    public string? CachedFilePath { get; set; }
-
-    /// <summary>
-    ///     The MIME type of the cached image.
-    /// </summary>
-    public string? MimeType { get; set; }
-
-    /// <summary>
-    ///     Error message if the operation failed.
-    /// </summary>
-    public string? ErrorMessage { get; set; }
+    public string AccessToken { get; set; } = string.Empty;
 }

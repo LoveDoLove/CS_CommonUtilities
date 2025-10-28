@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-using CommonUtilities.Helpers.MegaDrive;
 using Microsoft.AspNetCore.Http;
 
 namespace CommonUtilities.Helpers.Media;
@@ -48,43 +47,6 @@ public interface IImageHelper
     /// <param name="file">The file name to delete.</param>
     /// <param name="folder">The folder containing the file.</param>
     void DeletePhoto(string file, string folder);
-
-    /// <summary>
-    ///     Saves the uploaded photo file to Mega Drive, resizing it as needed.
-    /// </summary>
-    /// <param name="f">The uploaded form file to save.</param>
-    /// <param name="megaDriveHelper">An instance of IMegaDriveHelper for uploading.</param>
-    /// <returns>The MegaDrive upload result.</returns>
-    Task<MegaUploadResult> SavePhotoToMegaDriveAsync(IFormFile f, IMegaDriveHelper megaDriveHelper);
-
-    /// <summary>
-    ///     Removes a photo from Mega Drive by file ID.
-    /// </summary>
-    /// <param name="fileId">The Mega Drive file ID to remove.</param>
-    /// <param name="megaDriveHelper">An instance of IMegaDriveHelper for deletion.</param>
-    /// <returns>True if successful.</returns>
-    Task<bool> RemovePhotoFromMegaDriveAsync(string fileId, IMegaDriveHelper megaDriveHelper);
-
-    /// <summary>
-    ///     Gets a photo from Mega Drive by file ID.
-    /// </summary>
-    /// <param name="fileId">The Mega Drive file ID to retrieve.</param>
-    /// <param name="destinationPath">Local destination path.</param>
-    /// <param name="megaDriveHelper">An instance of IMegaDriveHelper for download.</param>
-    /// <returns>Download result info.</returns>
-    Task<MegaDownloadResult> GetPhotoFromMegaDriveAsync(string fileId, string destinationPath,
-        IMegaDriveHelper megaDriveHelper);
-
-    /// <summary>
-    ///     Downloads and caches an image from a public Mega.nz URL.
-    ///     This method handles downloading, caching, and MIME type detection for Mega.nz public image links.
-    /// </summary>
-    /// <param name="megaPublicUrl">The public Mega.nz URL (e.g., https://mega.nz/file/xxx#yyy).</param>
-    /// <param name="cacheDirectory">The directory where cached images should be stored.</param>
-    /// <param name="filePrefix">Optional prefix for the cached filename (default: "cached").</param>
-    /// <returns>Result containing the cached file path, MIME type, and success status.</returns>
-    Task<MegaImageCacheResult> DownloadAndCacheMegaImageAsync(string megaPublicUrl, string cacheDirectory,
-        string filePrefix = "cached");
 
     /// <summary>
     ///     Gets the MIME type for an image file based on its extension.
