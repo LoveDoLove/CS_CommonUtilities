@@ -50,7 +50,6 @@
 		<PackageReference Include="Google.Apis.Drive.v3" Version="1.72.0.3938" />
 		<PackageReference Include="GoogleAuthenticator" Version="3.2.0" />
 		<PackageReference Include="MailKit" Version="4.14.1" />
-		<PackageReference Include="MegaApiClient" Version="1.10.5" />
 		<PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
