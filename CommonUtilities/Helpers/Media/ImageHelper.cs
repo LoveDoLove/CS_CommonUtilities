@@ -21,7 +21,7 @@
 // THE SOFTWARE.
 
 using System.Text.RegularExpressions;
-using CommonUtilities.Helpers.GoogleDrive;
+using CommonUtilities.Helpers.MegaDrive;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
@@ -108,12 +108,24 @@ public class ImageHelper : IImageHelper
     }
 
     /// <summary>
-    ///     Saves the uploaded photo file to Google Drive, resizing it as needed.
+    ///     Deletes the specified photo file from the given folder.
     /// </summary>
-    /// <param name="f"></param>
-    /// <param name="driveHelper"></param>
-    /// <returns></returns>
-    public string SavePhotoToGoogleDrive(IFormFile f, IGoogleDriveHelper driveHelper)
+    /// <param name="file">The file name to delete.</param>
+    /// <param name="folder">The folder containing the file.</param>
+    public void DeletePhoto(string file, string folder)
+    {
+        file = Path.GetFileName(file);
+        string path = Path.Combine(_environment.WebRootPath, folder, file);
+        File.Delete(path);
+    }
+
+    /// <summary>
+    ///     Saves the uploaded photo file to Mega Drive, resizing it as needed.
+    /// </summary>
+    /// <param name="f">The uploaded form file to save.</param>
+    /// <param name="megaDriveHelper">An instance of IMegaDriveHelper for uploading.</param>
+    /// <returns>The MegaDrive upload result.</returns>
+    public async Task<MegaUploadResult> SavePhotoToMegaDriveAsync(IFormFile f, IMegaDriveHelper megaDriveHelper)
     {
         string originalExtension = Path.GetExtension(f.FileName).ToLowerInvariant();
         string targetExtension = ".jpg";
@@ -128,29 +140,49 @@ public class ImageHelper : IImageHelper
             Mode = ResizeMode.Crop
         };
 
-        using Stream inputStream = f.OpenReadStream();
-        using Image img = Image.Load(inputStream);
+        await using Stream inputStream = f.OpenReadStream();
+        using Image img = await Image.LoadAsync(inputStream);
         img.Mutate(x => x.Resize(options));
         using MemoryStream outputStream = new MemoryStream();
         if (targetExtension == ".png")
-            img.Save(outputStream, PngFormat.Instance);
+            await img.SaveAsync(outputStream, PngFormat.Instance);
         else
-            img.Save(outputStream, JpegFormat.Instance);
+            await img.SaveAsync(outputStream, JpegFormat.Instance);
         outputStream.Position = 0;
 
-        var driveFile = driveHelper.CreateFile(f.FileName, f.ContentType, outputStream);
-        return driveFile.Id;
+        // Save to temp file for upload
+        string tempFile = Path.GetTempFileName() + targetExtension;
+        await using (FileStream fs = new FileStream(tempFile, FileMode.Create, FileAccess.Write))
+        {
+            await outputStream.CopyToAsync(fs);
+        }
+
+        MegaUploadResult result = await megaDriveHelper.UploadFileAsync(tempFile);
+        File.Delete(tempFile);
+        return result;
     }
 
     /// <summary>
-    ///     Deletes the specified photo file from the given folder.
+    ///     Removes a photo from Mega Drive by file ID.
     /// </summary>
-    /// <param name="file">The file name to delete.</param>
-    /// <param name="folder">The folder containing the file.</param>
-    public void DeletePhoto(string file, string folder)
+    /// <param name="fileId">The Mega Drive file ID to remove.</param>
+    /// <param name="megaDriveHelper">An instance of IMegaDriveHelper for deletion.</param>
+    /// <returns>True if successful.</returns>
+    public async Task<bool> RemovePhotoFromMegaDriveAsync(string fileId, IMegaDriveHelper megaDriveHelper)
     {
-        file = Path.GetFileName(file);
-        string path = Path.Combine(_environment.WebRootPath, folder, file);
-        File.Delete(path);
+        return await megaDriveHelper.DeleteNodeAsync(fileId);
+    }
+
+    /// <summary>
+    ///     Gets a photo from Mega Drive by file ID.
+    /// </summary>
+    /// <param name="fileId">The Mega Drive file ID to retrieve.</param>
+    /// <param name="destinationPath">Local destination path.</param>
+    /// <param name="megaDriveHelper">An instance of IMegaDriveHelper for download.</param>
+    /// <returns>Download result info.</returns>
+    public async Task<MegaDownloadResult> GetPhotoFromMegaDriveAsync(string fileId, string destinationPath,
+        IMegaDriveHelper megaDriveHelper)
+    {
+        return await megaDriveHelper.DownloadFileAsync(fileId, destinationPath);
     }
 }

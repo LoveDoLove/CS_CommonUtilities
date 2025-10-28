@@ -44,18 +44,6 @@ public class MegaDriveHelper : IMegaDriveHelper
     }
 
     /// <summary>
-    ///     Ensures the client is logged in before performing any operation.
-    /// </summary>
-    private async Task EnsureLoggedInAsync()
-    {
-        if (!_isLoggedIn)
-        {
-            await Task.Run(() => _megaApiClient.Login(_megaDriveConfig.Email, _megaDriveConfig.Password));
-            _isLoggedIn = true;
-        }
-    }
-
-    /// <summary>
     ///     Logs out the client.
     /// </summary>
     public async Task LogoutAsync()
@@ -227,6 +215,18 @@ public class MegaDriveHelper : IMegaDriveHelper
         catch
         {
             return false;
+        }
+    }
+
+    /// <summary>
+    ///     Ensures the client is logged in before performing any operation.
+    /// </summary>
+    private async Task EnsureLoggedInAsync()
+    {
+        if (!_isLoggedIn)
+        {
+            await Task.Run(() => _megaApiClient.Login(_megaDriveConfig.Email, _megaDriveConfig.Password));
+            _isLoggedIn = true;
         }
     }
 }
