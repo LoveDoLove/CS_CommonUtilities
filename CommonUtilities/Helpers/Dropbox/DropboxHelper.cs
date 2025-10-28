@@ -84,6 +84,18 @@ public class DropboxHelper : IDropboxHelper
     }
 
     /// <summary>
+    ///     Moves or renames a file in Dropbox.
+    /// </summary>
+    /// <param name="fromPath">Current Dropbox file path.</param>
+    /// <param name="toPath">New Dropbox file path.</param>
+    /// <returns>Metadata of the moved file.</returns>
+    public async Task<FileMetadata> MoveAsync(string fromPath, string toPath)
+    {
+        RelocationResult result = await _client.Files.MoveV2Async(fromPath, toPath, autorename: false);
+        return result.Metadata.AsFile;
+    }
+
+    /// <summary>
     ///     Deletes a file from Dropbox.
     /// </summary>
     /// <param name="dropboxPath">Dropbox file path.</param>
