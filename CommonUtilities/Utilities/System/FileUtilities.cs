@@ -31,6 +31,21 @@ namespace CommonUtilities.Utilities.System;
 public static class FileUtilities
 {
     /// <summary>
+    ///     Generates a unique filename for the uploaded file.
+    /// </summary>
+    /// <param name="file"></param>
+    /// <param name="keepOriginalName"></param>
+    /// <returns></returns>
+    public static string GenerateFileName(IFormFile file, bool keepOriginalName = false)
+    {
+        string extension = Path.GetExtension(file.FileName);
+        string fileName = keepOriginalName
+            ? Path.GetFileNameWithoutExtension(file.FileName)
+            : Guid.NewGuid().ToString();
+        return $"{fileName}_{DateTime.Now:yyyyMMddHHmmss}{extension}";
+    }
+
+    /// <summary>
     ///     Deletes a folder and all its contents recursively.
     /// </summary>
     /// <param name="directoryPath">The path to the directory to delete.</param>
@@ -143,6 +158,7 @@ public static class FileUtilities
             File.Delete(filePath);
             return true;
         }
+
         return false;
     }
 
