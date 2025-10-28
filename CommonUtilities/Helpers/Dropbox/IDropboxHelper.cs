@@ -50,6 +50,14 @@ public interface IDropboxHelper
     Task<FileMetadata> UpdateAsync(string dropboxPath, Stream fileStream);
 
     /// <summary>
+    ///     Moves or renames a file in Dropbox.
+    /// </summary>
+    /// <param name="fromPath">Current Dropbox file path.</param>
+    /// <param name="toPath">New Dropbox file path.</param>
+    /// <returns>Metadata of the moved file.</returns>
+    Task<FileMetadata> MoveAsync(string fromPath, string toPath);
+
+    /// <summary>
     ///     Deletes a file from Dropbox.
     /// </summary>
     /// <param name="dropboxPath">Dropbox file path.</param>
