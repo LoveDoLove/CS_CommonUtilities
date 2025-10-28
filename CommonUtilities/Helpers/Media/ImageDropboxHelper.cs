@@ -22,7 +22,6 @@
 
 using CommonUtilities.Helpers.Dropbox;
 using Dropbox.Api.Files;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Jpeg;
@@ -34,17 +33,15 @@ namespace CommonUtilities.Helpers.Media;
 /// <summary>
 ///     Extends ImageHelper to support Dropbox image CRUD operations.
 /// </summary>
-public class ImageDropboxHelper : ImageHelper
+public class ImageDropboxHelper : IImageDropboxHelper
 {
     private readonly DropboxHelper _dropboxHelper;
 
     /// <summary>
     ///     Initializes a new instance of ImageDropboxHelper with the specified environment and DropboxHelper.
     /// </summary>
-    /// <param name="environment">Web host environment for local file operations.</param>
     /// <param name="dropboxHelper">DropboxHelper instance for Dropbox operations.</param>
-    public ImageDropboxHelper(IWebHostEnvironment environment, DropboxHelper dropboxHelper)
-        : base(environment)
+    public ImageDropboxHelper(DropboxHelper dropboxHelper)
     {
         _dropboxHelper = dropboxHelper;
     }
