@@ -23,6 +23,17 @@ namespace CommonUtilities.Helpers.Dropbox;
 
 /// <summary>
 ///     Helper class for Dropbox CRUD operations and direct image preview link retrieval.
+///     Dropbox OAuth2 Refresh Token Flow:
+///     - You must obtain a refresh token via the OAuth2 authorization flow with token_access_type=offline.
+///     - The App Console 'Generate' button does NOT provide a refresh token.
+///     - Manual steps:
+///     1. Visit https://www.dropbox.com/oauth2/authorize?client_id=APPKEYHERE&response_type=code&token_access_type=offline
+///     2. Authorize the app and copy the authorization code from the redirect.
+///     3. Exchange the code for a refresh token using:
+///     curl https://api.dropbox.com/oauth2/token -d code=AUTHORIZATIONCODEHERE -d grant_type=authorization_code -u
+///     APPKEYHERE:APPSECRETHERE
+///     4. Store the returned refresh token in configuration.
+///     See Dropbox OAuth guide: https://developers.dropbox.com/oauth-guide
 /// </summary>
 public class DropboxHelper : IDropboxHelper
 {
@@ -90,7 +101,7 @@ public class DropboxHelper : IDropboxHelper
     public async Task<FileMetadata> MoveAsync(string fromPath, string toPath)
     {
         EnsureClient();
-        RelocationResult result = await _client.Files.MoveV2Async(fromPath, toPath, autorename: false);
+        RelocationResult? result = await _client.Files.MoveV2Async(fromPath, toPath, autorename: false);
         return result.Metadata.AsFile;
     }
 
@@ -139,7 +150,8 @@ public class DropboxHelper : IDropboxHelper
     /// </summary>
     private string RefreshAccessToken()
     {
-        // Use Dropbox OAuth2 token endpoint
+        // Use Dropbox OAuth2 token endpoint to refresh access token.
+        // This requires a valid refresh token obtained via the OAuth2 authorization flow.
         using HttpClient client = new();
         Dictionary<string, string> values = new()
         {
@@ -150,8 +162,10 @@ public class DropboxHelper : IDropboxHelper
         };
         FormUrlEncodedContent content = new(values);
         HttpResponseMessage response = client.PostAsync("https://api.dropbox.com/oauth2/token", content).Result;
-        response.EnsureSuccessStatusCode();
         string json = response.Content.ReadAsStringAsync().Result;
+        if (!response.IsSuccessStatusCode)
+            // If you get 'invalid_grant' or 'refresh token is malformed', the refresh token is invalid or not generated via the correct flow.
+            throw new InvalidOperationException($"Dropbox token refresh failed: {response.StatusCode} {json}");
         JsonDocument tokenObj = JsonDocument.Parse(json);
         string? accessToken = tokenObj.RootElement.GetProperty("access_token").GetString();
         // Optionally update config
