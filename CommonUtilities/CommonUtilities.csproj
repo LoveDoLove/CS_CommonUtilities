@@ -48,6 +48,7 @@
 		<PackageReference Include="Cronos" Version="0.11.1" />
 		<PackageReference Include="Dropbox.Api" Version="7.0.0" />
 		<PackageReference Include="Google.Apis.Drive.v3" Version="1.72.0.3938" />
+		<PackageReference Include="Google.GenAI" Version="0.3.0" />
 		<PackageReference Include="GoogleAuthenticator" Version="3.2.0" />
 		<PackageReference Include="MailKit" Version="4.14.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.3.0" />
