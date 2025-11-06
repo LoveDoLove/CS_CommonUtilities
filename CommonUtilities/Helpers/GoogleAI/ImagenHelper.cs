@@ -14,6 +14,7 @@
 
 using GenerativeAI;
 using GenerativeAI.Clients;
+using GenerativeAI.Types;
 
 namespace CommonUtilities.Helpers.GoogleAI;
 
@@ -47,13 +48,13 @@ public class ImagenHelper : IImagenHelper
     /// </summary>
     public async Task<byte[]> GenerateImageAsync(string prompt)
     {
-        var response = await _imageModel.GenerateImagesAsync(prompt);
+        GenerateImageResponse? response = await _imageModel.GenerateImagesAsync(prompt);
 
         // SDK returns response.Predictions list containing VisionGenerativeModelResult objects
         // Each prediction has BytesBase64Encoded property with the image data
         if (response?.Predictions != null && response.Predictions.Count > 0)
         {
-            var prediction = response.Predictions[0];
+            VisionGenerativeModelResult? prediction = response.Predictions[0];
             if (!string.IsNullOrEmpty(prediction?.BytesBase64Encoded))
                 return Convert.FromBase64String(prediction.BytesBase64Encoded);
         }
@@ -69,12 +70,12 @@ public class ImagenHelper : IImagenHelper
     /// </summary>
     public async Task<List<byte[]>> GenerateImagesAsync(string prompt, int count = 1)
     {
-        var images = new List<byte[]>();
-        var response = await _imageModel.GenerateImagesAsync(prompt);
+        List<byte[]> images = new();
+        GenerateImageResponse? response = await _imageModel.GenerateImagesAsync(prompt);
 
         // SDK returns response.Predictions list containing VisionGenerativeModelResult objects
         if (response?.Predictions != null && response.Predictions.Count > 0)
-            foreach (var prediction in response.Predictions.Take(count))
+            foreach (VisionGenerativeModelResult? prediction in response.Predictions.Take(count))
                 if (!string.IsNullOrEmpty(prediction?.BytesBase64Encoded))
                     images.Add(Convert.FromBase64String(prediction.BytesBase64Encoded));
 

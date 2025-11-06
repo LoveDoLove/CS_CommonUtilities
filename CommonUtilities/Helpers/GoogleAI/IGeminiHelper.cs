@@ -17,6 +17,7 @@ namespace CommonUtilities.Helpers.GoogleAI;
 /// <summary>
 ///     Interface for Google Gemini helper.
 ///     Gemini models support text generation, chat, streaming, and multimodal input (text + images/files).
+///     Includes support for grounding with Google Search for web-based information.
 ///     Reference: https://github.com/gunpal5/google_generativeai#usage
 /// </summary>
 public interface IGeminiHelper
@@ -25,6 +26,14 @@ public interface IGeminiHelper
     ///     Generates text content from a prompt.
     /// </summary>
     Task<string> GenerateTextAsync(string prompt);
+
+    /// <summary>
+    ///     Generates text with grounding enabled (Google Search).
+    ///     This allows the model to search the web for current and factual information.
+    /// </summary>
+    /// <param name="prompt">The prompt to send to the model</param>
+    /// <returns>Tuple of (response text, grounding metadata if available)</returns>
+    Task<(string responseText, GroundingMetadata? metadata)> GenerateTextWithGroundingAsync(string prompt);
 
     /// <summary>
     ///     Starts a chat session and sends a message.
