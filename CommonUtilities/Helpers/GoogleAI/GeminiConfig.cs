@@ -30,7 +30,7 @@ public class GeminiConfig
     /// <summary>
     ///     Model name (e.g., "models/gemini-1.5-flash", "models/gemini-2.0-flash-exp").
     /// </summary>
-    public string Model { get; set; } = "models/gemini-1.5-flash";
+    public string Model { get; set; } = "models/gemini-2.5-flash-lite";
 
     /// <summary>
     ///     Optional: Project ID for Vertex AI.
@@ -53,4 +53,26 @@ public class GeminiConfig
     /// </summary>
     [DefaultValue(false)]
     public bool ExpressMode { get; set; } = false;
+
+    /// <summary>
+    ///     Optional: Enable Google Search grounding for web search capabilities (default: false).
+    ///     When enabled, Gemini can search the web to provide current and factual information.
+    /// </summary>
+    [DefaultValue(false)]
+    public bool EnableGrounding { get; set; } = false;
+
+    /// <summary>
+    ///     Optional: Dynamic retrieval threshold for grounding (0.0 to 1.0, default: 0.7).
+    ///     The model will only perform a web search if its confidence in answering from its own knowledge
+    ///     falls below this threshold. Set to 1.0 to always search, or 0.0 to never search.
+    /// </summary>
+    [DefaultValue(0.7)]
+    public double GroundingThreshold { get; set; } = 0.7;
+
+    /// <summary>
+    ///     Optional: Grounding mode ("DYNAMIC" for dynamic threshold, "ALWAYS" to always ground).
+    ///     Default: "DYNAMIC" - only searches when confidence is below threshold.
+    /// </summary>
+    [DefaultValue("DYNAMIC")]
+    public string GroundingMode { get; set; } = "DYNAMIC";
 }
