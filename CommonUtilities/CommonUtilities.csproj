@@ -13,8 +13,8 @@
 		<Description>A modular, production-ready C#/.NET utility library and toolkit for rapid development.</Description>
 		<RepositoryUrl>https://github.com/LoveDoLove/CS_CommonUtilities</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<AssemblyVersion>1.9.3</AssemblyVersion>
-		<FileVersion>1.9.3</FileVersion>
+		<AssemblyVersion>1.9.4</AssemblyVersion>
+		<FileVersion>1.9.4</FileVersion>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
@@ -50,6 +50,7 @@
 		<PackageReference Include="Google.Apis.Drive.v3" Version="1.72.0.3938" />
 		<PackageReference Include="GoogleAuthenticator" Version="3.2.0" />
 		<PackageReference Include="Google_GenerativeAI" Version="3.4.0" />
+		<PackageReference Include="HtmlSanitizer" Version="9.0.886" />
 		<PackageReference Include="MailKit" Version="4.14.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
