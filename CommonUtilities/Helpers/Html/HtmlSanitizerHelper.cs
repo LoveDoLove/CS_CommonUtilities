@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using AngleSharp.Dom;
 using Ganss.Xss;
 
 namespace CommonUtilities.Helpers.Html;
@@ -22,47 +23,78 @@ namespace CommonUtilities.Helpers.Html;
 public static class HtmlSanitizerHelper
 {
     /// <summary>
-    ///     The HTML sanitizer instance with a custom whitelist.
+    ///     The HTML sanitizer instance with a configurable whitelist/policy.
     /// </summary>
     private static readonly HtmlSanitizer Sanitizer;
 
-    /// <summary>
-    ///     Static constructor to initialize the HTML sanitizer with a custom whitelist.
-    /// </summary>
     static HtmlSanitizerHelper()
     {
         Sanitizer = new HtmlSanitizer();
 
-        // Start with a conservative whitelist of tags and attributes
+        // Clear default allowed tags and define our own conservative whitelist
         Sanitizer.AllowedTags.Clear();
         string[] allowedTags =
         [
-            "a", "b", "i", "strong", "em", "u", "p", "br", "ul", "ol", "li", "blockquote", "code", "pre"
+            "a", "b", "i", "strong", "em", "u", "p", "br",
+            "ul", "ol", "li", "blockquote", "code", "pre"
         ];
-        foreach (string t in allowedTags) Sanitizer.AllowedTags.Add(t);
+        foreach (string tag in allowedTags) Sanitizer.AllowedTags.Add(tag);
 
+        // Clear default allowed attributes and define ours
         Sanitizer.AllowedAttributes.Clear();
         Sanitizer.AllowedAttributes.Add("href");
         Sanitizer.AllowedAttributes.Add("title");
         Sanitizer.AllowedAttributes.Add("target");
         Sanitizer.AllowedAttributes.Add("rel");
+
+        // Limit allowed URI schemes for safe links
+        Sanitizer.AllowedSchemes.Clear();
+        Sanitizer.AllowedSchemes.Add("http");
+        Sanitizer.AllowedSchemes.Add("https");
+        Sanitizer.AllowedSchemes.Add("mailto");
+
+        // Forbid all event attributes (onload, onclick, etc.)
+        Sanitizer.RemovingAttribute += (sender, args) =>
+        {
+            if (args.Attribute.Name.StartsWith("on", StringComparison.OrdinalIgnoreCase))
+                args.Cancel = false; // allow removal
+        };
+
+        // Optional: disallow style attributes entirely (for simplicity)
+        Sanitizer.AllowedCssProperties.Clear();
+
+        // Optional: For links enforce rel="nofollow" (or other policy)
+        Sanitizer.PostProcessNode += (sender, args) =>
+        {
+            if (args.Node is IElement element &&
+                element.TagName.Equals("a", StringComparison.OrdinalIgnoreCase))
+            {
+                element.GetAttribute("href");
+                element.SetAttribute("rel", "noopener noreferrer nofollow");
+            }
+        };
     }
 
     /// <summary>
     ///     Sanitizes the provided HTML-like input and returns a string safe to render as HTML.
     ///     Newlines are converted to &lt;br/&gt; so plain-text line breaks are preserved.
-    ///     Allowed tags are limited by the sanitizer configuration above.
+    ///     Allowed tags and attributes are limited by the sanitizer configuration above.
     /// </summary>
+    /// <param name="input">The user-provided HTML-like string.</param>
+    /// <returns>A sanitized string safe for HTML rendering.</returns>
     public static string SanitizeAndFormat(string input)
     {
-        if (string.IsNullOrEmpty(input)) return string.Empty;
+        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
 
-        // First sanitize the raw input (this removes unsafe tags/attributes)
+        // Sanitize the raw input (removes unsafe tags/attributes, normalizes HTML)
         string sanitized = Sanitizer.Sanitize(input);
 
-        // Convert remaining newlines to <br/> to preserve simple formatting when users paste plain text
-        // (If input already contains <p> or <br>, this is harmless.)
-        sanitized = sanitized.Replace("\r\n", "\n").Replace("\r", "\n").Replace("\n", "<br/>");
+        // Convert newline sequences to <br/>. 
+        // Note: If you prefer using <p> wrappers, you might adjust this accordingly.
+        sanitized = sanitized
+            .Replace("\r\n", "\n")
+            .Replace("\r", "\n")
+            .Replace("\n", "<br/>");
 
         return sanitized;
     }
