@@ -19,78 +19,82 @@ namespace CommonUtilities.Helpers.Html;
 
 /// <summary>
 ///     Helper class for sanitizing HTML-like input to prevent XSS attacks.
+///     Allows img tags with src & class attributes; disallows script tags and unsafe attributes.
 /// </summary>
 public static class HtmlSanitizerHelper
 {
-    /// <summary>
-    ///     The HTML sanitizer instance with a configurable whitelist/policy.
-    /// </summary>
     private static readonly HtmlSanitizer Sanitizer;
 
     static HtmlSanitizerHelper()
     {
         Sanitizer = new HtmlSanitizer();
 
-        // Clear default allowed tags and define our own conservative whitelist
+        // Configure allowed tags (whitelist)
         Sanitizer.AllowedTags.Clear();
-        string[] allowedTags =
-        [
-            "a", "b", "i", "strong", "em", "u", "p", "br",
-            "ul", "ol", "li", "blockquote", "code", "pre"
-        ];
+        string[] allowedTags = new[]
+        {
+            "a", "b", "i", "strong", "em", "u",
+            "p", "br", "ul", "ol", "li", "blockquote",
+            "code", "pre", "img"
+        };
         foreach (string tag in allowedTags) Sanitizer.AllowedTags.Add(tag);
 
-        // Clear default allowed attributes and define ours
+        // Configure allowed attributes
         Sanitizer.AllowedAttributes.Clear();
         Sanitizer.AllowedAttributes.Add("href");
         Sanitizer.AllowedAttributes.Add("title");
         Sanitizer.AllowedAttributes.Add("target");
         Sanitizer.AllowedAttributes.Add("rel");
+        Sanitizer.AllowedAttributes.Add("src");
+        Sanitizer.AllowedAttributes.Add("class");
 
-        // Limit allowed URI schemes for safe links
+        // Configure allowed URI schemes
         Sanitizer.AllowedSchemes.Clear();
         Sanitizer.AllowedSchemes.Add("http");
         Sanitizer.AllowedSchemes.Add("https");
         Sanitizer.AllowedSchemes.Add("mailto");
 
-        // Forbid all event attributes (onload, onclick, etc.)
+        // Configure which attributes are treated as URI attributes
+        Sanitizer.UriAttributes.Clear();
+        Sanitizer.UriAttributes.Add("href");
+        Sanitizer.UriAttributes.Add("src");
+
+        // Disallow any inline event attributes (onload, onclick, etc.)
         Sanitizer.RemovingAttribute += (sender, args) =>
         {
             if (args.Attribute.Name.StartsWith("on", StringComparison.OrdinalIgnoreCase))
-                args.Cancel = false; // allow removal
+                // Allow removal (nothing special to do)
+                args.Cancel = false;
         };
 
-        // Optional: disallow style attributes entirely (for simplicity)
+        // Disallow all CSS properties if you do not want inline styles
         Sanitizer.AllowedCssProperties.Clear();
 
-        // Optional: For links enforce rel="nofollow" (or other policy)
+        // Post-process <a> tags to enforce rel & target policy
         Sanitizer.PostProcessNode += (sender, args) =>
         {
             if (args.Node is IElement element &&
                 element.TagName.Equals("a", StringComparison.OrdinalIgnoreCase))
-            {
-                element.GetAttribute("href");
+                // Ensure rel attribute to avoid reverse tabnabbing
                 element.SetAttribute("rel", "noopener noreferrer nofollow");
-            }
+            // (You may also enforce target="_blank" if desired)
         };
     }
 
     /// <summary>
     ///     Sanitizes the provided HTML-like input and returns a string safe to render as HTML.
-    ///     Newlines are converted to &lt;br/&gt; so plain-text line breaks are preserved.
-    ///     Allowed tags and attributes are limited by the sanitizer configuration above.
+    ///     Plain-text newlines are converted to &lt;br/&gt; so simple line breaks are preserved.
     /// </summary>
     /// <param name="input">The user-provided HTML-like string.</param>
-    /// <returns>A sanitized string safe for HTML rendering.</returns>
+    /// <returns>A sanitized string safe for HTML body rendering.</returns>
     public static string SanitizeAndFormat(string input)
     {
         if (string.IsNullOrWhiteSpace(input)) return string.Empty;
 
-        // Sanitize the raw input (removes unsafe tags/attributes, normalizes HTML)
+        // Sanitize the raw input (removes disallowed tags/attributes)
         string sanitized = Sanitizer.Sanitize(input);
 
-        // Convert newline sequences to <br/>. 
-        // Note: If you prefer using <p> wrappers, you might adjust this accordingly.
+        // Convert newline sequences to <br/> for simple formatting
         sanitized = sanitized
             .Replace("\r\n", "\n")
             .Replace("\r", "\n")
