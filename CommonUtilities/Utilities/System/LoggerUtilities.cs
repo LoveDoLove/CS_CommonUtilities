@@ -12,6 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System.Diagnostics;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -82,11 +86,104 @@ public static class LoggerUtilities
     }
 
     /// <summary>
+    ///     Builds a message prefix using the calling class and method names.
+    /// </summary>
+    private static string FormatMessage(string message)
+    {
+        try
+        {
+            (string className, string methodName) = GetCallerInfo();
+            return $"[{className}] [{methodName}] {message}";
+        }
+        catch
+        {
+            // In case stack inspection fails for any reason, return the original message.
+            return message;
+        }
+    }
+
+    /// <summary>
+    ///     Inspects the stack to find the first caller outside LoggerUtilities and Serilog internals.
+    ///     Returns (ClassName, MethodName).
+    /// </summary>
+    private static (string ClassName, string MethodName) GetCallerInfo()
+    {
+        StackTrace stack = new StackTrace(1, false);
+        foreach (StackFrame frame in stack.GetFrames())
+        {
+            MethodBase? method = frame.GetMethod();
+            if (method == null) continue;
+
+            Type? declaringType = method.DeclaringType;
+            if (declaringType == null) continue;
+
+            // Skip frames from this utility class
+            if (declaringType == typeof(LoggerUtilities))
+                continue;
+
+            // Skip common Serilog frames
+            string fullName = declaringType.FullName ?? string.Empty;
+            if (fullName.StartsWith("Serilog.", StringComparison.Ordinal) ||
+                fullName.StartsWith("Serilog", StringComparison.Ordinal))
+                continue;
+
+            // Handle compiler-generated state machine types (async/iterator) and closures
+            // Common pattern: nested type like `<MethodName>d__N` with a MoveNext method.
+            if (declaringType.IsNested && declaringType.Name.Contains("<"))
+            {
+                Type? outer = declaringType.DeclaringType;
+                if (outer != null)
+                {
+                    // Try to find the original method by searching for AsyncStateMachine/IteratorStateMachine attributes
+                    MethodInfo[] candidates = outer.GetMethods(BindingFlags.Instance | BindingFlags.Static |
+                                                               BindingFlags.Public | BindingFlags.NonPublic);
+                    foreach (MethodInfo m in candidates)
+                    {
+                        AsyncStateMachineAttribute? asyncAttr = m.GetCustomAttribute<AsyncStateMachineAttribute>();
+                        if (asyncAttr != null && asyncAttr.StateMachineType == declaringType)
+                            return (outer.Name, m.Name);
+
+                        IteratorStateMachineAttribute? iterAttr = m.GetCustomAttribute<IteratorStateMachineAttribute>();
+                        if (iterAttr != null && iterAttr.StateMachineType == declaringType)
+                            return (outer.Name, m.Name);
+                    }
+
+                    // Fallback: extract name from nested type like `<Index>d__2` -> Index
+                    Match match = Regex.Match(declaringType.Name, "<(?<name>[^>]+)>");
+                    if (match.Success)
+                    {
+                        string extracted = match.Groups["name"].Value;
+                        return (outer.Name, extracted);
+                    }
+
+                    // As a last resort, use outer type name and MoveNext
+                    return (outer.Name, method.Name);
+                }
+            }
+
+            // If the declaring type is compiler-generated (closures) try to use declaringType.DeclaringType as class name
+            if (declaringType.GetCustomAttribute<CompilerGeneratedAttribute>() != null ||
+                declaringType.Name.Contains("DisplayClass") || declaringType.Name.Contains("AnonStorey"))
+            {
+                Type? outer = declaringType.DeclaringType;
+                if (outer != null)
+                    return (outer.Name, method.Name);
+            }
+
+            string className = declaringType.Name;
+            string methodName = method.Name;
+            return (className, methodName);
+        }
+
+        return ("UnknownClass", "UnknownMethod");
+    }
+
+    /// <summary>
     ///     Logs an informational message.
     /// </summary>
     public static void Info(string message)
     {
-        Log.Information(message);
+        Log.Information(FormatMessage(message));
     }
 
     /// <summary>
@@ -94,7 +191,7 @@ public static class LoggerUtilities
     /// </summary>
     public static void Error(string message)
     {
-        Log.Error(message);
+        Log.Error(FormatMessage(message));
     }
 
     /// <summary>
@@ -102,7 +199,7 @@ public static class LoggerUtilities
     /// </summary>
     public static void Warning(string message)
     {
-        Log.Warning(message);
+        Log.Warning(FormatMessage(message));
     }
 
     /// <summary>
@@ -110,7 +207,7 @@ public static class LoggerUtilities
     /// </summary>
     public static void Debug(string message)
     {
-        Log.Debug(message);
+        Log.Debug(FormatMessage(message));
     }
 
     /// <summary>
@@ -118,7 +215,7 @@ public static class LoggerUtilities
     /// </summary>
     public static void Error(Exception exception, string message)
     {
-        Log.Error(exception, message);
+        Log.Error(exception, FormatMessage(message));
     }
 
     /// <summary>
@@ -126,7 +223,7 @@ public static class LoggerUtilities
     /// </summary>
     public static void Fatal(string message)
     {
-        Log.Fatal(message);
+        Log.Fatal(FormatMessage(message));
     }
 
     /// <summary>
@@ -134,6 +231,6 @@ public static class LoggerUtilities
     /// </summary>
     public static void Fatal(Exception exception, string message)
     {
-        Log.Fatal(exception, message);
+        Log.Fatal(exception, FormatMessage(message));
     }
 }
