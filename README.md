@@ -34,13 +34,15 @@
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#about-the-project">About The Project</a>
+    <li>
+      <a href="#about-the-project">About The Project</a>
       <ul>
         <li><a href="#features">Features</a></li>
         <li><a href="#built-with">Built With</a></li>
       </ul>
     </li>
-    <li><a href="#getting-started">Getting Started</a>
+    <li>
+      <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#installation">Installation</a></li>
@@ -48,6 +50,7 @@
       </ul>
     </li>
     <li><a href="#usage">Usage</a></li>
+    <li><a href="#project-structure">Project Structure</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
@@ -59,35 +62,30 @@
 
 ## About The Project
 
-CommonUtilities is a modular, production-ready C#/.NET utility library and toolkit designed to accelerate development for .NET 8+ projects. It provides a comprehensive set of helpers, models, and utilities for common application needs, including security, data, HTTP, scheduling, media, and more. The project is structured for easy extension and integration into any .NET solution.
+CommonUtilities is a modular, production-ready C#/.NET utility library and toolkit designed to accelerate development for .NET 8+ projects. It contains a broad set of helpers, models, and utilities for common application needs (security, data, HTTP, scheduling, media, cloud integrations, and more). The codebase is organized for easy consumption as a project reference or compiled library.
+
+This README was created from the project's template and repository contents.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Features
 
-- **Security**: AES, SHA256, 3DES, signature, and validation helpers
-- **Data**: Conversion, formatting, JSON file operations
-- **HTTP**: Basic and advanced HTTP utilities
-- **System**: App settings, caching, file/process utilities, logging, timestamps
-- **Scheduler**: Cron jobs, scheduled services, extensible SyncService base
-- **Media**: Image processing helpers
-- **QR Code**: QR code generation utilities
-- **Stripe**: Payment integration helpers
-- **Google MFA**: Multi-factor authentication helpers
-- **Cloudflare Captcha**: Captcha validation helpers
-- **Mailer**: SMTP and email sending helpers
-- **IP Info**: IP geolocation and lookup helpers
-- **Command**: Command-line helper utilities
-- **Enum**: Enum parsing and conversion helpers
-- **Database**: Strongly-typed models and DbContext
-- **Extensible**: Modular, production-ready, and open source
+- Security: AES, SHA256, signature and related helpers
+- Data: Conversion, formatting, JSON file utilities
+- HTTP: Basic and advanced HTTP helpers
+- System: App settings, caching, file/process utilities, logging helpers
+- Scheduler: Cron job helpers, scheduled services, SyncService base
+- Media: Image helpers, Dropbox/image helpers, QR code generation
+- Integrations: Stripe, Cloudflare captcha, Google AI, Google Drive, Google MFA
+- Mailer: SMTP/mail helpers
+- Utilities: Command helpers, enum helpers, IP info lookup
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
 
 - [.NET 8.0](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
-- [C#](https://docs.microsoft.com/en-us/dotnet/csharp/)
-- [xUnit.net](https://xunit.net/) (for testing)
-- [.NET Community Toolkit](https://github.com/CommunityToolkit/dotnet)
+- [C#](https://learn.microsoft.com/dotnet/csharp/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -95,67 +93,53 @@ CommonUtilities is a modular, production-ready C#/.NET utility library and toolk
 
 ## Getting Started
 
-To use CommonUtilities in your .NET project, follow these steps:
+Use this project by referencing the `CommonUtilities` project in your solution or by building the library and consuming the DLL.
 
 ### Prerequisites
 
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
-- (Optional) [xUnit.net](https://xunit.net/) for testing
 
 ### Installation
 
 1. Clone the repository:
-   ```cmd
-   git clone https://github.com/LoveDoLove/CS_CommonUtilities.git
-   ```
-2. Add the project or reference the compiled DLL in your solution.
-3. (Optional) Restore and run tests:
-   ```cmd
-   dotnet restore
-   dotnet test
-   ```
+
+```cmd
+git clone https://github.com/LoveDoLove/CS_CommonUtilities.git
+```
+
+2. Restore packages and build:
+
+```cmd
+dotnet restore
+dotnet build
+```
+
+3. Add `CommonUtilities\CommonUtilities.csproj` as a project reference in your solution or copy the compiled DLL from `bin/`.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Configuration
 
-Many helpers require configuration via `appsettings.json` (or `appsettings.Development.json`). Example:
+Many helpers require configuration via `appsettings.json` (or `appsettings.Development.json`). Example configuration keys used in this repo:
 
 ```json
 {
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
-  },
-  "AllowedHosts": "*",
-  "ConnectionStrings": {
-    "DBConnection": "Server=(localdb)\\mssqllocaldb;Database=NetCore-Mvc-Setup-Kit;Trusted_Connection=True;TrustServerCertificate=True;MultipleActiveResultSets=true"
-  },
   "Smtp": {
-    "Host": "smtp.example.com",
-    "Port": 587,
-    "Username": "xxx@example.com",
-    "Password": "example",
-    "From": "no-reply@example.com",
-    "Name": "example"
+    /* mailer */
   },
   "CfCaptcha": {
-    "SiteKey": "xxx",
-    "SecretKey": "xxx"
+    /* cloudflare captcha */
   },
   "IpInfo": {
-    "Token": "xxx"
+    /* ipinfo token */
   },
   "Stripe": {
-    "ApiKey": "sk_test_xxx",
-    "WebhookSecret": "whsec_xxx"
+    /* api keys */
   }
 }
 ```
 
-- Adjust these values for your environment.
-- For development, use `appsettings.Development.json` to override settings as needed.
-- See the sample files for all available options.
+See `appsettings.json` and `appsettings.Development.json` in the repo root for concrete examples.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -163,9 +147,9 @@ Many helpers require configuration via `appsettings.json` (or `appsettings.Devel
 
 ## Usage
 
-Import the relevant namespaces from `CommonUtilities` and use the helpers as needed.
+Examples below show common usage patterns. Refer to source XML comments for full API details.
 
-**Basic Security Example:**
+### Basic security
 
 ```csharp
 using CommonUtilities.Utilities.Security;
@@ -174,85 +158,76 @@ string encrypted = AesUtilities.Encrypt("mydata", "password");
 string hash = Sha256Utilities.ComputeHash("mydata");
 ```
 
-**MailerHelper with configuration:**
+### Sending email
 
 ```csharp
 using CommonUtilities.Helpers.Mailer;
 using Microsoft.Extensions.Configuration;
 
-var config = new ConfigurationBuilder()
-  .AddJsonFile("appsettings.json")
-  .Build();
-var smtpConfig = config.GetSection("Smtp").Get<SmtpConfig>();
-var mailer = new MailerHelper(smtpConfig);
+var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
+var smtpConfig = config.GetSection("Smtp").Get<Mailer.MailerConfig>();
+var mailer = new Mailer.MailerHelper(smtpConfig);
 await mailer.SendAsync("to@example.com", "Subject", "Body");
 ```
 
-**StripeHelper:**
+### Stripe (example)
 
 ```csharp
 using CommonUtilities.Helpers.Stripe;
-var stripeConfig = new StripeConfig { ApiKey = "sk_test_xxx" };
-var stripe = new StripeHelper(stripeConfig);
-// Use stripe methods for payment, customer, etc.
+
+var cfg = new Stripe.StripeConfig { ApiKey = "sk_test_xxx" };
+var stripe = new Stripe.StripeHelper(cfg);
+// use stripe methods
 ```
-
-**SyncService (scheduled job):**
-
-```csharp
-// Inherit from SyncServiceBase<T> and override ExecuteSyncAsync for your job logic.
-```
-
-For more usage examples, see the source code and XML documentation in each helper class.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- CONTRIBUTING -->
+## Project Structure
+
+Top-level folders and a short description (see repository for full details):
+
+- `CommonUtilities/Helpers/` — helper classes grouped by feature (Mailer, Stripe, GoogleDrive, Security, Media, etc.)
+- `CommonUtilities/Models/` — shared models and constants
+- `CommonUtilities/Utilities/` — lower-level utilities (Data, Http, Security, System helpers)
+- `CommonUtilities/Services/` — background services and SyncService base
+- `appsettings.json` / `appsettings.Development.json` — configuration samples
+
+Use these namespaces in your projects to call the helpers directly.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are welcome. To contribute:
 
-To contribute:
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/MyFeature`)
+3. Commit your changes (`git commit -m "Add feature"`)
+4. Push to your branch (`git push origin feature/MyFeature`)
 5. Open a Pull Request
 
-Please follow the [Context7](https://context7.com/) and .NET Foundation code of conduct and best practices.
+Please follow standard .NET best practices and include unit tests where appropriate.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- LICENSE -->
 
 ## License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See `LICENSE` for details.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- CONTACT -->
 
 ## Contact
 
-LoveDoLove - [GitHub](https://github.com/LoveDoLove)
+LoveDoLove — [GitHub](https://github.com/LoveDoLove)
 
-Project Link: [https://github.com/LoveDoLove/CS_CommonUtilities](https://github.com/LoveDoLove/CS_CommonUtilities)
+Project Link: https://github.com/LoveDoLove/CS_CommonUtilities
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-<!-- ACKNOWLEDGMENTS -->
 
 ## Acknowledgments
 
 - [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
-- [Choose an Open Source License](https://choosealicense.com)
-- [.NET Foundation](https://dotnetfoundation.org/)
-- [Context7 Documentation](https://context7.com/)
-- [xUnit.net](https://xunit.net/)
-- [CommunityToolkit](https://github.com/CommunityToolkit/dotnet)
+- [.NET Documentation](https://learn.microsoft.com/dotnet/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
