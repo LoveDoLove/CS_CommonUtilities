@@ -50,6 +50,21 @@ public static class LanguageHelper
     /// </summary>
     public static string GetLanguageName(string languageCode)
     {
-        return Enum.TryParse<LanguageCodeType>(languageCode, out var code) ? GetLanguageName(code) : languageCode;
+        return Enum.TryParse(languageCode, out LanguageCodeType code) ? GetLanguageName(code) : languageCode;
+    }
+
+    /// <summary>
+    ///     Validates whether the provided language code string is either empty/null (treated as not-set)
+    ///     or matches a known LanguageCodeType value present in LanguageMappings.
+    /// </summary>
+    public static bool IsValidLanguage(string? languageCode)
+    {
+        // Allow empty / not-set values.
+        if (string.IsNullOrWhiteSpace(languageCode))
+            return true;
+
+        // Try parse and ensure the parsed value exists in the mappings.
+        return Enum.TryParse(languageCode.Trim(), out LanguageCodeType code) &&
+               LanguageMappings.LanguageNames.ContainsKey(code);
     }
 }
