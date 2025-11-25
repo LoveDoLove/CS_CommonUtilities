@@ -12,20 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Net;
 using System.Text.Json;
+using CommonUtilities.Utilities.System;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
 
 namespace CommonUtilities.Helpers.IpInfo;
 
 /// <summary>
 ///     Provides helper methods for retrieving IP information and extracting client IP addresses from HTTP requests.
+///     This version uses the dual-stack endpoint (https://ipinfo.io/) to safely retrieve full IP info
+///     for both IPv4 and IPv6 clients, even if the server is IPv4-only.
 /// </summary>
 public class IpInfoHelper : IIpInfoHelper
 {
-    private const string IpV4InfoUrl = "https://ipinfo.io/";
-    private const string IpV6InfoUrl = "https://v6.ipinfo.io/";
+    // Use dual-stack endpoint to support both IPv4 and IPv6 client IPs
+    private const string IpInfoUrl = "https://ipinfo.io/";
     private readonly IpInfoConfig _ipInfo;
 
     /// <summary>
@@ -39,6 +40,7 @@ public class IpInfoHelper : IIpInfoHelper
 
     /// <summary>
     ///     Asynchronously retrieves IP information for the client making the HTTP request.
+    ///     Supports both IPv4 and IPv6 client IPs and avoids server DNS/socket issues.
     /// </summary>
     /// <param name="context">The HTTP context containing the client request.</param>
     /// <returns>An <see cref="IpInfoResponse" /> with details about the client's IP address, or null if not found.</returns>
@@ -46,80 +48,67 @@ public class IpInfoHelper : IIpInfoHelper
     {
         string clientIp = GetClientIp(context);
 
-        HttpClient client = new HttpClient();
-        string url = clientIp.Contains(":") ? IpV6InfoUrl : IpV4InfoUrl;
-        HttpResponseMessage response = await client.GetAsync($"{url}{clientIp}?token={_ipInfo.Token}");
-        string responseContent = await response.Content.ReadAsStringAsync();
+        // Construct the URL with client IP and token
+        string url = $"{IpInfoUrl}{clientIp}?token={_ipInfo.Token}";
 
-        IpInfoResponse? ipInfo = JsonSerializer.Deserialize<IpInfoResponse>(responseContent);
-        return ipInfo;
+        try
+        {
+            using HttpClient client = new HttpClient();
+            HttpResponseMessage response = await client.GetAsync(url);
+            string responseContent = await response.Content.ReadAsStringAsync();
+
+            IpInfoResponse? ipInfo = JsonSerializer.Deserialize<IpInfoResponse>(responseContent);
+            return ipInfo;
+        }
+        catch (Exception ex)
+        {
+            // Log exception here if needed
+            LoggerUtilities.Error(ex, $"Failed to retrieve IP info for {clientIp}");
+            return null;
+        }
     }
 
     /// <summary>
-    ///     Extracts the client IP address from an <see cref="HttpContext" />.
-    ///     The method inspects several common proxy/CDN/load-balancer headers in priority order
-    ///     (for example: CF-Connecting-IP, X-Forwarded-For) and uses the first non-empty
-    ///     value it finds. If the header contains multiple comma-separated IPs, the first
-    ///     address is selected. If none of the headers yield a value, it falls back to
-    ///     <see cref="HttpContext.Connection.RemoteIpAddress" />. The returned address is
-    ///     normalized: the IPv6 loopback "::1" is converted to the IPv4 loopback
-    ///     "127.0.0.1", and IPv4-mapped IPv6 addresses (e.g. "::ffff:192.168.1.1") are
-    ///     mapped back to their IPv4 representation.
+    ///     Extracts the client's IP address from the HTTP context, considering common proxy headers.
+    ///     Returns IPv4 or IPv6 addresses as-is.
     /// </summary>
-    /// <param name="context">The current HTTP context (request + connection info).</param>
-    /// <returns>
-    ///     A string containing the best-effort client IP address. If none available the method
-    ///     will return a string that may be "UNKNOWN" when no candidate is found.
-    /// </returns>
+    /// <param name="context">The HTTP context containing the client request.</param>
+    /// <returns>The client's IP address as a string.</returns>
     public string GetClientIp(HttpContext context)
     {
         string? ipAddress = "UNKNOWN";
 
-        // These are common proxy / CDN / load-balancer headers; evaluated in priority order.
+        // Check common headers for the original client IP
         string[] headersToCheck =
         {
             "CF-Connecting-IP",
             "True-Client-IP",
-            "X-Forwarded-For",
             "HTTP_CLIENT_IP",
             "HTTP_X_FORWARDED_FOR",
             "HTTP_X_FORWARDED",
             "HTTP_FORWARDED_FOR",
             "HTTP_FORWARDED",
-            "REMOTE_ADDR"
+            "REMOTE_ADDR",
+            "X-Forwarded-For"
         };
 
         foreach (string header in headersToCheck)
-            if (context.Request.Headers.TryGetValue(header, out StringValues values))
-            {
-                string? headerValue = values.FirstOrDefault();
-                if (!string.IsNullOrWhiteSpace(headerValue))
-                {
-                    // Some headers provide multiple IPs separated by commas.
-                    string firstIp = headerValue.Split(',').First().Trim();
-                    if (!string.IsNullOrEmpty(firstIp))
-                    {
-                        ipAddress = firstIp;
-                        break;
-                    }
-                }
-            }
-
-        // Fallback to RemoteIpAddress if no proxy headers provided a value.
-        if (string.IsNullOrEmpty(ipAddress) || ipAddress == "UNKNOWN")
         {
-            IPAddress? remote = context.Connection.RemoteIpAddress;
-            if (remote != null) ipAddress = remote.ToString();
+            string? headerValue = context.Request.Headers[header].FirstOrDefault();
+
+            if (string.IsNullOrEmpty(headerValue)) continue;
+
+            // If multiple IPs, take the first one (original client IP)
+            ipAddress = headerValue.Split(',').FirstOrDefault()?.Trim();
+            if (!string.IsNullOrEmpty(ipAddress)) break;
         }
 
-        // Normalize IPv6 loopback
+        // Fallback to connection remote IP
+        if (string.IsNullOrEmpty(ipAddress)) ipAddress = context.Connection.RemoteIpAddress?.ToString();
+
+        // Normalize localhost IPv6 to IPv4 for consistency
         if (ipAddress == "::1") ipAddress = "127.0.0.1";
 
-        // Normalize IPv4-mapped IPv6 addresses (e.g., ::ffff:192.168.1.1)
-        if (IPAddress.TryParse(ipAddress, out IPAddress? parsedAddress))
-            if (parsedAddress.IsIPv4MappedToIPv6)
-                ipAddress = parsedAddress.MapToIPv4().ToString();
-
-        return ipAddress;
+        return ipAddress ?? "UNKNOWN";
     }
 }
