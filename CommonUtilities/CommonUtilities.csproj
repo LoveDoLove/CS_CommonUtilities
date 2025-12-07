@@ -22,7 +22,7 @@
 		<Company>LoveDoLove</Company>
 		<Version>2.0.1</Version>
 		<Title>CommonUtilities</Title>
-		<PackageId>CommonUtilities</PackageId>
+		<PackageId>LoveDoLove.CommonUtilities</PackageId>
 		<Product>CommonUtilities</Product>
 	</PropertyGroup>
 
