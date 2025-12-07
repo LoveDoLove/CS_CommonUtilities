@@ -63,7 +63,7 @@ jobs:
         run: dotnet clean CommonUtilities/CommonUtilities.csproj
 
       - name: Publish library
-        run: dotnet publish CommonUtilities/CommonUtilities.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained false /p:UseAppHost=false -o ./publish/${{ matrix.os }}-${{ matrix.arch }}/CommonUtilities
+        run: dotnet publish CommonUtilities/CommonUtilities.csproj --configuration Release --runtime ${{ matrix.runtime }} --self-contained true /p:UseAppHost=false -o ./publish/${{ matrix.os }}-${{ matrix.arch }}/CommonUtilities
 
       - name: Zip ${{ matrix.os }}-${{ matrix.arch }} output
         run: |
