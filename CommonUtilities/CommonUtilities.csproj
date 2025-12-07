@@ -10,7 +10,7 @@
 		<PackageProjectUrl>https://github.com/LoveDoLove/CS_CommonUtilities</PackageProjectUrl>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<Description>A modular, production-ready C#/.NET utility library and toolkit for rapid development.</Description>
+		<Description>CommonUtilities is a modular, production-ready C#/.NET utility library and toolkit designed to accelerate development for .NET 8+ projects. It contains a broad set of helpers, models, and utilities for common application needs (security, data, HTTP, scheduling, media, cloud integrations, and more). The codebase is organized for easy consumption as a project reference or compiled library.</Description>
 		<RepositoryUrl>https://github.com/LoveDoLove/CS_CommonUtilities</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 		<AssemblyVersion>2.0.1</AssemblyVersion>
@@ -22,6 +22,8 @@
 		<Company>LoveDoLove</Company>
 		<Version>2.0.1</Version>
 		<Title>CommonUtilities</Title>
+		<PackageId>CommonUtilities</PackageId>
+		<Product>CommonUtilities</Product>
 	</PropertyGroup>
 
 	<ItemGroup>
