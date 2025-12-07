@@ -33,10 +33,10 @@ public static class AdvancedHttpUtilities
     /// <summary>
     ///     Default User-Agent string used if none is provided.
     /// </summary>
-    private const string DefaultUserAgent = "CommonUtilities.AdvancedHttpUtilities/1.0";
+    private const string DefaultUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36";
 
-    private static readonly Dictionary<string, RestClient> _clientCache = new();
-    private static readonly object _lock = new(); // Used for thread-safe access to _clientCache
+    private static readonly Dictionary<string, RestClient> ClientCache = new();
+    private static readonly object Lock = new(); // Used for thread-safe access to _clientCache
 
     /// <summary>
     ///     Gets a cached or new <see cref="RestClient" /> configured for a specific base URL, User-Agent, and timeout.
@@ -59,9 +59,9 @@ public static class AdvancedHttpUtilities
         string clientKey =
             $"{normalizedBaseUrl}_{userAgent ?? DefaultUserAgent}_{timeoutSeconds ?? DefaultTimeoutSeconds}";
 
-        lock (_lock) // Ensure thread-safe access to the cache
+        lock (Lock) // Ensure thread-safe access to the cache
         {
-            if (_clientCache.TryGetValue(clientKey, out var cachedClient))
+            if (ClientCache.TryGetValue(clientKey, out var cachedClient))
             {
                 Log.Debug("Returning cached RestClient for {ClientKey}", clientKey);
                 return cachedClient;
@@ -76,7 +76,7 @@ public static class AdvancedHttpUtilities
             };
 
             var newClient = new RestClient(options);
-            _clientCache[clientKey] = newClient; // Add the new client to the cache
+            ClientCache[clientKey] = newClient; // Add the new client to the cache
 
             Log.Information(
                 "Created and cached new RestClient for {BaseUrl} with User-Agent {UserAgent} and Timeout {Timeout}s",
@@ -102,7 +102,7 @@ public static class AdvancedHttpUtilities
     public static async Task<RestResponse<T>> ExecuteWithRetryAsync<T>(
         RestClient client,
         RestRequest request,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default) where T : notnull
     {
         int maxRetries = 3; // Maximum number of retry attempts
         int retryCount = 0; // Current retry attempt
@@ -208,7 +208,7 @@ public static class AdvancedHttpUtilities
         Dictionary<string, string>? headers = null,
         Dictionary<string, string>? parameters = null,
         string? userAgent = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default) where T : notnull
     {
         var client = GetClient(baseUrl, userAgent);
         var request = new RestRequest(endpoint);
@@ -252,7 +252,7 @@ public static class AdvancedHttpUtilities
         object payload,
         Dictionary<string, string>? headers = null,
         string? userAgent = null,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default) where T : notnull
     {
         var client = GetClient(baseUrl, userAgent);
         var request = new RestRequest(endpoint, Method.Post);
@@ -364,16 +364,16 @@ public static class AdvancedHttpUtilities
     /// </summary>
     public static void Cleanup()
     {
-        lock (_lock) // Ensure thread-safe access to the cache
+        lock (Lock) // Ensure thread-safe access to the cache
         {
-            if (_clientCache.Count == 0)
+            if (ClientCache.Count == 0)
             {
                 Log.Debug("AdvancedHttpUtilities client cache is already empty. No cleanup needed.");
                 return;
             }
 
-            Log.Information("Cleaning up {Count} cached RestClient instances.", _clientCache.Count);
-            foreach (var clientEntry in _clientCache)
+            Log.Information("Cleaning up {Count} cached RestClient instances.", ClientCache.Count);
+            foreach (var clientEntry in ClientCache)
                 try
                 {
                     clientEntry.Value.Dispose();
@@ -384,7 +384,7 @@ public static class AdvancedHttpUtilities
                     Log.Error(ex, "Error disposing RestClient for key {ClientKey}", clientEntry.Key);
                 }
 
-            _clientCache.Clear();
+            ClientCache.Clear();
             Log.Information("AdvancedHttpUtilities client cache cleared successfully.");
         }
     }
