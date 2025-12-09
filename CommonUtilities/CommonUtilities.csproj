@@ -13,14 +13,14 @@
 		<Description>CommonUtilities is a modular, production-ready C#/.NET utility library and toolkit designed to accelerate development for .NET 8+ projects. It contains a broad set of helpers, models, and utilities for common application needs (security, data, HTTP, scheduling, media, cloud integrations, and more). The codebase is organized for easy consumption as a project reference or compiled library.</Description>
 		<RepositoryUrl>https://github.com/LoveDoLove/CS_CommonUtilities</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<AssemblyVersion>2.0.1</AssemblyVersion>
-		<FileVersion>2.0.1</FileVersion>
+		<AssemblyVersion>2.0.2</AssemblyVersion>
+		<FileVersion>2.0.2</FileVersion>
 		<PackageLicenseFile>LICENSE</PackageLicenseFile>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Authors>LoveDoLove</Authors>
 		<Company>LoveDoLove</Company>
-		<Version>2.0.1</Version>
+		<Version>2.0.2</Version>
 		<Title>CommonUtilities</Title>
 		<PackageId>LoveDoLove.CommonUtilities</PackageId>
 		<Product>CommonUtilities</Product>
@@ -54,21 +54,21 @@
 	<ItemGroup>
 		<PackageReference Include="Cronos" Version="0.11.1" />
 		<PackageReference Include="Dropbox.Api" Version="7.0.0" />
-		<PackageReference Include="Google.Apis.Drive.v3" Version="1.72.0.3970" />
+		<PackageReference Include="Google.Apis.Drive.v3" Version="1.73.0.3987" />
 		<PackageReference Include="GoogleAuthenticator" Version="3.2.0" />
 		<PackageReference Include="Google_GenerativeAI" Version="3.4.1" />
 		<PackageReference Include="HtmlSanitizer" Version="9.0.889" />
 		<PackageReference Include="MailKit" Version="4.14.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.22" />
 		<PackageReference Include="QRCoder" Version="1.7.0" />
 		<PackageReference Include="Razor.Templating.Core" Version="2.1.0" />
 		<PackageReference Include="RestSharp" Version="113.0.0" />
-		<PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />
+		<PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
 		<PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
 		<PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
 		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
 		<PackageReference Include="Stripe.net" Version="50.0.0" />
-		<PackageReference Include="System.Runtime.Caching" Version="9.0.11" />
+		<PackageReference Include="System.Runtime.Caching" Version="8.0.1" />
 	</ItemGroup>
 
 </Project>
